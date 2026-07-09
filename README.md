@@ -69,5 +69,6 @@ For production PostgreSQL, use `pg_dump` and `pg_restore` with managed backups.
 ## Known Limits
 
 - SQLite is suitable for local development and simple single-node deployment. For Vercel production, configure a managed PostgreSQL database and adapt the data access layer.
+- When deployed to Vercel without `DATABASE_PATH`, the app uses `/tmp/site.db` so pages can render in Serverless runtime. This is suitable for content preview, but not durable production business data.
 - External SEO sync, AI generation, email and webhook alerts require provider credentials.
 - Demonstration News/Blog records are explicitly marked as examples and are not presented as real news.

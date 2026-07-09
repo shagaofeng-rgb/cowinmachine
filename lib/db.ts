@@ -4,7 +4,8 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { canonicalizeUrl, fingerprint } from "./core.mjs";
 
-const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), "data", "site.db");
+const defaultDbPath = process.env.VERCEL ? "/tmp/site.db" : path.join(process.cwd(), "data", "site.db");
+const dbPath = process.env.DATABASE_PATH || defaultDbPath;
 let instance: Database.Database | null = null;
 
 export type Product = {
