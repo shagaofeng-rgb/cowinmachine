@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { canonicalizeUrl, fingerprint } from "./core.mjs";
+import ltpkCatalog from "../data/ltpk-catalog.json";
 
 const defaultDbPath = process.env.VERCEL ? "/tmp/site.db" : path.join(process.cwd(), "data", "site.db");
 const dbPath = process.env.DATABASE_PATH || defaultDbPath;
@@ -62,6 +63,28 @@ export type Article = {
   relevance_score: number;
   generation_model: string;
   generation_prompt_version: string;
+};
+
+type LtpkCatalog = {
+  categories: Array<{ slug: string; name: string; summary: string }>;
+  products: Array<{
+    name: string;
+    english_name: string;
+    sku: string;
+    slug: string;
+    category_slug: string;
+    summary: string;
+    description: string;
+    applications: string;
+    features: string;
+    specifications: string;
+    tags: string;
+    image_url: string;
+    source_url: string;
+    is_featured: number;
+    seo_title: string;
+    seo_description: string;
+  }>;
 };
 
 export function db() {
@@ -411,40 +434,95 @@ function seed(sqlite: Database.Database) {
     }
   }
 
-  const existing = sqlite.prepare("SELECT COUNT(*) as count FROM product_categories").get() as { count: number };
-  if (existing.count > 0) return;
-
-  const catStmt = sqlite.prepare(`INSERT INTO product_categories
-    (name, english_name, slug, summary, description, image_url, sort_order, seo_title, seo_description)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-  const categories = [
-    ["自动立式包装机系列", "Automatic Vertical Packaging Machine Series", "automatic-vertical-packaging-machine-series", "适用于颗粒、粉末、液体和酱料的自动计量包装。"],
-    ["封口机系列", "Sealing Machine Series", "sealing-machine-series", "面向食品、日化、医药包装的封口设备。"],
-    ["喷码与打码设备", "Coding Machine Series", "coding-machine-series", "为包装线提供日期、批号和追溯编码。"],
-  ];
-  categories.forEach(([name, english, slug, summary], index) => {
-    catStmt.run(name, english, slug, summary, `${summary} 后台支持 SEO、导航显示、排序和多语言扩展。`, externalImage(index), index, `${english} | Lianteng`, summary);
-  });
-
-  const productStmt = sqlite.prepare(`INSERT INTO products
-    (name, english_name, sku, slug, category_id, summary, description, applications, features, specifications, tags, image_url, is_featured, seo_title, seo_description)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-  const productRows = [
-    ["LT-320K 颗粒包装机", "LT-320K Granule Packing Machine", "LT-320K", "lt-320k-granule-packing-machine", 1, "面向颗粒物料的小袋自动包装设备。", "适用于食品、药品和日化颗粒物料的计量、制袋、填充、封合和切断。", "茶叶、糖果、调味料、药片、五金小件", "自动计量,稳定封口,可扩展打码,适合连续生产", "包装速度: 20-60 bags/min; 袋宽: 50-150mm", "granule,packing,vertical,food", externalImage(3), 1],
-    ["连续薄膜封口机", "Continuous Film Sealing Machine", "DBF-1000", "continuous-film-sealing-machine", 2, "用于袋装产品连续封口。", "适用于塑料袋、复合膜袋等包装材料的连续热封，可与输送线配合使用。", "食品袋、药品袋、日用品袋", "连续作业,封口平整,温控稳定,维护简单", "封口宽度: 6-12mm; 速度: 0-12m/min", "sealing,film,bags,food", externalImage(4), 1],
-    ["光纤激光喷码机", "Fiber Laser Coding Machine", "FL-20W", "fiber-laser-coding-machine", 3, "用于金属和硬质材料永久标识。", "适用于包装产线上的日期、批号、二维码和追溯码标刻。", "瓶盖、金属件、电子元件、包装盒", "免耗材,标识清晰,适合高速产线,支持追溯码", "功率: 20W; 标刻范围: 110x110mm", "coding,laser,traceability,printing", externalImage(5), 1],
-  ];
-  for (const row of productRows) {
-    productStmt.run(...row, `${row[1]} | Packaging Machinery`, `${row[5]} Learn specifications, applications and request a quote.`);
-  }
-
+  seedLtpkCatalog(sqlite);
   sqlite.prepare("INSERT OR IGNORE INTO news_categories(name, slug) VALUES (?, ?)").run("Industry News", "industry-news");
   seedArticles(sqlite);
+  ensureArticleProductRelations(sqlite);
   seedSettings(sqlite);
 }
 
+function seedLtpkCatalog(sqlite: Database.Database) {
+  const catalog = ltpkCatalog as LtpkCatalog;
+  const categoryStmt = sqlite.prepare(`INSERT OR IGNORE INTO product_categories
+    (name, english_name, slug, summary, description, image_url, sort_order, seo_title, seo_description)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+  const categoryImage = new Map<string, string>();
+  for (const product of catalog.products) {
+    if (!categoryImage.has(product.category_slug)) categoryImage.set(product.category_slug, product.image_url);
+  }
+  catalog.categories.forEach((category, index) => {
+    categoryStmt.run(
+      category.name,
+      category.name,
+      category.slug,
+      category.summary,
+      `${category.summary} This catalog section is migrated from the original LTPK website and optimized for B2B inquiries.`,
+      categoryImage.get(category.slug) || "https://www.ltpk.com/uploads/2508/prpoducts-banner.jpg",
+      index,
+      `${category.name} | Lianteng Packaging Machinery`,
+      category.summary,
+    );
+  });
+
+  const categoryRows = sqlite.prepare("SELECT id, slug FROM product_categories").all() as Array<{ id: number; slug: string }>;
+  const categoryIds = new Map(categoryRows.map((row) => [row.slug, row.id]));
+  const productStmt = sqlite.prepare(`INSERT INTO products
+    (name, english_name, sku, slug, category_id, summary, description, applications, features, specifications, tags, image_url, is_featured, seo_title, seo_description)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(slug) DO UPDATE SET
+      name = excluded.name,
+      english_name = excluded.english_name,
+      sku = excluded.sku,
+      category_id = excluded.category_id,
+      summary = excluded.summary,
+      description = excluded.description,
+      applications = excluded.applications,
+      features = excluded.features,
+      specifications = excluded.specifications,
+      tags = excluded.tags,
+      image_url = excluded.image_url,
+      status = 'published',
+      is_featured = excluded.is_featured,
+      seo_title = excluded.seo_title,
+      seo_description = excluded.seo_description,
+      updated_at = CURRENT_TIMESTAMP`);
+  for (const product of catalog.products) {
+    const categoryId = categoryIds.get(product.category_slug);
+    if (!categoryId) continue;
+    const sku = uniqueSku(sqlite, product.sku, product.slug);
+    productStmt.run(
+      product.name,
+      product.english_name,
+      sku,
+      product.slug,
+      categoryId,
+      product.summary,
+      product.description,
+      product.applications,
+      product.features,
+      product.specifications,
+      product.tags,
+      product.image_url,
+      product.is_featured,
+      product.seo_title,
+      product.seo_description,
+    );
+  }
+
+  sqlite.prepare("UPDATE products SET status = 'archived' WHERE slug = ?").run("lt-320k-granule-packing-machine");
+  sqlite
+    .prepare("INSERT OR REPLACE INTO system_settings(key, value, updated_at) VALUES ('catalog_source', ?, CURRENT_TIMESTAMP)")
+    .run("ltpk.com migrated catalog: 183 products / 36 categories");
+}
+
+function uniqueSku(sqlite: Database.Database, sku: string, slug: string) {
+  const conflict = sqlite.prepare("SELECT slug FROM products WHERE sku = ? AND slug <> ?").get(sku, slug) as { slug: string } | undefined;
+  if (!conflict) return sku;
+  return `${sku.slice(0, 48)}-${slug.slice(0, 10)}`.slice(0, 64);
+}
+
 function seedArticles(sqlite: Database.Database) {
-  const product = sqlite.prepare("SELECT id, english_name FROM products ORDER BY id LIMIT 1").get() as { id: number; english_name: string };
+  const product = sqlite.prepare("SELECT id, english_name FROM products WHERE status = 'published' ORDER BY is_featured DESC, id LIMIT 1").get() as { id: number; english_name: string };
   const sourceUrl = "https://example.com/open-industry-source/packaging-automation-market-note";
   const canonical = canonicalizeUrl(sourceUrl);
   const publishedAt = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
@@ -521,6 +599,44 @@ function seedArticles(sqlite: Database.Database) {
   sqlite.prepare("INSERT OR IGNORE INTO blog_products(blog_id, product_id, relevance_score, relationship_reason) VALUES (?, ?, ?, ?)").run(blog.id, product.id, 0.75, "博客说明产品、内容和询盘系统之间的关系");
 }
 
+function ensureArticleProductRelations(sqlite: Database.Database) {
+  const product = sqlite.prepare("SELECT id, english_name FROM products WHERE status = 'published' ORDER BY is_featured DESC, id LIMIT 1").get() as
+    | { id: number; english_name: string }
+    | undefined;
+  if (!product) return;
+  const newsRows = sqlite
+    .prepare(
+      `SELECT n.id FROM news_articles n
+       LEFT JOIN news_products np ON np.news_id = n.id
+       LEFT JOIN products p ON p.id = np.product_id AND p.status = 'published' AND p.deleted_at IS NULL
+       WHERE n.status = 'published' AND n.deleted_at IS NULL
+       GROUP BY n.id
+       HAVING COUNT(p.id) = 0`,
+    )
+    .all() as Array<{ id: number }>;
+  for (const row of newsRows) {
+    sqlite
+      .prepare("INSERT OR IGNORE INTO news_products(news_id, product_id, relevance_score, relationship_reason) VALUES (?, ?, ?, ?)")
+      .run(row.id, product.id, 0.65, `Auto-linked to ${product.english_name} during catalog migration`);
+  }
+
+  const blogRows = sqlite
+    .prepare(
+      `SELECT b.id FROM blog_articles b
+       LEFT JOIN blog_products bp ON bp.blog_id = b.id
+       LEFT JOIN products p ON p.id = bp.product_id AND p.status = 'published' AND p.deleted_at IS NULL
+       WHERE b.status = 'published' AND b.deleted_at IS NULL
+       GROUP BY b.id
+       HAVING COUNT(p.id) = 0`,
+    )
+    .all() as Array<{ id: number }>;
+  for (const row of blogRows) {
+    sqlite
+      .prepare("INSERT OR IGNORE INTO blog_products(blog_id, product_id, relevance_score, relationship_reason) VALUES (?, ?, ?, ?)")
+      .run(row.id, product.id, 0.65, `Auto-linked to ${product.english_name} during catalog migration`);
+  }
+}
+
 function seedSettings(sqlite: Database.Database) {
   const stmt = sqlite.prepare("INSERT OR IGNORE INTO system_settings(key, value) VALUES (?, ?)");
   for (const setting of [
@@ -566,6 +682,20 @@ export function verifyPassword(password: string, stored: string) {
 
 export function products() {
   return db().prepare(`SELECT p.*, c.english_name as category_name FROM products p JOIN product_categories c ON c.id = p.category_id WHERE p.status = 'published' AND p.deleted_at IS NULL ORDER BY p.is_featured DESC, p.updated_at DESC`).all() as Product[];
+}
+
+export function productCategories() {
+  return db()
+    .prepare(
+      `SELECT c.*, COUNT(p.id) as product_count
+       FROM product_categories c
+       LEFT JOIN products p ON p.category_id = c.id AND p.status = 'published' AND p.deleted_at IS NULL
+       WHERE c.enabled = 1 AND c.deleted_at IS NULL
+       GROUP BY c.id
+       HAVING product_count > 0
+       ORDER BY c.sort_order ASC, c.english_name ASC`,
+    )
+    .all() as Array<{ id: number; name: string; english_name: string; slug: string; summary: string; image_url: string; product_count: number }>;
 }
 
 export function productBySlug(slug: string) {

@@ -29,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <footer className="footer">
           <strong>Wenzhou Lianteng Packaging Machinery Co., LTD</strong>
-          <span>No.405-1 Xia Jin Road, Wenzhou, Zhejiang, China</span>
+          <span>No.405-1 Xia Jin Road, Jinzhu Industrial Zone, South White Elephant, Ouhai District, Wenzhou City, Zhejiang Province, China</span>
+          <a href="tel:+8657788309030">(86)-0577-88309030</a>
           <a href="mailto:lianteng@31819.com">lianteng@31819.com</a>
         </footer>
       </body>
