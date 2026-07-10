@@ -21,7 +21,7 @@ async function runAuthorizedSitemapJob(request: Request, fallbackTrigger: "cron"
     trigger: user ? "manual" : fallbackTrigger,
     force: url.searchParams.get("force") === "1",
     dryRun: url.searchParams.get("dryRun") === "1",
-    submit: url.searchParams.get("submit") === "1",
+    submit: url.searchParams.get("submit") === "1" || (!user && fallbackTrigger === "cron"),
     verbose: url.searchParams.get("verbose") === "1",
   });
 
