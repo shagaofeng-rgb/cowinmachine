@@ -1,6 +1,7 @@
 import { currentUser } from "@/lib/auth";
 import { articles, db, products } from "@/lib/db";
 import { googleSeoConfig, sitemapUrl } from "@/lib/google-seo";
+import { latestSitemapRuns, sitemapIndexUrl } from "@/lib/sitemap";
 
 export default async function AdminPage() {
   const user = await currentUser();
@@ -19,6 +20,7 @@ export default async function AdminPage() {
   const audits = sqlite.prepare("SELECT * FROM news_publication_audits ORDER BY checked_at DESC LIMIT 10").all() as Array<Record<string, string | number>>;
   const sync = sqlite.prepare("SELECT * FROM sync_sources ORDER BY id").all() as Array<Record<string, string | number>>;
   const seoJobs = sqlite.prepare("SELECT * FROM sync_jobs WHERE source_name = 'Google Search Console' ORDER BY started_at DESC LIMIT 8").all() as Array<Record<string, string | number>>;
+  const sitemapRuns = latestSitemapRuns(8);
   const seoConfig = googleSeoConfig();
   return (
     <div className="admin-shell">
@@ -57,6 +59,21 @@ export default async function AdminPage() {
           <DataTable rows={sync} columns={["name", "source_type", "configured", "connection_status", "last_success_at", "recent_error"]} />
           <h3>Google SEO 同步记录</h3>
           <DataTable rows={seoJobs} columns={["id", "status", "started_at", "completed_at", "success_count", "failure_count", "error_message"]} />
+        </section>
+        <section id="sitemap">
+          <h2>Sitemap 自动生成</h2>
+          <div className="card">
+            <div className="card-body">
+              <h3>Google Sitemap</h3>
+              <p className="meta">公开地址：{sitemapIndexUrl()} · GSC 提交地址：{sitemapUrl()}</p>
+              <form action="/api/admin/sitemap/run" method="post">
+                <button className="button">手动生成并记录日志</button>
+                <a className="button secondary" href="/api/admin/sitemap/run?dryRun=1">Dry Run</a>
+                <a className="button secondary" href="/api/admin/sitemap/run?submit=1">生成并提交 GSC</a>
+              </form>
+            </div>
+          </div>
+          <DataTable rows={sitemapRuns} columns={["id", "status", "trigger_type", "started_at", "completed_at", "url_count", "split", "submitted_to_google", "google_result", "error_message"]} />
         </section>
         <section id="logs"><h2>News 任务与每日审计</h2><DataTable rows={jobs} columns={["id", "job_type", "status", "retry_count", "error_message"]} /><DataTable rows={audits} columns={["date", "target_count", "published_count", "missing_count", "status"]} /></section>
       </main>

@@ -1,9 +1,11 @@
-import { db, articles, products, relatedProductsForArticle } from "../lib/db";
+import { db, articles, productCategories, products, relatedProductsForArticle } from "../lib/db";
+import { buildSitemapBundle } from "../lib/sitemap";
 
 const base = process.env.SITE_URL || "http://localhost:3000";
 const pages = [
   "/",
   "/products",
+  ...productCategories().map((category) => `/products/category/${category.slug}`),
   ...products().map((p) => `/products/${p.slug}`),
   "/news",
   ...articles("news").map((a) => `/news/${a.slug}`),
@@ -12,6 +14,7 @@ const pages = [
   "/search?q=packing",
   "/contact",
   "/sitemap.xml",
+  ...buildSitemapBundle().files.map((file) => `/${file.name}`),
   "/rss.xml",
   "/robots.txt",
   "/api/health",
@@ -23,6 +26,11 @@ async function main() {
   for (const product of products()) {
     if (!product.seo_title || !product.seo_description) issues.push({ severity: "P2", module: "SEO", problem: `Product SEO missing: ${product.slug}` });
   }
+  const bundle = buildSitemapBundle();
+  if (bundle.entries.some((entry) => entry.loc.includes("?") || entry.loc.includes("/admin") || entry.loc.includes("/search"))) {
+    issues.push({ severity: "P1", module: "Sitemap", problem: "Sitemap contains non-canonical or blocked URLs" });
+  }
+  if (!bundle.indexXml.includes("sitemapindex")) issues.push({ severity: "P1", module: "Sitemap", problem: "Sitemap index missing" });
   for (const article of articles("news")) {
     if (!article.cover_image_url || !article.cover_image_source_url) issues.push({ severity: "P1", module: "News 图片", problem: `News image source missing: ${article.slug}` });
     if (relatedProductsForArticle("news", article.id).length === 0) issues.push({ severity: "P1", module: "News 产品关联", problem: `News relation missing: ${article.slug}` });

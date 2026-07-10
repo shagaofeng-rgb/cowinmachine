@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/*.test.mjs",
+    "test": "node --import tsx --test tests/*.test.mjs",
     "self-check": "tsx scripts/self-check.ts",
-    "db:init": "tsx scripts/init-db.ts"
+    "db:init": "tsx scripts/init-db.ts",
+    "sitemap:generate": "tsx scripts/sitemap.ts",
+    "sitemap:dry-run": "tsx scripts/sitemap.ts --dry-run --verbose",
+    "sitemap:submit": "tsx scripts/sitemap.ts --submit --verbose"
   },
   "dependencies": {
     "@types/better-sqlite3": "^7.6.13",

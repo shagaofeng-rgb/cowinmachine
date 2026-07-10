@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import fs from "node:fs";
 import { db, products, articles, audit } from "./db";
 import { siteUrl } from "./seo";
 
@@ -32,19 +33,24 @@ export type GoogleSeoSyncResult = {
 };
 
 export function googleSeoConfig() {
-  const clientEmail = process.env.GSC_CLIENT_EMAIL || process.env.GOOGLE_CLIENT_EMAIL || "";
-  const privateKey = process.env.GSC_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY || "";
+  const credentials = readServiceAccountCredentials();
+  const clientEmail = process.env.GSC_CLIENT_EMAIL || process.env.GOOGLE_CLIENT_EMAIL || credentials.clientEmail || "";
+  const privateKey = process.env.GSC_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY || credentials.privateKey || "";
   const configured = Boolean(clientEmail && privateKey);
   return {
+    enabled: process.env.GOOGLE_SEARCH_CONSOLE_ENABLED === "true" || process.env.GSC_SUBMIT_ENABLED === "true",
     clientEmail,
     privateKey,
-    siteUrl: normalizeSiteUrl(process.env.GSC_SITE_URL || process.env.SITE_URL || "https://cowinmachine.com/"),
+    siteUrl: normalizeSiteUrl(process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL || process.env.GSC_SITE_URL || process.env.SITE_URL || "sc-domain:cowinmachine.com"),
+    sitemapUrl: process.env.GOOGLE_SEARCH_CONSOLE_SITEMAP_URL || siteUrl("/sitemap.xml"),
     configured,
   };
 }
 
 export function sitemapUrl() {
-  const propertyUrl = googleSeoConfig().siteUrl;
+  const config = googleSeoConfig();
+  if (config.sitemapUrl) return config.sitemapUrl;
+  const propertyUrl = config.siteUrl;
   if (propertyUrl.startsWith("sc-domain:")) return siteUrl("/sitemap.xml");
   return `${propertyUrl.replace(/\/$/, "")}/sitemap.xml`;
 }
@@ -140,6 +146,77 @@ export async function syncGoogleSeo(): Promise<GoogleSeoSyncResult> {
   }
 }
 
+export type GoogleSitemapSubmitResult = {
+  ok: boolean;
+  configured: boolean;
+  enabled: boolean;
+  siteUrl: string;
+  sitemapUrl: string;
+  submittedSitemap: boolean;
+  message: string;
+};
+
+type GoogleSubmitOptions = {
+  fetchImpl?: typeof fetch;
+  tokenFactory?: (clientEmail: string, privateKey: string, scopes: string[]) => Promise<string>;
+  retries?: number;
+  timeoutMs?: number;
+};
+
+export async function submitGoogleSitemap(options: GoogleSubmitOptions = {}): Promise<GoogleSitemapSubmitResult> {
+  const sqlite = db();
+  const config = googleSeoConfig();
+  const currentSitemapUrl = sitemapUrl();
+  const jobId = `gsc-sitemap-${Date.now()}`;
+  sqlite.prepare("INSERT INTO sync_jobs(id, source_name, status, started_at) VALUES (?, 'Google Search Console', 'running', ?)").run(jobId, new Date().toISOString());
+
+  try {
+    if (!config.enabled) {
+      const message = "Google Search Console sitemap submission is disabled.";
+      await updateSitemapSyncJob(jobId, "skipped", message);
+      return { ok: true, configured: config.configured, enabled: false, siteUrl: config.siteUrl, sitemapUrl: currentSitemapUrl, submittedSitemap: false, message };
+    }
+    if (!config.configured) throw new Error("缺少 GSC_CLIENT_EMAIL/GSC_PRIVATE_KEY 或 GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_PATH。");
+
+    await assertPublicSitemapReachable(currentSitemapUrl, options.fetchImpl || fetch, options.timeoutMs || 10_000);
+    const token = await (options.tokenFactory || createAccessToken)(config.clientEmail, config.privateKey, [WEBMASTERS_SCOPE]);
+    await retry(
+      () => submitSitemap(token, config.siteUrl, currentSitemapUrl, options.fetchImpl),
+      options.retries ?? 2,
+    );
+
+    const completedAt = new Date().toISOString();
+    sqlite
+      .prepare("UPDATE sync_jobs SET status = 'success', completed_at = ?, success_count = 1, failure_count = 0, error_message = NULL WHERE id = ?")
+      .run(completedAt, jobId);
+    await updateSyncSource("Sitemap 提交成功", 1, completedAt);
+    audit("提交 Sitemap", "SEO", "success", jobId, currentSitemapUrl);
+    return {
+      ok: true,
+      configured: true,
+      enabled: true,
+      siteUrl: config.siteUrl,
+      sitemapUrl: currentSitemapUrl,
+      submittedSitemap: true,
+      message: "Google Search Console sitemap submitted successfully.",
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Google Search Console sitemap submission failed.";
+    await updateSitemapSyncJob(jobId, "failed", message);
+    await updateSyncSource("Sitemap 提交失败", config.configured ? 1 : 0, undefined, message);
+    audit("提交 Sitemap", "SEO", "failed", jobId, message);
+    return {
+      ok: false,
+      configured: config.configured,
+      enabled: config.enabled,
+      siteUrl: config.siteUrl,
+      sitemapUrl: currentSitemapUrl,
+      submittedSitemap: false,
+      message,
+    };
+  }
+}
+
 async function updateSyncSource(status: string, configured: 0 | 1, lastSuccessAt?: string, recentError?: string) {
   db()
     .prepare(
@@ -184,11 +261,18 @@ async function createAccessToken(clientEmail: string, privateKey: string, scopes
   return payload.access_token;
 }
 
-async function submitSitemap(token: string, propertyUrl: string, feedpath: string) {
+async function updateSitemapSyncJob(jobId: string, status: "skipped" | "failed", message: string) {
+  db()
+    .prepare("UPDATE sync_jobs SET status = ?, completed_at = ?, failure_count = ?, error_message = ? WHERE id = ?")
+    .run(status, new Date().toISOString(), status === "failed" ? 1 : 0, message, jobId);
+}
+
+async function submitSitemap(token: string, propertyUrl: string, feedpath: string, fetchImpl: typeof fetch = fetch) {
   const response = await googleFetch(
     token,
     `https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(propertyUrl)}/sitemaps/${encodeURIComponent(feedpath)}`,
     { method: "PUT" },
+    fetchImpl,
   );
   if (!response.ok) throw new Error(await googleErrorMessage(response, "提交 sitemap 失败"));
 }
@@ -235,14 +319,40 @@ async function querySearchAnalytics(token: string, propertyUrl: string) {
   return Array.isArray(payload.rows) ? payload.rows.length : 0;
 }
 
-async function googleFetch(token: string, url: string, init: RequestInit = {}) {
-  return fetch(url, {
+async function googleFetch(token: string, url: string, init: RequestInit = {}, fetchImpl: typeof fetch = fetch) {
+  return fetchImpl(url, {
     ...init,
     headers: {
       authorization: `Bearer ${token}`,
       ...(init.headers || {}),
     },
   });
+}
+
+async function assertPublicSitemapReachable(url: string, fetchImpl: typeof fetch, timeoutMs: number) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetchImpl(url, { method: "GET", signal: controller.signal });
+    if (!response.ok) throw new Error(`Sitemap URL is not reachable: HTTP ${response.status}`);
+    const contentType = response.headers.get("content-type") || "";
+    if (!contentType.includes("xml")) throw new Error(`Sitemap URL returned unexpected content-type: ${contentType || "unknown"}`);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function retry<T>(operation: () => Promise<T>, retries: number) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (attempt < retries) await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
+    }
+  }
+  throw lastError;
 }
 
 async function googleErrorMessage(response: Response, fallback: string) {
@@ -259,6 +369,17 @@ async function googleErrorMessage(response: Response, fallback: string) {
 function normalizeSiteUrl(value: string) {
   if (value.startsWith("sc-domain:")) return value;
   return `${value.replace(/\/$/, "")}/`;
+}
+
+function readServiceAccountCredentials() {
+  const credentialsPath = process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_PATH || process.env.GOOGLE_APPLICATION_CREDENTIALS || "";
+  if (!credentialsPath) return { clientEmail: "", privateKey: "" };
+  try {
+    const payload = JSON.parse(fs.readFileSync(credentialsPath, "utf8")) as { client_email?: string; private_key?: string };
+    return { clientEmail: payload.client_email || "", privateKey: payload.private_key || "" };
+  } catch {
+    return { clientEmail: "", privateKey: "" };
+  }
 }
 
 function normalizePrivateKey(key: string) {

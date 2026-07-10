@@ -4,8 +4,7 @@ import { syncGoogleSeo } from "@/lib/google-seo";
 
 export async function POST(request: Request) {
   const user = await currentUser();
-  const cronSecret = request.headers.get("x-cron-secret");
-  if (!user && (!process.env.CRON_SECRET || cronSecret !== process.env.CRON_SECRET)) {
+  if (!user && !hasCronSecret(request)) {
     return NextResponse.json({ ok: false, message: "未授权" }, { status: 401 });
   }
 
@@ -18,4 +17,10 @@ export async function POST(request: Request) {
     return NextResponse.redirect(url, 303);
   }
   return NextResponse.json(result, { status: result.ok ? 200 : 500 });
+}
+
+function hasCronSecret(request: Request) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+  return request.headers.get("authorization") === `Bearer ${secret}` || request.headers.get("x-cron-secret") === secret;
 }

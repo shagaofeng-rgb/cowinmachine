@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/admin/sitemap/run",
+      "schedule": "20 1 * * *"
+    },
+    {
       "path": "/api/admin/news/run",
       "schedule": "0 2,6,10,14,18 * * *"
     }

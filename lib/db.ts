@@ -389,6 +389,31 @@ function migrate(sqlite: Database.Database) {
       retry_count INTEGER NOT NULL DEFAULT 0,
       error_message TEXT
     );
+    CREATE TABLE IF NOT EXISTS sitemap_runs (
+      id TEXT PRIMARY KEY,
+      trigger_type TEXT NOT NULL,
+      status TEXT NOT NULL,
+      started_at TEXT NOT NULL,
+      completed_at TEXT,
+      duration_ms INTEGER,
+      sitemap_files TEXT NOT NULL DEFAULT '[]',
+      url_count INTEGER NOT NULL DEFAULT 0,
+      success_count INTEGER NOT NULL DEFAULT 0,
+      skipped_count INTEGER NOT NULL DEFAULT 0,
+      error_count INTEGER NOT NULL DEFAULT 0,
+      file_size_bytes INTEGER NOT NULL DEFAULT 0,
+      split INTEGER NOT NULL DEFAULT 0,
+      submitted_to_google INTEGER NOT NULL DEFAULT 0,
+      google_result TEXT,
+      diff_summary TEXT NOT NULL DEFAULT '{}',
+      error_message TEXT
+    );
+    CREATE TABLE IF NOT EXISTS sitemap_locks (
+      lock_name TEXT PRIMARY KEY,
+      owner TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      acquired_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
     CREATE TABLE IF NOT EXISTS audit_logs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_email TEXT,
@@ -443,9 +468,20 @@ function seed(sqlite: Database.Database) {
 
 function seedLtpkCatalog(sqlite: Database.Database) {
   const catalog = ltpkCatalog as LtpkCatalog;
-  const categoryStmt = sqlite.prepare(`INSERT OR IGNORE INTO product_categories
-    (name, english_name, slug, summary, description, image_url, sort_order, seo_title, seo_description)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+  const catalogUpdatedAt = "2026-07-09T00:00:00.000Z";
+  const categoryStmt = sqlite.prepare(`INSERT INTO product_categories
+    (name, english_name, slug, summary, description, image_url, sort_order, seo_title, seo_description, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(slug) DO UPDATE SET
+      name = excluded.name,
+      english_name = excluded.english_name,
+      summary = excluded.summary,
+      description = excluded.description,
+      image_url = excluded.image_url,
+      sort_order = excluded.sort_order,
+      seo_title = excluded.seo_title,
+      seo_description = excluded.seo_description,
+      updated_at = excluded.updated_at`);
   const categoryImage = new Map<string, string>();
   for (const product of catalog.products) {
     if (!categoryImage.has(product.category_slug)) categoryImage.set(product.category_slug, product.image_url);
@@ -461,14 +497,16 @@ function seedLtpkCatalog(sqlite: Database.Database) {
       index,
       `${category.name} | Lianteng Packaging Machinery`,
       category.summary,
+      catalogUpdatedAt,
+      catalogUpdatedAt,
     );
   });
 
   const categoryRows = sqlite.prepare("SELECT id, slug FROM product_categories").all() as Array<{ id: number; slug: string }>;
   const categoryIds = new Map(categoryRows.map((row) => [row.slug, row.id]));
   const productStmt = sqlite.prepare(`INSERT INTO products
-    (name, english_name, sku, slug, category_id, summary, description, applications, features, specifications, tags, image_url, is_featured, seo_title, seo_description)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (name, english_name, sku, slug, category_id, summary, description, applications, features, specifications, tags, image_url, is_featured, seo_title, seo_description, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(slug) DO UPDATE SET
       name = excluded.name,
       english_name = excluded.english_name,
@@ -485,7 +523,7 @@ function seedLtpkCatalog(sqlite: Database.Database) {
       is_featured = excluded.is_featured,
       seo_title = excluded.seo_title,
       seo_description = excluded.seo_description,
-      updated_at = CURRENT_TIMESTAMP`);
+      updated_at = excluded.updated_at`);
   for (const product of catalog.products) {
     const categoryId = categoryIds.get(product.category_slug);
     if (!categoryId) continue;
@@ -506,6 +544,8 @@ function seedLtpkCatalog(sqlite: Database.Database) {
       product.is_featured,
       product.seo_title,
       product.seo_description,
+      catalogUpdatedAt,
+      catalogUpdatedAt,
     );
   }
 
@@ -695,7 +735,34 @@ export function productCategories() {
        HAVING product_count > 0
        ORDER BY c.sort_order ASC, c.english_name ASC`,
     )
-    .all() as Array<{ id: number; name: string; english_name: string; slug: string; summary: string; image_url: string; product_count: number }>;
+    .all() as Array<{ id: number; name: string; english_name: string; slug: string; summary: string; image_url: string; product_count: number; updated_at: string }>;
+}
+
+export function productCategoryBySlug(slug: string) {
+  return db()
+    .prepare(
+      `SELECT c.*, COUNT(p.id) as product_count
+       FROM product_categories c
+       LEFT JOIN products p ON p.category_id = c.id AND p.status = 'published' AND p.deleted_at IS NULL
+       WHERE c.slug = ? AND c.enabled = 1 AND c.deleted_at IS NULL
+       GROUP BY c.id
+       HAVING product_count > 0`,
+    )
+    .get(slug) as
+    | { id: number; name: string; english_name: string; slug: string; summary: string; description: string; image_url: string; product_count: number; updated_at: string }
+    | undefined;
+}
+
+export function productsByCategorySlug(slug: string) {
+  return db()
+    .prepare(
+      `SELECT p.*, c.english_name as category_name
+       FROM products p
+       JOIN product_categories c ON c.id = p.category_id
+       WHERE c.slug = ? AND p.status = 'published' AND p.deleted_at IS NULL
+       ORDER BY p.is_featured DESC, p.updated_at DESC, p.english_name ASC`,
+    )
+    .all(slug) as Product[];
 }
 
 export function productBySlug(slug: string) {
