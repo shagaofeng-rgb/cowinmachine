@@ -8,6 +8,12 @@ export const metadata: Metadata = {
     template: "%s | Lianteng Packaging Machinery",
   },
   description: "B2B packaging machinery, sealing machines, coding machines and automated packaging solutions.",
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
+    shortcut: [{ url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "180x180" }],
+  },
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +22,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a className="skip" href="#main">Skip to content</a>
         <header className="site-header">
-          <a className="brand" href="/">Lianteng Packaging</a>
+          <a className="brand" href="/" aria-label="Lianteng Packaging home">
+            <img className="brand-logo" src="/brand/cowin-logo.jpg" alt="" width="64" height="64" />
+            <span className="brand-name">Lianteng Packaging</span>
+          </a>
           <nav aria-label="Main navigation">
             <a href="/products">Products</a>
             <a href="/news">News</a>
