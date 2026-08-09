@@ -2,7 +2,6 @@ import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { canonicalizeUrl, fingerprint } from "./core.mjs";
 import ltpkCatalog from "../data/ltpk-catalog.json";
 
 const defaultDbPath = process.env.VERCEL ? "/tmp/site.db" : path.join(process.cwd(), "data", "site.db");
@@ -244,41 +243,6 @@ function migrate(sqlite: Database.Database) {
       display_order INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY(news_id, product_id)
     );
-    CREATE TABLE IF NOT EXISTS news_sources (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      domain TEXT NOT NULL UNIQUE,
-      publisher_name TEXT NOT NULL,
-      source_type TEXT NOT NULL,
-      rss_url TEXT,
-      language TEXT NOT NULL,
-      country TEXT NOT NULL,
-      credibility_score REAL NOT NULL DEFAULT 0.7,
-      enabled INTEGER NOT NULL DEFAULT 1,
-      allowed_for_auto_publish INTEGER NOT NULL DEFAULT 0,
-      last_fetched_at TEXT,
-      failure_count INTEGER NOT NULL DEFAULT 0
-    );
-    CREATE TABLE IF NOT EXISTS news_jobs (
-      id TEXT PRIMARY KEY,
-      job_type TEXT NOT NULL,
-      status TEXT NOT NULL,
-      scheduled_at TEXT NOT NULL,
-      started_at TEXT,
-      completed_at TEXT,
-      retry_count INTEGER NOT NULL DEFAULT 0,
-      error_message TEXT,
-      metadata TEXT NOT NULL DEFAULT '{}'
-    );
-    CREATE TABLE IF NOT EXISTS news_publication_audits (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      date TEXT NOT NULL,
-      timezone TEXT NOT NULL,
-      target_count INTEGER NOT NULL,
-      published_count INTEGER NOT NULL,
-      missing_count INTEGER NOT NULL,
-      status TEXT NOT NULL,
-      checked_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
     CREATE TABLE IF NOT EXISTS blog_articles (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
@@ -460,9 +424,6 @@ function seed(sqlite: Database.Database) {
   }
 
   seedLtpkCatalog(sqlite);
-  sqlite.prepare("INSERT OR IGNORE INTO news_categories(name, slug) VALUES (?, ?)").run("Industry News", "industry-news");
-  seedArticles(sqlite);
-  ensureArticleProductRelations(sqlite);
   seedSettings(sqlite);
 }
 
@@ -561,138 +522,18 @@ function uniqueSku(sqlite: Database.Database, sku: string, slug: string) {
   return `${sku.slice(0, 48)}-${slug.slice(0, 10)}`.slice(0, 64);
 }
 
-function seedArticles(sqlite: Database.Database) {
-  const product = sqlite.prepare("SELECT id, english_name FROM products WHERE status = 'published' ORDER BY is_featured DESC, id LIMIT 1").get() as { id: number; english_name: string };
-  const sourceUrl = "https://example.com/open-industry-source/packaging-automation-market-note";
-  const canonical = canonicalizeUrl(sourceUrl);
-  const publishedAt = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
-  const image = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1400&q=80";
-  const content = `<h2>Core Answer</h2><p>This is a clearly marked demonstration article for validating the News system. It is not presented as a real external news report.</p><h2>Source Facts</h2><p>The system stores source URL, canonical URL, publication time, fetch time, source fingerprint and product relationship for future RSS or News API integration.</p><h2>Our View</h2><p>Packaging machinery buyers care about stable automation, traceability and after-sales support. News content should connect industry changes to real product pages without copying original articles.</p><h2>How We Can Help</h2><p>${product.english_name} helps customers build reliable small-bag packaging workflows and can integrate with coding, sealing and conveying equipment.</p>`;
-  sqlite.prepare(`INSERT OR IGNORE INTO news_articles
-    (title, slug, excerpt, content, status, cover_image_url, cover_image_source_url, cover_image_page_url, cover_image_alt,
-     author_name, category_id, published_at, seo_title, seo_description, canonical_url, primary_keyword, secondary_keywords,
-     geo_summary, key_takeaways, source_title, source_author, source_publisher, source_url, canonical_source_url,
-     source_language, source_published_at, source_fetched_at, source_timezone, source_fingerprint, event_fingerprint,
-     content_hash, relevance_score, credibility_score, generation_model, generation_prompt_version)
-    VALUES (?, ?, ?, ?, 'published', ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .run(
-      "Packaging Automation News System Demonstration",
-      "packaging-automation-news-system-demonstration",
-      "A clearly marked demonstration article for validating News SEO, GEO, product linking and source fields.",
-      content,
-      image,
-      "https://unsplash.com/",
-      "https://unsplash.com/photos/person-using-machine",
-      "Packaging automation line image from an external open image source",
-      "Lianteng Editorial",
-      publishedAt,
-      "Packaging Automation News System Demonstration | Lianteng",
-      "A non-factual demonstration News article used to verify source fields, product links, SEO, GEO and JSON-LD.",
-      "/news/packaging-automation-news-system-demonstration",
-      "packaging automation",
-      "packaging machine,news automation,source traceability",
-      "Demonstrates how source facts, analysis and related packaging machinery are exposed for AI search systems.",
-      "Source traceability; product relationship; SEO metadata; JSON-LD; RSS and Sitemap coverage",
-      "Packaging automation market note",
-      "Example Source",
-      "Example Public Source",
-      sourceUrl,
-      canonical,
-      "en",
-      publishedAt,
-      new Date().toISOString(),
-      "UTC",
-      fingerprint([canonical, "Packaging automation market note", publishedAt]),
-      fingerprint(["packaging automation", publishedAt.slice(0, 10)]),
-      fingerprint([content]),
-      0.8,
-      0.5,
-      "manual-demo",
-      "v1",
-    );
-  const news = sqlite.prepare("SELECT id FROM news_articles WHERE slug = ?").get("packaging-automation-news-system-demonstration") as { id: number };
-  sqlite.prepare("INSERT OR IGNORE INTO news_products(news_id, product_id, relevance_score, relationship_reason) VALUES (?, ?, ?, ?)").run(news.id, product.id, 0.8, "示例文章用于验证 News 与真实产品关联");
-
-  const blogContent = `<h2>Overview</h2><p>This implementation note explains how overseas B2B packaging machinery websites can connect product pages, forms, News, Blog and SEO data.</p><h2>Key Takeaways</h2><ul><li>Published content should link to real products.</li><li>Forms must be stored server-side.</li><li>SEO and GEO fields should be part of the content model.</li></ul><h2>Related Product</h2><p>${product.english_name} is used as a real product relationship for validation.</p>`;
-  sqlite.prepare(`INSERT OR IGNORE INTO blog_articles
-    (title, slug, excerpt, content, status, cover_image_url, cover_image_source_url, cover_image_page_url, cover_image_alt,
-     author_name, published_at, seo_title, seo_description, canonical_url, geo_summary, key_takeaways, source_url)
-    VALUES (?, ?, ?, ?, 'published', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(
-    "How B2B Packaging Websites Connect Products, Content and Inquiries",
-    "how-b2b-packaging-websites-connect-products-content-and-inquiries",
-    "A practical implementation note for connecting product content, News, Blog, forms and SEO.",
-    blogContent,
-    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
-    "https://unsplash.com/",
-    "https://unsplash.com/photos/people-sitting-down-near-table-with-assorted-laptop-computers",
-    "Team reviewing B2B website content workflow",
-    "Lianteng Editorial",
-    publishedAt,
-    "B2B Packaging Website Content and Inquiry System",
-    "How product pages, News, Blog, inquiry forms, SEO and GEO connect on a B2B packaging machinery website.",
-    "/blog/how-b2b-packaging-websites-connect-products-content-and-inquiries",
-    "Explains how B2B packaging machinery content should expose product relationships, inquiry paths and SEO/GEO signals.",
-    "Product linking; server-side forms; SEO/GEO; content operations",
-    "internal-implementation-note",
-  );
-  const blog = sqlite.prepare("SELECT id FROM blog_articles WHERE slug = ?").get("how-b2b-packaging-websites-connect-products-content-and-inquiries") as { id: number };
-  sqlite.prepare("INSERT OR IGNORE INTO blog_products(blog_id, product_id, relevance_score, relationship_reason) VALUES (?, ?, ?, ?)").run(blog.id, product.id, 0.75, "博客说明产品、内容和询盘系统之间的关系");
-}
-
-function ensureArticleProductRelations(sqlite: Database.Database) {
-  const product = sqlite.prepare("SELECT id, english_name FROM products WHERE status = 'published' ORDER BY is_featured DESC, id LIMIT 1").get() as
-    | { id: number; english_name: string }
-    | undefined;
-  if (!product) return;
-  const newsRows = sqlite
-    .prepare(
-      `SELECT n.id FROM news_articles n
-       LEFT JOIN news_products np ON np.news_id = n.id
-       LEFT JOIN products p ON p.id = np.product_id AND p.status = 'published' AND p.deleted_at IS NULL
-       WHERE n.status = 'published' AND n.deleted_at IS NULL
-       GROUP BY n.id
-       HAVING COUNT(p.id) = 0`,
-    )
-    .all() as Array<{ id: number }>;
-  for (const row of newsRows) {
-    sqlite
-      .prepare("INSERT OR IGNORE INTO news_products(news_id, product_id, relevance_score, relationship_reason) VALUES (?, ?, ?, ?)")
-      .run(row.id, product.id, 0.65, `Auto-linked to ${product.english_name} during catalog migration`);
-  }
-
-  const blogRows = sqlite
-    .prepare(
-      `SELECT b.id FROM blog_articles b
-       LEFT JOIN blog_products bp ON bp.blog_id = b.id
-       LEFT JOIN products p ON p.id = bp.product_id AND p.status = 'published' AND p.deleted_at IS NULL
-       WHERE b.status = 'published' AND b.deleted_at IS NULL
-       GROUP BY b.id
-       HAVING COUNT(p.id) = 0`,
-    )
-    .all() as Array<{ id: number }>;
-  for (const row of blogRows) {
-    sqlite
-      .prepare("INSERT OR IGNORE INTO blog_products(blog_id, product_id, relevance_score, relationship_reason) VALUES (?, ?, ?, ?)")
-      .run(row.id, product.id, 0.65, `Auto-linked to ${product.english_name} during catalog migration`);
-  }
-}
-
 function seedSettings(sqlite: Database.Database) {
   const stmt = sqlite.prepare("INSERT OR IGNORE INTO system_settings(key, value) VALUES (?, ?)");
   for (const setting of [
     ["site_name", process.env.SITE_NAME || "Wenzhou Lianteng Packaging Machinery Co., LTD"],
     ["default_language", "en"],
-    ["default_timezone", process.env.NEWS_TIMEZONE || "Asia/Shanghai"],
-    ["news_daily_target", process.env.NEWS_DAILY_TARGET || "4"],
-    ["news_auto_publish", process.env.NEWS_AUTO_PUBLISH || "false"],
+    ["default_timezone", "Asia/Shanghai"],
     ["upload_max_mb", "20"],
     ["data_retention_days", "730"],
   ]) stmt.run(...setting);
 
   const sync = sqlite.prepare("INSERT OR IGNORE INTO sync_sources(name, source_type, configured, connection_status) VALUES (?, ?, ?, ?)");
   sync.run("Google Search Console", "seo", process.env.GSC_CLIENT_EMAIL ? 1 : 0, process.env.GSC_CLIENT_EMAIL ? "已配置" : "尚未配置");
-  sync.run("News API", "news", process.env.NEWS_API_KEY ? 1 : 0, process.env.NEWS_API_KEY ? "已配置" : "尚未配置");
-  sync.run("AI Provider", "ai", process.env.AI_PROVIDER_API_KEY ? 1 : 0, process.env.AI_PROVIDER_API_KEY ? "已配置" : "尚未配置");
 }
 
 function externalImage(index: number) {

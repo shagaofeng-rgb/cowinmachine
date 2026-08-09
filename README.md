@@ -1,6 +1,6 @@
 # Lianteng B2B Website System
 
-This repository contains a Next.js B2B packaging machinery website with a Chinese admin panel, persistent local database, product pages, News, Blog, inquiry forms, SEO/GEO output, RSS, Sitemap and a News automation task endpoint.
+This repository contains a Next.js B2B packaging machinery website with a Chinese admin panel, persistent local database, product pages, News, Blog, inquiry forms, SEO/GEO output, RSS and Sitemap.
 
 ## Local Setup
 
@@ -64,16 +64,6 @@ Troubleshooting:
 - API 403: confirm the service account has access to the Search Console property and the property string matches `sc-domain:cowinmachine.com`.
 - Submitted but not indexed: sitemap submission only helps Google discover URLs. Crawling and indexing still depend on Google Search Console status and page quality.
 
-## News Automation
-
-Manual run:
-
-```bash
-curl -X POST http://localhost:3000/api/admin/news/run -H "Authorization: Bearer $CRON_SECRET"
-```
-
-Without real `NEWS_API_KEY`, RSS source configuration or AI credentials, the automation records a blocked/failed job instead of inventing real news. For local workflow validation only, set `NEWS_TEST_MODE=1`.
-
 ## Tests
 
 ```bash
@@ -108,5 +98,4 @@ For production PostgreSQL, use `pg_dump` and `pg_restore` with managed backups.
 
 - SQLite is suitable for local development and simple single-node deployment. For Vercel production, configure a managed PostgreSQL database and adapt the data access layer.
 - When deployed to Vercel without `DATABASE_PATH`, the app uses `/tmp/site.db` so pages can render in Serverless runtime. This is suitable for content preview, but not durable production business data.
-- External SEO sync, AI generation, email and webhook alerts require provider credentials.
-- Demonstration News/Blog records are explicitly marked as examples and are not presented as real news.
+- External SEO sync requires provider credentials.

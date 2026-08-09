@@ -9,15 +9,14 @@
 - 后端：Next.js Route Handlers。
 - 数据库：SQLite 本地持久化文件，生产建议替换为 PostgreSQL 并保留同等表结构。
 - 认证：PBKDF2 密码哈希 + HttpOnly Cookie Session。
-- 定时任务：`/api/admin/news/run` 支持管理员或 `CRON_SECRET` 调用。
+- 定时任务：`/api/admin/sitemap/run` 由 Vercel 每日调用。
 
 ## 数据库设计
-核心表包括 users、sessions、roles、permissions、product_categories、products、media_assets、news_articles、news_products、news_sources、news_jobs、news_publication_audits、blog_articles、blog_products、form_submissions、analytics_events、seo_issues、sync_sources、sync_jobs、audit_logs、system_settings。
+核心表包括 users、sessions、roles、permissions、product_categories、products、media_assets、news_articles、news_products、blog_articles、blog_products、form_submissions、analytics_events、seo_issues、sync_sources、sync_jobs、audit_logs、system_settings。
 
 ## 功能模块
 - 前台：首页、产品、产品详情、News、News 详情、Blog、Blog 详情、搜索、联系表单。
-- 后台：中文登录、数据概览、产品列表、新闻列表、客户表单、同步源、任务日志、每日审计。
-- 自动化：News 候选校验、72 小时过滤、7 天去重、产品相关性、图片来源字段、发布审计。
+- 后台：中文登录、数据概览、产品列表、新闻列表、客户表单、同步源、Sitemap 日志。
 - SEO/GEO：Metadata、canonical、Open Graph、Twitter Card、Product/NewsArticle/BlogPosting JSON-LD、sitemap、robots、RSS。
 
 ## 安全方案
@@ -25,7 +24,6 @@
 - 登录失败 15 分钟内 5 次锁定。
 - 管理任务接口要求登录或 CRON_SECRET。
 - 表单含 honeypot、后端校验、IP 哈希和审计日志。
-- 外部 News 内容经过 HTML 清理，外部 API Key 仅使用环境变量。
 
 ## 测试方案
 - `pnpm typecheck`
@@ -39,6 +37,4 @@
 - SQLite 适合本地和单机持久化；Vercel Serverless 生产建议接 PostgreSQL。
 
 ## 风险和待确认事项
-- 真实外部新闻采集、AI 生成、邮件通知、SEO 外部数据同步需要 API Key 或第三方凭证。
-- 当前自动发布在缺少真实来源时会记录失败，不伪造真实新闻。
-- News/Blog 示例内容已明确标记为演示，不冒充真实新闻。
+- SEO 外部数据同步需要 API Key 或第三方凭证。

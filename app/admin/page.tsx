@@ -16,9 +16,7 @@ export default async function AdminPage() {
   }
   const sqlite = db();
   const forms = sqlite.prepare("SELECT * FROM form_submissions ORDER BY created_at DESC LIMIT 20").all() as Array<Record<string, string>>;
-  const jobs = sqlite.prepare("SELECT * FROM news_jobs ORDER BY scheduled_at DESC LIMIT 10").all() as Array<Record<string, string>>;
-  const audits = sqlite.prepare("SELECT * FROM news_publication_audits ORDER BY checked_at DESC LIMIT 10").all() as Array<Record<string, string | number>>;
-  const sync = sqlite.prepare("SELECT * FROM sync_sources ORDER BY id").all() as Array<Record<string, string | number>>;
+  const sync = sqlite.prepare("SELECT * FROM sync_sources WHERE source_type = 'seo' ORDER BY id").all() as Array<Record<string, string | number>>;
   const seoJobs = sqlite.prepare("SELECT * FROM sync_jobs WHERE source_name = 'Google Search Console' ORDER BY started_at DESC LIMIT 8").all() as Array<Record<string, string | number>>;
   const sitemapRuns = latestSitemapRuns(8);
   const seoConfig = googleSeoConfig();
@@ -31,7 +29,7 @@ export default async function AdminPage() {
         <a href="#news">新闻管理</a>
         <a href="#forms">客户表单</a>
         <a href="#sync">数据同步</a>
-        <a href="#logs">任务日志</a>
+        <a href="#sitemap">Sitemap</a>
         <form action="/api/admin/logout" method="post"><button className="button secondary">退出登录</button></form>
       </aside>
       <main className="admin-main">
@@ -43,7 +41,7 @@ export default async function AdminPage() {
           <div className="card"><div className="card-body"><h3>Blog 数量</h3><p>{articles("blog").length}</p></div></div>
         </section>
         <section id="products"><h2>产品管理</h2><DataTable rows={products()} columns={["id", "english_name", "sku", "status", "category_name"]} /></section>
-        <section id="news"><h2>新闻管理</h2><form action="/api/admin/news/run" method="post"><button className="button">手动执行 News 自动发布</button></form><DataTable rows={articles("news")} columns={["id", "title", "status", "source_publisher", "published_at"]} /></section>
+        <section id="news"><h2>新闻管理</h2><DataTable rows={articles("news")} columns={["id", "title", "status", "source_publisher", "published_at"]} /></section>
         <section id="forms"><h2>客户表单</h2><DataTable rows={forms} columns={["form_no", "name", "email", "country", "status", "created_at"]} /></section>
         <section id="sync">
           <h2>数据同步</h2>
@@ -75,7 +73,6 @@ export default async function AdminPage() {
           </div>
           <DataTable rows={sitemapRuns} columns={["id", "status", "trigger_type", "started_at", "completed_at", "url_count", "split", "submitted_to_google", "google_result", "error_message"]} />
         </section>
-        <section id="logs"><h2>News 任务与每日审计</h2><DataTable rows={jobs} columns={["id", "job_type", "status", "retry_count", "error_message"]} /><DataTable rows={audits} columns={["date", "target_count", "published_count", "missing_count", "status"]} /></section>
       </main>
     </div>
   );
