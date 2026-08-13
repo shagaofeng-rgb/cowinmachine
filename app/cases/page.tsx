@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import { PageHero } from "@/components/PageHero";
+export const metadata: Metadata = { title: "Cases", description: "A placeholder area for verified COWIN MACHINE project case information." };
+export default function CasesPage() { return <><PageHero eyebrow="Project cases" title="Cases" description="Sample case placeholders are not claims of completed projects." /><section className="section"><div className="content-wrap grid">{["Mining Project", "Water Well Project", "Remote Construction Site", "Aggregate Handling", "Temporary Lighting", "Material Processing"].map((item) => <article className="card" key={item}><h2>{item}</h2><p>Sample case — replace with verified project data.</p><p>TODO: Replace with verified project case information.</p></article>)}</div></section></>; }
