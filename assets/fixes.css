@@ -1,9 +1,0 @@
-.nav-item.open>.dropdown,.nav-item.open>.mega{visibility:visible;opacity:1;transform:none}
-.checklist li::before{content:"OK";font-size:10px;left:13px}
-@media(max-width:1030px){.mobile-drawer.open{display:block;visibility:visible;opacity:1}}
-html[dir=rtl] body{text-align:right}
-html[dir=rtl] .desktop-nav{margin-left:0;margin-right:auto}
-html[dir=rtl] .dropdown{left:auto;right:0}
-html[dir=rtl] .mega{left:auto;right:-170px}
-html[dir=rtl] .mobile-nav>a,html[dir=rtl] .accordion-button{text-align:right}
-html[dir=rtl] .accordion-button::after{float:left}
