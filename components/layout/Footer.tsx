@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { productCategories } from "@/lib/products";
 import { siteConfig, whatsappHref } from "@/lib/site";
+import { SiteLogo } from "@/components/layout/SiteLogo";
 
 export function Footer() {
   return <footer className="site-footer">
-    <div className="footer-cta"><p>Need equipment for your next project?</p><Link className="button button-primary" href="/request-a-quote">Request a Quote</Link></div>
+    <div className="footer-cta"><SiteLogo inverse /><div><p>Need equipment for your next project?</p><Link className="button button-primary" href="/request-a-quote">Request a Quote</Link></div></div>
     <div className="footer-grid">
       <div><p className="footer-heading">Company</p><Link href="/about">About Us</Link><Link href="/factory-quality">Factory & Quality</Link><Link href="/cases">Cases</Link></div>
       <div><p className="footer-heading">Products</p>{productCategories.map((item) => <Link key={item.slug} href={`/products/${item.slug}`}>{item.name}</Link>)}</div>
