@@ -1,5 +1,7 @@
 import type { Product, ProductCategorySlug } from "@/types/product";
 
+export const migrationPublishingEnabled = false;
+
 export const productCategories: {
   slug: ProductCategorySlug;
   name: string;

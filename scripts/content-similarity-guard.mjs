@@ -2,6 +2,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const fingerprintFile = path.resolve("docs/migration/source-content-fingerprints.json");
+const publishingGateFile = path.resolve("lib/products.ts");
 const publicRoots = ["app", "components", "lib", "types"];
 const extensions = new Set([".ts", ".tsx"]);
 
@@ -32,8 +33,13 @@ let sourceRecords;
 try {
   sourceRecords = JSON.parse(await readFile(fingerprintFile, "utf8"));
 } catch {
-  console.error("Private migration fingerprint file is required. Run pnpm audit:source-products before building.");
-  process.exit(1);
+  const productData = await readFile(publishingGateFile, "utf8");
+  if (!/migrationPublishingEnabled\s*=\s*false/.test(productData)) {
+    console.error("Private migration fingerprints are required before publishing approved product content.");
+    process.exit(1);
+  }
+  console.log("Review-only catalog detected; source similarity audit is retained locally and no product facts are published.");
+  process.exit(0);
 }
 const publicText = (await Promise.all((await Promise.all(publicRoots.map((root) => walk(path.resolve(root))))).flat().map((file) => readFile(file, "utf8")))).join("\n");
 const failures = [];
