@@ -3,7 +3,8 @@ export type ProductCategorySlug =
   | "generator-systems"
   | "drilling-equipment"
   | "drilling-consumables"
-  | "mobile-lighting-systems";
+  | "mobile-lighting-systems"
+  | "magnetic-separators";
 
 export type Product = {
   id: string;

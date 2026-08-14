@@ -7,9 +7,9 @@ export const desktopNavigation = [
 ] as const;
 
 export const productNavigation = [
-  { number: "01", href: "/products/air-compressors", label: "Air Compressors", description: "Compressed air solutions for industrial and jobsite applications." },
-  { number: "02", href: "/products/drilling-rigs", label: "Drilling Rigs", description: "Equipment solutions for drilling and site preparation." },
-  { number: "03", href: "/products/solar-light-towers", label: "Solar Light Towers", description: "Mobile lighting solutions for remote and temporary jobsites." },
+  { number: "01", href: "/products/compressed-air-equipment", label: "Air Compressors", description: "Compressed air solutions for industrial and jobsite applications." },
+  { number: "02", href: "/products/drilling-equipment", label: "Drilling Rigs", description: "Equipment solutions for drilling and site preparation." },
+  { number: "03", href: "/products/mobile-lighting-systems", label: "Solar Light Towers", description: "Mobile lighting solutions for remote and temporary jobsites." },
   { number: "04", href: "/products/magnetic-separators", label: "Magnetic Separators", description: "Equipment for material separation and industrial processing." },
 ] as const;
 

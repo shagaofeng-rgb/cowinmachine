@@ -13,11 +13,13 @@ const auditOutput = path.join(reportDirectory, "product-master-audit.csv");
 const fingerprintOutput = path.join(reportDirectory, "source-content-fingerprints.json");
 const scopeOutput = path.join(reportDirectory, "audit-scope.md");
 const categoryMap = [
+  [/(magnet|magnetic-separator|iron-remover|eddy-current|metal-detector)/i, "magnetic-separators"],
   [/(drill-bit|drill-pipe|dth-hammer|drilling-tool|jack-hammer)/i, "drilling-consumables"],
   [/(drilling-rig|water-well|rock-drill|boring)/i, "drilling-equipment"],
   [/(air-compressor|screw-air|piston-air|rotary-screw)/i, "compressed-air-equipment"],
   [/(diesel-generator|generator)/i, "generator-systems"],
   [/(light-tower|surveillance|cctv|lighting)/i, "mobile-lighting-systems"],
+  [/(univtower|solar-tower|hybrid-tower|diesel-tower)/i, "mobile-lighting-systems"],
 ];
 
 const escapeCsv = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
@@ -41,6 +43,7 @@ const targetNameFor = (category, index) => {
     "drilling-equipment": "Drilling equipment review record",
     "drilling-consumables": "Drilling consumables review record",
     "mobile-lighting-systems": "Mobile lighting review record",
+    "magnetic-separators": "Magnetic separator review record",
   };
   return `${labels[category] ?? "Product review record"} ${String(index + 1).padStart(3, "0")}`;
 };
