@@ -12,8 +12,11 @@
     "catalog:build": "node scripts/build-authorized-product-catalog.mjs",
     "check:public-boundary": "node scripts/public-boundary-guard.mjs",
     "check:content-similarity": "node scripts/content-similarity-guard.mjs",
+    "check:site-visuals": "node scripts/check-site-visual-usage.mjs",
     "report:migration": "node scripts/generate-migration-reports.mjs",
-    "prebuild": "pnpm run check:public-boundary && pnpm run check:content-similarity"
+    "content:schedule": "node scripts/run-content-automation.mjs",
+    "content:validate": "node scripts/validate-content-automation.mjs",
+    "prebuild": "pnpm run check:public-boundary && pnpm run check:content-similarity && pnpm run check:site-visuals"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",

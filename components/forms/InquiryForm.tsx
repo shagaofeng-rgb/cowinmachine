@@ -14,13 +14,19 @@ const schema = z.object({
   message: z.string().min(10, "Tell us a little about your application."),
   website: z.string().max(0),
   productModel: z.string().optional(),
+  productUrl: z.string().url().optional().or(z.literal("")),
+  application: z.string().optional(),
+  material: z.string().optional(),
+  quantity: z.string().optional(),
+  whatsapp: z.string().optional(),
+  projectRequirements: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export function InquiryForm({ productModel, compact = false }: { productModel?: string; compact?: boolean }) {
+export function InquiryForm({ productModel, productUrl, compact = false, defaults = {} }: { productModel?: string; productUrl?: string; compact?: boolean; defaults?: Partial<FormData> }) {
   const [serverMessage, setServerMessage] = useState<string>();
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { category: "", productModel: productModel ?? "", website: "" } });
+  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { category: "", productModel: productModel ?? "", productUrl: productUrl ?? "", website: "", ...defaults } });
   const onSubmit = async (data: FormData) => {
     setServerMessage(undefined);
     try {
@@ -28,15 +34,16 @@ export function InquiryForm({ productModel, compact = false }: { productModel?: 
       const result = await response.json() as { message?: string };
       if (!response.ok) throw new Error(result.message ?? "We could not submit your request. Please try again.");
       setServerMessage("Your request has been received. Our sales team will reply within 24 hours.");
-      reset({ category: data.category, productModel: productModel ?? "", website: "" });
+      reset({ category: data.category, productModel: productModel ?? "", productUrl: productUrl ?? "", website: "" });
     } catch (error) { setServerMessage(error instanceof Error ? error.message : "We could not submit your request. Please try again."); }
   };
   const field = (id: keyof FormData, label: string, type = "text") => <label>{label}<input type={type} {...register(id)} aria-invalid={Boolean(errors[id])} />{errors[id] && <span className="field-error" role="alert">{errors[id]?.message}</span>}</label>;
   return <form className={`inquiry-form ${compact ? "compact" : ""}`} onSubmit={handleSubmit(onSubmit)} noValidate>
     <input className="honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" {...register("website")} />
     {field("name", "Full Name")}{field("company", "Company Name")}{field("country", "Country")}{field("email", "Business Email", "email")}
-    <label>Product Category<select {...register("category")} aria-invalid={Boolean(errors.category)}><option value="">Select a category</option><option>Compressed-Air Equipment</option><option>Generator Systems</option><option>Drilling Equipment</option><option>Drilling Consumables</option><option>Mobile Lighting Systems</option></select>{errors.category && <span className="field-error" role="alert">{errors.category.message}</span>}</label>
-    {productModel && <input type="hidden" {...register("productModel")} />}
+    <label>Product Category<select {...register("category")} aria-invalid={Boolean(errors.category)}><option value="">Select a category</option><option value="compressed-air-equipment">Compressed-Air Equipment</option><option value="generator-systems">Generator Systems</option><option value="drilling-equipment">Drilling Equipment</option><option value="drilling-consumables">Drilling Consumables</option><option value="mobile-lighting-systems">Mobile Lighting Systems</option><option value="magnetic-separators">Magnetic Separators</option></select>{errors.category && <span className="field-error" role="alert">{errors.category.message}</span>}</label>
+    {!compact && <><label>Application<input {...register("application")} /></label><label>Material / medium<input {...register("material")} /></label><label>Required quantity<input {...register("quantity")} /></label><label>WhatsApp / Phone<input {...register("whatsapp")} /></label></>}
+    {productModel && <input type="hidden" {...register("productModel")} />}{productUrl && <input type="hidden" {...register("productUrl")} />}
     <label className="form-wide">Message<textarea rows={compact ? 4 : 6} {...register("message")} aria-invalid={Boolean(errors.message)} placeholder="Share your application, required quantity and technical requirements." />{errors.message && <span className="field-error" role="alert">{errors.message.message}</span>}</label>
     <div className="form-wide"><button className="button button-primary" disabled={isSubmitting}>{isSubmitting ? "Sending request…" : "Send Inquiry"}</button>{serverMessage && <p role="status" className="form-status">{serverMessage}</p>}</div>
   </form>;

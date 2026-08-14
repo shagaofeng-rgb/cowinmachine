@@ -4,7 +4,8 @@ import { z } from "zod";
 const inquirySchema = z.object({
   name: z.string().min(2), company: z.string().min(2), country: z.string().min(2),
   email: z.string().email(), category: z.string().min(1), message: z.string().min(10),
-  website: z.string().max(0), productModel: z.string().optional(),
+  website: z.string().max(0), productModel: z.string().optional(), productUrl: z.string().url().optional().or(z.literal("")),
+  application: z.string().optional(), material: z.string().optional(), quantity: z.string().optional(), whatsapp: z.string().optional(), projectRequirements: z.string().optional(),
 });
 
 export async function POST(request: Request) {

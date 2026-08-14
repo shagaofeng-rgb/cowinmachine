@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-08-14",
+  "rejected": [
+    {
+      "id": "REJECT-ACAR-2026-07-07",
+      "url": "https://www.acarkardeslersondaj.com/en/news/turkey-acr-h1000-hydraulic-water-well-drilling-rig-machine-in-action",
+      "title": "Hydraulic water-well drilling rig marketing update",
+      "sourceName": "Acar Kardesler Sondaj",
+      "reason": "Competitor marketing page cannot be the sole factual source.",
+      "rejectedAt": "2026-08-14"
+    },
+    {
+      "id": "REJECT-YGNE-2026-05-28",
+      "url": "https://www.ygnesolar.com/",
+      "title": "Solar mobile CCTV trailer marketing article",
+      "sourceName": "YGNE",
+      "reason": "Competitor marketing content; no independent supporting evidence.",
+      "rejectedAt": "2026-08-14"
+    },
+    {
+      "id": "REJECT-BIGLUX-2026-06-19",
+      "url": "https://www.bigluxled.com/newslist-1",
+      "title": "Solar security product-line update",
+      "sourceName": "BIGLUX",
+      "reason": "Competitor marketing content; do not reuse claims, images or copy.",
+      "rejectedAt": "2026-08-14"
+    },
+    {
+      "id": "REJECT-REDDIT-2026-06-29",
+      "url": "https://www.reddit.com/r/WaterWellDrilling/comments/1uj11qy/a_drilled_well_will_be_done_soon_july_what_kind/",
+      "title": "Water-well discussion thread",
+      "sourceName": "Reddit",
+      "reason": "No controlled sourcing, author verification or reliable publication standard.",
+      "rejectedAt": "2026-08-14"
+    }
+  ]
+}

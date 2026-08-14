@@ -1,0 +1,1305 @@
+{
+  "generatedAt": "2026-08-14",
+  "researchWindow": {
+    "start": "2026-05-16",
+    "end": "2026-08-14"
+  },
+  "articles": [
+    {
+      "id": "TOPIC-01",
+      "title": "How Diesel Screw Air Compressors Support DTH Drilling in Remote Quarry Sites",
+      "primaryProductFamily": "Electric Screw Air Compressor (ZD10LG-8)",
+      "primaryProductUrl": "/products/compressed-air-equipment/air-zd10lg-8-122",
+      "industry": "mining and quarrying",
+      "scenario": "DTH drilling support",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "diesel screw air compressor",
+        "DTH drilling air supply",
+        "remote quarry compressor"
+      ],
+      "newsAngle": "Research recent quarry and drilling mobilisation developments before drafting.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/compressed-air-equipment/air-zd10lg-8-122",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "compressed-air-equipment:mining-and-quarrying:DTH-drilling-support",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-02",
+      "title": "How to Match Air Delivery and Pressure for Water-Well Drilling",
+      "primaryProductFamily": "Screw Air Compressor (ZD10LV-8)",
+      "primaryProductUrl": "/products/compressed-air-equipment/air-zd10lv-8-123",
+      "industry": "water well drilling",
+      "scenario": "air-rotary well drilling",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "air delivery for water well drilling",
+        "working pressure",
+        "drilling compressor selection"
+      ],
+      "newsAngle": "Track water-well planning and drilling-method developments.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/compressed-air-equipment/air-zd10lv-8-123",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "compressed-air-equipment:water-well-drilling:air-rotary-well-drilling",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-03",
+      "title": "Compressed-Air Leak Reviews for Industrial Workshops: What to Check First",
+      "primaryProductFamily": "Screw Air Compressor (ZD30)",
+      "primaryProductUrl": "/products/compressed-air-equipment/air-zd30-126",
+      "industry": "manufacturing workshops",
+      "scenario": "compressed-air distribution",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "compressed air leaks",
+        "industrial air audit",
+        "air system pressure loss"
+      ],
+      "newsAngle": "Use recent industrial-energy reporting only when available.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/compressed-air-equipment/air-zd30-126",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "compressed-air-equipment:manufacturing-workshops:compressed-air-distribution",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-04",
+      "title": "Portable vs Stationary Screw Air Compressors for Road Construction Crews",
+      "primaryProductFamily": "Electric Portable Screw Air Compressor (KYLC-18)",
+      "primaryProductUrl": "/products/compressed-air-equipment/air-kylc-18-129",
+      "industry": "road construction",
+      "scenario": "mobile pneumatic work",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "portable screw air compressor",
+        "stationary compressor",
+        "road construction air supply"
+      ],
+      "newsAngle": "Link current construction activity to selection questions, not performance claims.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/compressed-air-equipment/air-kylc-18-129",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "compressed-air-equipment:road-construction:mobile-pneumatic-work",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-05",
+      "title": "Air Quality and Condensate Management for Drilling and Pneumatic Tools",
+      "primaryProductFamily": "Electric Portable Screw Air Compressor (ZDY75D-7)",
+      "primaryProductUrl": "/products/compressed-air-equipment/air-zdy75d-7-130",
+      "industry": "drilling",
+      "scenario": "tool air treatment",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "compressed air filtration",
+        "condensate management",
+        "pneumatic tool air quality"
+      ],
+      "newsAngle": "Prioritize standards or association guidance.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/compressed-air-equipment/air-zdy75d-7-130",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "compressed-air-equipment:drilling:tool-air-treatment",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-06",
+      "title": "Selecting an Electric Screw Air Compressor for a Fixed Industrial Air System",
+      "primaryProductFamily": "Electric Portable Screw Air Compressor (ZDY90D-7)",
+      "primaryProductUrl": "/products/compressed-air-equipment/air-zdy90d-7-131",
+      "industry": "manufacturing workshops",
+      "scenario": "fixed compressed-air supply",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "electric screw air compressor",
+        "industrial air system",
+        "air receiver selection"
+      ],
+      "newsAngle": "Use recent facility-energy or industrial-maintenance developments.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/compressed-air-equipment/air-zdy90d-7-131",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "compressed-air-equipment:manufacturing-workshops:fixed-compressed-air-supply",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-07",
+      "title": "Generator Sizing Considerations for Temporary Construction Power",
+      "primaryProductFamily": "Silent Diesel Generator System (BF-150KVA)",
+      "primaryProductUrl": "/products/generator-systems/gen-bf-150kva-144",
+      "industry": "construction sites",
+      "scenario": "temporary distribution",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "temporary construction generator",
+        "generator sizing",
+        "starting load"
+      ],
+      "newsAngle": "Relate recent worksite-power developments to sizing workflow.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/generator-systems/gen-bf-150kva-144",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "generator-systems:construction-sites:temporary-distribution",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-08",
+      "title": "Prime Power vs Standby Power: Questions Buyers Should Resolve Before Selection",
+      "primaryProductFamily": "Silent Diesel Generator System (ZD-30)",
+      "primaryProductUrl": "/products/generator-systems/gen-zd-30-145",
+      "industry": "remote infrastructure",
+      "scenario": "duty classification",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "prime power generator",
+        "standby generator",
+        "generator duty rating"
+      ],
+      "newsAngle": "Use recent resilience or infrastructure sources only where material.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/generator-systems/gen-zd-30-145",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "generator-systems:remote-infrastructure:duty-classification",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-09",
+      "title": "Silent Diesel Generators for Remote Worksites: Installation and Service Planning",
+      "primaryProductFamily": "Silent Diesel Generator System (ZD-20)",
+      "primaryProductUrl": "/products/generator-systems/gen-zd-20-146",
+      "industry": "remote mining operations",
+      "scenario": "remote power support",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "silent diesel generator",
+        "remote site power",
+        "generator service planning"
+      ],
+      "newsAngle": "Track logistics, power availability and site constraints.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/generator-systems/gen-zd-20-146",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "generator-systems:remote-mining-operations:remote-power-support",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-10",
+      "title": "Open-Frame Generator Constraints for Project-Site Power Planning",
+      "primaryProductFamily": "Silent Diesel Generator System (ZD-1000)",
+      "primaryProductUrl": "/products/generator-systems/gen-zd-1000-147",
+      "industry": "construction sites",
+      "scenario": "temporary outdoor power",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "open frame diesel generator",
+        "construction power",
+        "generator ventilation"
+      ],
+      "newsAngle": "Use project and safety sources; no noise or output claims without evidence.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/generator-systems/gen-zd-1000-147",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "generator-systems:construction-sites:temporary-outdoor-power",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-11",
+      "title": "Load Steps, Motor Starting and Generator Selection for Contractor Fleets",
+      "primaryProductFamily": "Diesel Generator System (ZD-80)",
+      "primaryProductUrl": "/products/generator-systems/gen-zd-80-148",
+      "industry": "equipment rental",
+      "scenario": "mixed motor loads",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "generator load step",
+        "motor starting generator",
+        "rental generator selection"
+      ],
+      "newsAngle": "Use recent rental or construction power developments.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/generator-systems/gen-zd-80-148",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "generator-systems:equipment-rental:mixed-motor-loads",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-12",
+      "title": "Fuel and Service Planning for Diesel Generator Use at Remote Sites",
+      "primaryProductFamily": "Diesel Mobile Generator System (UGT-1600)",
+      "primaryProductUrl": "/products/generator-systems/gen-ugt-1600-170",
+      "industry": "remote infrastructure",
+      "scenario": "off-grid temporary power",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "diesel generator fuel planning",
+        "remote generator service",
+        "temporary power logistics"
+      ],
+      "newsAngle": "Tie news to operations planning, not supplier claims.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/generator-systems/gen-ugt-1600-170",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "high",
+      "similarityKey": "generator-systems:remote-infrastructure:off-grid-temporary-power",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-13",
+      "title": "Choosing a Water-Well Drilling Rig for Agricultural Irrigation Projects",
+      "primaryProductFamily": "Water-Well Drilling Rig (FY300)",
+      "primaryProductUrl": "/products/drilling-equipment/rig-fy300-150",
+      "industry": "agricultural irrigation",
+      "scenario": "water-well construction",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "water well drilling rig",
+        "irrigation well drilling",
+        "drilling depth selection"
+      ],
+      "newsAngle": "Monitor public water infrastructure and drilling-program announcements.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-equipment/rig-fy300-150",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-equipment:agricultural-irrigation:water-well-construction",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-14",
+      "title": "Air Drilling vs Mud Drilling for Water-Well Project Planning",
+      "primaryProductFamily": "Drilling Rig (FY680)",
+      "primaryProductUrl": "/products/drilling-equipment/rig-fy680-151",
+      "industry": "water well drilling",
+      "scenario": "circulation method selection",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "air drilling vs mud drilling",
+        "water well drilling method",
+        "drilling fluid planning"
+      ],
+      "newsAngle": "Use association and project sources to frame methods.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-equipment/rig-fy680-151",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-equipment:water-well-drilling:circulation-method-selection",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-15",
+      "title": "Crawler Drilling Rig Mobility: Terrain, Access and Setup Questions",
+      "primaryProductFamily": "Crawler Drilling Rig (HT500)",
+      "primaryProductUrl": "/products/drilling-equipment/rig-ht500-152",
+      "industry": "road and railway construction",
+      "scenario": "site access",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "crawler drilling rig",
+        "drilling rig terrain",
+        "site setup"
+      ],
+      "newsAngle": "Recent mobilisation announcements can provide context, not performance evidence.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-equipment/rig-ht500-152",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-equipment:road-and-railway-construction:site-access",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-16",
+      "title": "How Hole Diameter, Depth and Torque Shape Drilling-Rig Selection",
+      "primaryProductFamily": "Drilling Rig (KH103)",
+      "primaryProductUrl": "/products/drilling-equipment/rig-kh103-153",
+      "industry": "foundation and anchoring",
+      "scenario": "bore design",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "drilling rig torque",
+        "hole diameter drilling",
+        "drilling depth selection"
+      ],
+      "newsAngle": "Use technical sources and field-plan context.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-equipment/rig-kh103-153",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-equipment:foundation-and-anchoring:bore-design",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-17",
+      "title": "DTH Drilling Workflow for Quarry and Rock-Drilling Projects",
+      "primaryProductFamily": "DTH Crawler Drilling Rig (KH612)",
+      "primaryProductUrl": "/products/drilling-equipment/rig-kh612-154",
+      "industry": "mining and quarrying",
+      "scenario": "production drilling",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "DTH drilling workflow",
+        "quarry drilling rig",
+        "rock drilling planning"
+      ],
+      "newsAngle": "Use two independent recent drilling-program sources before drafting.",
+      "requiredSources": [
+        "NEWS-ALIEN-2026-07-03",
+        "NEWS-ADNOC-2026-06-25"
+      ],
+      "internalLinks": [
+        "/products/drilling-equipment/rig-kh612-154",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-equipment:mining-and-quarrying:production-drilling",
+      "status": "research-ready",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-18",
+      "title": "What a Phased Drilling Mobilisation Plan Should Include",
+      "primaryProductFamily": "DTH Drilling Rig (KH712)",
+      "primaryProductUrl": "/products/drilling-equipment/rig-kh712-155",
+      "industry": "mining exploration",
+      "scenario": "access-cleared drilling",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "drilling mobilisation plan",
+        "drill pad access",
+        "drilling project planning"
+      ],
+      "newsAngle": "Use recent listed-company drilling announcements as the news context.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-equipment/rig-kh712-155",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-equipment:mining-exploration:access-cleared-drilling",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-19",
+      "title": "DTH Hammer and Drill Bit Selection for Hard-Rock Drilling",
+      "primaryProductFamily": "Drilling Tool (YT24)",
+      "primaryProductUrl": "/products/drilling-consumables/tool-yt24-158",
+      "industry": "mining and quarrying",
+      "scenario": "hard-rock DTH drilling",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "DTH hammer selection",
+        "DTH drill bit",
+        "hard rock drilling tools"
+      ],
+      "newsAngle": "Pair current drilling-program context with approved technical references.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-consumables/tool-yt24-158",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-consumables:mining-and-quarrying:hard-rock-DTH-drilling",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-20",
+      "title": "Drill Pipe Matching for Air-Drilling and Water-Well Projects",
+      "primaryProductFamily": "Drilling Tool (Y24)",
+      "primaryProductUrl": "/products/drilling-consumables/tool-y24-159",
+      "industry": "water well drilling",
+      "scenario": "drill-string planning",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "drill pipe selection",
+        "air drilling pipe",
+        "water well drill string"
+      ],
+      "newsAngle": "Track drilling project needs; do not claim compatibility without confirmation.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-consumables/tool-y24-159",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-consumables:water-well-drilling:drill-string-planning",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-21",
+      "title": "Rock Drill Tool Replacement Planning: What to Confirm Before Ordering",
+      "primaryProductFamily": "Drilling Tool (ZD-89)",
+      "primaryProductUrl": "/products/drilling-consumables/tool-zd-89-163",
+      "industry": "road construction",
+      "scenario": "tool replacement",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "rock drill tools",
+        "drilling tool replacement",
+        "shank compatibility"
+      ],
+      "newsAngle": "Use operational planning angle rather than supplier catalog claims.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-consumables/tool-zd-89-163",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-consumables:road-construction:tool-replacement",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-22",
+      "title": "How Flushing Method and Formation Affect Drill-Tool Wear Review",
+      "primaryProductFamily": "Drilling Tool (YT27)",
+      "primaryProductUrl": "/products/drilling-consumables/tool-yt27-184",
+      "industry": "geotechnical investigation",
+      "scenario": "tool wear planning",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "drill bit wear",
+        "drilling flushing",
+        "formation drilling tools"
+      ],
+      "newsAngle": "Require verified operating context before article drafting.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-consumables/tool-yt27-184",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-consumables:geotechnical-investigation:tool-wear-planning",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-23",
+      "title": "Preparing a DTH Tooling List for a Remote Drilling Campaign",
+      "primaryProductFamily": "Drilling Tool (YT29A)",
+      "primaryProductUrl": "/products/drilling-consumables/tool-yt29a-185",
+      "industry": "remote infrastructure",
+      "scenario": "consumables planning",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "DTH tooling list",
+        "remote drilling consumables",
+        "drilling campaign planning"
+      ],
+      "newsAngle": "Use current mobilisation news only as contextual input.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-consumables/tool-yt29a-185",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-consumables:remote-infrastructure:consumables-planning",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-24",
+      "title": "Thread, Shank and Interface Checks for Drilling-Tool Procurement",
+      "primaryProductFamily": "Drilling Tool (YT28)",
+      "primaryProductUrl": "/products/drilling-consumables/tool-yt28-193",
+      "industry": "construction sites",
+      "scenario": "interface verification",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "drilling tool thread",
+        "rock drill shank",
+        "tool compatibility"
+      ],
+      "newsAngle": "Prioritize safety and traceability questions.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/drilling-consumables/tool-yt28-193",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "medium",
+      "similarityKey": "drilling-consumables:construction-sites:interface-verification",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-25",
+      "title": "Solar Mobile Light Towers for Night Roadwork: Selection Factors and Operating Conditions",
+      "primaryProductFamily": "Solar Mobile Light Tower (UST600L)",
+      "primaryProductUrl": "/products/mobile-lighting-systems/tower-ust600l-090",
+      "industry": "roadworks",
+      "scenario": "night work lighting",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "solar mobile light tower",
+        "night roadwork lighting",
+        "mobile lighting selection"
+      ],
+      "newsAngle": "Monitor mobile energy and worksite-lighting developments.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/mobile-lighting-systems/tower-ust600l-090",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "mobile-lighting-systems:roadworks:night-work-lighting",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-26",
+      "title": "How Hybrid Light Towers Support Temporary Mining and Construction Sites",
+      "primaryProductFamily": "Solar Surveillance Mobile Light Tower (UST1200)",
+      "primaryProductUrl": "/products/mobile-lighting-systems/tower-ust1200-099",
+      "industry": "mining and construction",
+      "scenario": "temporary site lighting",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "hybrid light tower",
+        "mining site lighting",
+        "construction lighting tower"
+      ],
+      "newsAngle": "Use recent worksite-power developments without transferring supplier features.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/mobile-lighting-systems/tower-ust1200-099",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "mobile-lighting-systems:mining-and-construction:temporary-site-lighting",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-27",
+      "title": "Solar Security Towers for Remote Sites: Energy, Communications and Placement Questions",
+      "primaryProductFamily": "Mobile Light Tower (UGT-10QL)",
+      "primaryProductUrl": "/products/mobile-lighting-systems/tower-ugt-10ql-102",
+      "industry": "remote site security",
+      "scenario": "off-grid monitoring",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "solar security tower",
+        "remote site CCTV trailer",
+        "off grid site monitoring"
+      ],
+      "newsAngle": "Use two recent sources on mobile security and site power before drafting.",
+      "requiredSources": [
+        "NEWS-RING-2026-07-08",
+        "NEWS-HONDA-2026-06-15"
+      ],
+      "internalLinks": [
+        "/products/mobile-lighting-systems/tower-ugt-10ql-102",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "mobile-lighting-systems:remote-site-security:off-grid-monitoring",
+      "status": "research-ready",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-28",
+      "title": "Battery Capacity, Lighting Load and Night-Time Planning for Mobile Towers",
+      "primaryProductFamily": "Diesel Mobile Light Tower (UGT-1600)",
+      "primaryProductUrl": "/products/mobile-lighting-systems/tower-ugt-1600-103",
+      "industry": "construction sites",
+      "scenario": "night-shift lighting",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "battery mobile light tower",
+        "lighting load",
+        "night time site lighting"
+      ],
+      "newsAngle": "Use recent battery-system developments as context only.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/mobile-lighting-systems/tower-ugt-1600-103",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "mobile-lighting-systems:construction-sites:night-shift-lighting",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-29",
+      "title": "Mast Height, Trailer Access and Deployment Planning for Remote Light Towers",
+      "primaryProductFamily": "Diesel Mobile Light Tower (GDQ5A-4R)",
+      "primaryProductUrl": "/products/mobile-lighting-systems/tower-gdq5a-4r-104",
+      "industry": "emergency response",
+      "scenario": "temporary deployment",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "mobile light tower mast height",
+        "light tower trailer",
+        "emergency lighting deployment"
+      ],
+      "newsAngle": "Track emergency or remote-site logistics updates.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/mobile-lighting-systems/tower-gdq5a-4r-104",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "mobile-lighting-systems:emergency-response:temporary-deployment",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-30",
+      "title": "CCTV and Lighting Integration for Temporary Worksite Security",
+      "primaryProductFamily": "Diesel Mobile Light Tower (UGT4000PLED)",
+      "primaryProductUrl": "/products/mobile-lighting-systems/tower-ugt4000pled-106",
+      "industry": "construction sites",
+      "scenario": "site security",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "CCTV light tower",
+        "temporary site security",
+        "mobile surveillance tower"
+      ],
+      "newsAngle": "Use current security-tower news plus independent construction context.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/mobile-lighting-systems/tower-ugt4000pled-106",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "mobile-lighting-systems:construction-sites:site-security",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-31",
+      "title": "How Suspended Magnetic Separators Protect Crushers in Aggregate Processing",
+      "primaryProductFamily": "Permanent Magnetic Separator (ZD15LV-8)",
+      "primaryProductUrl": "/products/magnetic-separators/mag-zd15lv-8-124",
+      "industry": "aggregate and quarrying",
+      "scenario": "conveyor protection",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "suspended magnetic separator",
+        "crusher protection",
+        "aggregate tramp iron removal"
+      ],
+      "newsAngle": "Monitor aggregate processing and equipment-protection developments.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/magnetic-separators/mag-zd15lv-8-124",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "magnetic-separators:aggregate-and-quarrying:conveyor-protection",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-32",
+      "title": "Dry Drum vs Wet Drum Magnetic Separation in Mineral Processing",
+      "primaryProductFamily": "Permanent Magnetic Separator (ZD15LV-8)",
+      "primaryProductUrl": "/products/magnetic-separators/mag-zd15lv-8-124",
+      "industry": "mineral processing",
+      "scenario": "feed-condition selection",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "dry drum magnetic separator",
+        "wet drum magnetic separator",
+        "mineral processing separation"
+      ],
+      "newsAngle": "Use process context; do not infer recovery data.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/magnetic-separators/mag-zd15lv-8-124",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "magnetic-separators:mineral-processing:feed-condition-selection",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-33",
+      "title": "How Overband Magnets Support Ferrous Removal in Recycling Lines",
+      "primaryProductFamily": "Permanent Magnetic Separator (ZD15LV-8)",
+      "primaryProductUrl": "/products/magnetic-separators/mag-zd15lv-8-124",
+      "industry": "recycling sorting",
+      "scenario": "conveyor ferrous removal",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "overband magnet",
+        "recycling ferrous removal",
+        "self cleaning magnetic separator"
+      ],
+      "newsAngle": "Use two independent recent recycling and separation developments before drafting.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/magnetic-separators/mag-zd15lv-8-124",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "magnetic-separators:recycling-sorting:conveyor-ferrous-removal",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-34",
+      "title": "What Recycling Projects Reveal About Material Traceability Before Separation",
+      "primaryProductFamily": "Permanent Magnetic Separator (ZD15LV-8)",
+      "primaryProductUrl": "/products/magnetic-separators/mag-zd15lv-8-124",
+      "industry": "recycling sorting",
+      "scenario": "feedstock traceability",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "magnet recycling traceability",
+        "recycling sorting equipment",
+        "material stream review"
+      ],
+      "newsAngle": "Use the CoTec and Metal Tech News candidates as sector context only.",
+      "requiredSources": [
+        "NEWS-COTEC-2026-06-22",
+        "NEWS-GEOMEGA-2026-06-04"
+      ],
+      "internalLinks": [
+        "/products/magnetic-separators/mag-zd15lv-8-124",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "magnetic-separators:recycling-sorting:feedstock-traceability",
+      "status": "research-ready",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-35",
+      "title": "Selecting Manual-Clean or Self-Cleaning Magnetic Separation for Bulk Handling",
+      "primaryProductFamily": "Permanent Magnetic Separator (ZD15LV-8)",
+      "primaryProductUrl": "/products/magnetic-separators/mag-zd15lv-8-124",
+      "industry": "cement and bulk handling",
+      "scenario": "cleaning-duty selection",
+      "searchIntent": "commercial investigation",
+      "targetKeywords": [
+        "self cleaning magnetic separator",
+        "manual clean magnet",
+        "bulk material handling"
+      ],
+      "newsAngle": "Track bulk-handling operations and safety developments.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/magnetic-separators/mag-zd15lv-8-124",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "magnetic-separators:cement-and-bulk-handling:cleaning-duty-selection",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    },
+    {
+      "id": "TOPIC-36",
+      "title": "Magnetic Separation Questions for Scrap and Waste-Processing Feed Streams",
+      "primaryProductFamily": "Permanent Magnetic Separator (ZD15LV-8)",
+      "primaryProductUrl": "/products/magnetic-separators/mag-zd15lv-8-124",
+      "industry": "waste processing",
+      "scenario": "mixed feed sorting",
+      "searchIntent": "informational",
+      "targetKeywords": [
+        "magnetic separation waste processing",
+        "scrap sorting equipment",
+        "tramp metal removal"
+      ],
+      "newsAngle": "Use independent recycling developments and verified material-stream context.",
+      "requiredSources": [
+        "One current primary or government source within the 90-day window",
+        "One independent current source within the 90-day window"
+      ],
+      "internalLinks": [
+        "/products/magnetic-separators/mag-zd15lv-8-124",
+        "/solutions",
+        "/resources",
+        "/request-a-quote"
+      ],
+      "priority": "low",
+      "similarityKey": "magnetic-separators:waste-processing:mixed-feed-sorting",
+      "status": "research-pending",
+      "seoRequirements": [
+        "Article JSON-LD",
+        "BreadcrumbList JSON-LD",
+        "FAQPage JSON-LD only when FAQ is present",
+        "canonical URL",
+        "Open Graph metadata"
+      ],
+      "publicationRule": "Draft only. Human evidence review and explicit publish approval are required."
+    }
+  ]
+}

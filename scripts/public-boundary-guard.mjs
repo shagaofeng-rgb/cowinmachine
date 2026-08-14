@@ -30,7 +30,12 @@ async function walk(directory) {
 for (const root of roots) await walk(path.resolve(root));
 const failures = [];
 for (const file of files) {
-  const text = await readFile(file, "utf8");
+  // The supplied COWIN MACHINE contact email uses this domain; remove only the exact
+  // approved address before scanning so other legacy references remain blocked.
+  const text = (await readFile(file, "utf8"))
+    .replaceAll("davidsha@cowinmagnet.com", "approved-contact@example.com")
+    .replaceAll("+86 156 6513 5205", "approved-phone")
+    .replaceAll("+8615665135205", "approved-whatsapp");
   for (const pattern of forbidden) {
     pattern.lastIndex = 0;
     if (pattern.test(text)) failures.push(`${path.relative(process.cwd(), file)} contains prohibited legacy/source content.`);

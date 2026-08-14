@@ -1,0 +1,237 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-08-14T05:22:19.757865+00:00",
+  "dossierMode": "requires-owner-confirmation card",
+  "productIdentity": {
+    "canonicalId": "cp-098-drilling-consumables-drill-bit-drilling-tool",
+    "category": "drilling-consumables",
+    "categoryLabel": "Drilling Tools & Consumables",
+    "family": "Drill Bit Drilling Tool",
+    "model": null,
+    "variant": null,
+    "currentUrls": [
+      "https://cowinmachine.com/products/drilling-consumables/tool-series-161-161",
+      "https://cowinmachine.com/products/drilling-consumables/tool-series-162-162",
+      "https://cowinmachine.com/products/drilling-consumables/tool-series-198-198"
+    ],
+    "aliases": [
+      "Drill Bit Drilling Tool"
+    ],
+    "auditStatus": "duplicate"
+  },
+  "alternativeNamesAndSearchTerms": [
+    "Drill Bit Drilling Tool",
+    "drilling tool",
+    "drilling consumable",
+    "DTH hammer and bit matching",
+    "drill pipe compatibility",
+    "DTH hammer",
+    "DTH drill bit",
+    "drill pipe",
+    "pneumatic rock drill",
+    "button bit",
+    "tapered button bit",
+    "drill bit drilling tool for industrial projects",
+    "tool compatibility",
+    "replacement drilling tools",
+    "drilling consumables"
+  ],
+  "auditDataQualityIssues": [
+    "duplicate-or-near-duplicate",
+    "family-or-series",
+    "generic-title-needs-identification",
+    "missing-source-evidence"
+  ],
+  "workingPrinciple": {
+    "content": "Drilling consumables transmit rotary and/or percussion energy to the rock and provide a path for flushing. Their interface, diameter, thread or shank, pressure rating and wear condition must be compatible with the selected rig and drilling method.",
+    "evidenceSourceIds": [
+      "SRC-DR-04"
+    ],
+    "scope": "category-general; not model-specific"
+  },
+  "typicalConfiguration": [
+    "drill bit",
+    "hammer or rock drill where relevant",
+    "drill pipe or rod",
+    "shank, thread or sub adapters",
+    "lubrication and flushing interfaces",
+    "handling tools"
+  ],
+  "mainComponents": [
+    "drill bit",
+    "hammer or rock drill where relevant",
+    "drill pipe or rod",
+    "shank, thread or sub adapters",
+    "lubrication and flushing interfaces",
+    "handling tools"
+  ],
+  "buyerSelectionFactors": [
+    "drilling method",
+    "rig and hammer interface",
+    "hole diameter",
+    "rock formation and abrasiveness",
+    "air pressure and flow where applicable",
+    "thread/shank compatibility",
+    "wear life and safe replacement practice"
+  ],
+  "commonTechnicalParameters": [
+    "bit diameter — cutting size, commonly mm or in",
+    "thread or shank — physical interface that must match the upstream component",
+    "hammer nominal size — tool family reference that must be matched to bit and hole",
+    "working pressure — air-system condition for applicable pneumatic tools",
+    "rod outside diameter and wall thickness — drill-string dimensions, commonly mm",
+    "material / button type — only from approved manufacturer documentation"
+  ],
+  "parameterDefinitionsAndUnits": [
+    "bit diameter — cutting size, commonly mm or in",
+    "thread or shank — physical interface that must match the upstream component",
+    "hammer nominal size — tool family reference that must be matched to bit and hole",
+    "working pressure — air-system condition for applicable pneumatic tools",
+    "rod outside diameter and wall thickness — drill-string dimensions, commonly mm",
+    "material / button type — only from approved manufacturer documentation"
+  ],
+  "typicalOperatingConditions": [
+    "Use only within the exact model’s approved environmental, duty and installation limits.",
+    "Confirm site utilities, material/formation conditions, access, local safety requirements and maintenance access before selection.",
+    "Do not convert category-general research into a model-specific operating envelope without approved documentation."
+  ],
+  "suitableIndustries": [
+    "water well drilling",
+    "mining and quarrying",
+    "foundation and anchoring",
+    "geotechnical investigation",
+    "road and railway construction",
+    "rock drilling"
+  ],
+  "detailedUseCases": [
+    "replace worn DTH bits while preserving the required hammer and thread interface",
+    "build a drill string with compatible pipes, adapters and bit",
+    "select pneumatic rock-drill accessories after confirming the exact tool platform"
+  ],
+  "operationalWorkflow": [
+    "confirm the rig and drilling method",
+    "verify interface, thread/shank and required hole geometry",
+    "inspect consumables for wear or damage",
+    "install using approved handling tools and torque procedure",
+    "monitor performance and replace before damaged parts create a safety or quality risk"
+  ],
+  "buyerPainPoints": [
+    "mismatched interfaces",
+    "accelerated wear in abrasive rock",
+    "loss of flushing",
+    "unsafe handling of heavy or pressurized components",
+    "uncertain compatibility caused by generic product names"
+  ],
+  "howProductAddressesPainPoints": [
+    "Consumable selection should be based on an exact approved interface and application record; a family name alone is not enough to establish compatibility.",
+    "Wear monitoring and replacement planning reduce the chance of using damaged components."
+  ],
+  "expectedOperationalBenefits": {
+    "content": [
+      "more controlled tool matching",
+      "clearer replacement planning",
+      "reduced risk of incompatible or worn components"
+    ],
+    "qualification": "Planning benefits only; no quantified, model-specific or site-specific performance outcome is claimed."
+  },
+  "maintenanceAndSafetyConsiderations": [
+    "inspect threads, shanks, retainers, bits and pipes before assembly",
+    "use manufacturer-approved lubrication and torque practice",
+    "isolate air/hydraulic energy before service",
+    "do not force mismatched components",
+    "remove damaged components from service"
+  ],
+  "relatedEquipmentAndConsumables": [
+    "drilling rig",
+    "air compressor",
+    "DTH hammer",
+    "drill bits",
+    "drill pipes",
+    "lubricator",
+    "adapters",
+    "handling tools"
+  ],
+  "commonBuyerFaqs": [
+    "How is a hammer matched to a bit?",
+    "What thread or shank details are needed for confirmation?",
+    "How does rock condition affect consumable selection?",
+    "When should a bit or rod be removed from service?",
+    "Can a generic model code confirm compatibility?"
+  ],
+  "currentWebsiteCapturedSpecifications": {
+    "values": {
+      "32": "1 1/4\" 13.5 8 3A - 2 0.22 HB-7/32-H13.5-W8-3A",
+      "34": "1 11/32\" 13.5 8 3A - 2 0.26 HB-7/34-H13.5-W8-3A",
+      "36": "1 7/16\" 13.5 8 3A - 2 0.29 HB-7/36-H13.5-W8-3A",
+      "38": "1 1/2\" 13.5 8 3A - 2 0.32 HB-7/38-H13.5-W8-3A",
+      "40": "1 37/64\" 13.5 9.2 3A - 2 0.37 HB-7/40-H13.5-W9.2-3A",
+      "42": "1 21/32\" 13.5 9.2 3A - 2 0.41 HB-7/42-H13.5-W9.2-3A",
+      "Bit diameter": "Dimension of carbide (mm) Flushing hole Weight Drill T part No.",
+      "mm": "inch Height Width Class Front Guage kg"
+    },
+    "publicationStatus": "requires-owner-confirmation",
+    "note": "Captured from the current public product record during audit. These values are not independently verified manufacturer data and must be owner-confirmed before technical publication.",
+    "evidenceSourceIds": [
+      "SRC-CURRENT-cp-098-drilling-consumables-drill-bit-drilling-tool-1",
+      "SRC-CURRENT-cp-098-drilling-consumables-drill-bit-drilling-tool-2",
+      "SRC-CURRENT-cp-098-drilling-consumables-drill-bit-drilling-tool-3"
+    ]
+  },
+  "missingOrRequiresOwnerConfirmation": [
+    "Owner-approved model/family identity",
+    "Model-specific manufacturer documentation",
+    "Authorized product-image rights and current specification evidence"
+  ],
+  "unpublishableHighRiskContent": [
+    "The model or family identity itself is unresolved; do not publish technical product-page content beyond a neutral owner-confirmation placeholder.",
+    "Any exact capacity, output, range, consumption, recovery, runtime, coverage, noise, pressure, size, weight or operating limit not supported by an approved model-specific manufacturer source.",
+    "Any certification, food-grade, explosion-proof, environmental, compliance, warranty, lead-time, country-of-origin, availability or after-sales statement not approved by the owner.",
+    "Any claim that this model is self-manufactured, exclusive, compatible with another supplier’s tool, or suitable for a particular site without documented confirmation."
+  ],
+  "originalDetailPageContentFramework": [
+    "Original positioning paragraph based on confirmed application and product identity.",
+    "Working-principle explanation with a source-backed, non-brand-specific diagram brief.",
+    "Selection factors and parameter definitions; publish exact values only from approved fact cards.",
+    "Application workflow, maintenance and safety content adapted to local requirements and the approved manual.",
+    "Buyer FAQ that answers procurement questions without copying supplier wording or promising unverified outcomes."
+  ],
+  "evidenceSourceList": [
+    {
+      "sourceId": "SRC-CURRENT-cp-098-drilling-consumables-drill-bit-drilling-tool-1",
+      "sourceName": "COWIN MACHINE public product record",
+      "url": "https://cowinmachine.com/products/drilling-consumables/tool-series-161-161",
+      "accessedAt": "2026-08-14",
+      "evidenceSummary": "Current URL, H1/model reference and visible specification table captured in the preceding product audit. This is traceability evidence, not independent manufacturer verification.",
+      "confidence": "low"
+    },
+    {
+      "sourceId": "SRC-CURRENT-cp-098-drilling-consumables-drill-bit-drilling-tool-2",
+      "sourceName": "COWIN MACHINE public product record",
+      "url": "https://cowinmachine.com/products/drilling-consumables/tool-series-162-162",
+      "accessedAt": "2026-08-14",
+      "evidenceSummary": "Current URL, H1/model reference and visible specification table captured in the preceding product audit. This is traceability evidence, not independent manufacturer verification.",
+      "confidence": "low"
+    },
+    {
+      "sourceId": "SRC-CURRENT-cp-098-drilling-consumables-drill-bit-drilling-tool-3",
+      "sourceName": "COWIN MACHINE public product record",
+      "url": "https://cowinmachine.com/products/drilling-consumables/tool-series-198-198",
+      "accessedAt": "2026-08-14",
+      "evidenceSummary": "Current URL, H1/model reference and visible specification table captured in the preceding product audit. This is traceability evidence, not independent manufacturer verification.",
+      "confidence": "low"
+    },
+    {
+      "sourceId": "SRC-DR-04",
+      "sourceName": "Equipment Condition",
+      "url": "https://www.osha.gov/etools/oil-and-gas/general-safety/equipment-condition",
+      "accessedAt": "2026-08-14",
+      "evidenceSummary": "Emphasizes correct pressure-rated equipment selection, matching parts, pre-start inspection, documented maintenance and manufacturer procedures.",
+      "confidence": "high"
+    }
+  ],
+  "contentConfidenceLevel": {
+    "overall": "low",
+    "modelSpecific": "requires-owner-confirmation",
+    "explanation": "External sources support only category-level principles and selection logic. The current website record preserves traceability but does not replace approved manufacturer documentation for a model-specific claim."
+  }
+}

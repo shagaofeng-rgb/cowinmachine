@@ -1,0 +1,247 @@
+{
+  "generatedAt": "2026-08-14",
+  "researchWindow": {
+    "start": "2026-05-16",
+    "end": "2026-08-14"
+  },
+  "coverageStatement": "A monitored set of high-confidence, relevant global industry-news candidates; it does not claim comprehensive global coverage.",
+  "candidates": [
+    {
+      "id": "NEWS-RING-2026-07-08",
+      "url": "https://blog.ring.com/about-ring/ring-mobile-security-tower-is-here/",
+      "sourceName": "Ring Blog",
+      "title": "Ring Mobile Security Tower and Elite 360 4K Camera announcement",
+      "publishedAt": "2026-07-08",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "mobile-lighting-systems"
+      ],
+      "industries": [
+        "construction sites",
+        "remote site security",
+        "events"
+      ],
+      "summary": "A manufacturer announcement described a portable security tower, an optional solar and battery arrangement, and jobsite deployment considerations.",
+      "primaryFacts": [
+        "The announcement is dated July 8, 2026.",
+        "It describes mobile placement and off-grid power options.",
+        "The source notes that operating conditions vary with weather and usage."
+      ],
+      "sourceQuality": "primary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "medium",
+      "eligibleForArticle": true
+    },
+    {
+      "id": "NEWS-COTEC-2026-06-22",
+      "url": "https://www.cotec.ca/news/cotec-holdings-corp-notes-hypromag-usa-advancement-of-texas-hub-and-us-magnet-platform",
+      "sourceName": "CoTec Holdings",
+      "title": "HyProMag USA advancement and HDD magnet separation systems update",
+      "publishedAt": "2026-06-22",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "magnetic-separators"
+      ],
+      "industries": [
+        "recycling sorting",
+        "critical-mineral processing"
+      ],
+      "summary": "A company update reported installed HDD magnet-separation systems and planned data-traceability work at pre-processing sites.",
+      "primaryFacts": [
+        "The update reports three installed HDD magnet-separation systems.",
+        "It references recognition and data-traceability upgrades.",
+        "The announcement is a company statement, not a COWIN MACHINE product claim."
+      ],
+      "sourceQuality": "primary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "medium",
+      "eligibleForArticle": true
+    },
+    {
+      "id": "NEWS-GEOMEGA-2026-06-04",
+      "url": "https://www.metaltechnews.com/story/2026/06/10/tech-metals/geomega-clears-magnet-recycling-permit/2787.html",
+      "sourceName": "Metal Tech News",
+      "title": "Geomega clears magnet recycling permit",
+      "publishedAt": "2026-06-04",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "magnetic-separators"
+      ],
+      "industries": [
+        "recycling sorting",
+        "mineral processing"
+      ],
+      "summary": "Industry reporting described a permitted rare-earth magnet recycling demonstration plant and its planned commissioning work.",
+      "primaryFacts": [
+        "The article reports an environmental permit for a demonstration plant.",
+        "It describes equipment installation and control-system commissioning work.",
+        "The report supports sector context only; it is not a product-performance source."
+      ],
+      "sourceQuality": "authoritative-media",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "low",
+      "eligibleForArticle": true
+    },
+    {
+      "id": "NEWS-ALIEN-2026-07-03",
+      "url": "https://www.investegate.co.uk/announcement/rns/alien-metals-limited-npv-di---ufo/munni-munni-and-whundo-drill-update/9650666",
+      "sourceName": "Investegate / Alien Metals announcement",
+      "title": "Munni Munni and Whundo drill update",
+      "publishedAt": "2026-07-03",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "drilling-equipment",
+        "drilling-consumables"
+      ],
+      "industries": [
+        "mining and quarrying",
+        "exploration drilling"
+      ],
+      "summary": "A listed-company announcement described phased mobilisation, cleared drill pads, a planned drilling program and parallel metallurgical work.",
+      "primaryFacts": [
+        "The announcement is dated July 3, 2026.",
+        "It describes phased mobilisation tied to access clearance.",
+        "It separates drilling activity from later metallurgical evaluation."
+      ],
+      "sourceQuality": "primary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "low",
+      "eligibleForArticle": true
+    },
+    {
+      "id": "NEWS-ADNOC-2026-06-25",
+      "url": "https://www.adnocdrilling.ae/en/news-and-media/news-releases/2026/ad-300-first-ai-rig",
+      "sourceName": "ADNOC Drilling",
+      "title": "ADNOC Drilling delivers first AI-enabled walking island rig",
+      "publishedAt": "2026-06-25",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "drilling-equipment"
+      ],
+      "industries": [
+        "drilling",
+        "remote infrastructure"
+      ],
+      "summary": "A drilling-company announcement reported delivery of an automated island rig and highlighted automation, hybrid power and pipe-handling context.",
+      "primaryFacts": [
+        "The announcement is dated June 25, 2026.",
+        "It discusses automated pipe handling and monitoring.",
+        "Its offshore asset is not evidence for water-well rig performance."
+      ],
+      "sourceQuality": "primary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "medium",
+      "eligibleForArticle": true
+    },
+    {
+      "id": "NEWS-HONDA-2026-06-15",
+      "url": "https://global.honda/en/newsroom/news/2026/p260615eng.html",
+      "sourceName": "Honda Global",
+      "title": "Honda high-output electric power units for commercial-grade work equipment",
+      "publishedAt": "2026-06-15",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "generator-systems",
+        "mobile-lighting-systems"
+      ],
+      "industries": [
+        "construction sites",
+        "remote power"
+      ],
+      "summary": "A manufacturer announcement discussed electrified construction-equipment power units, swappable batteries and worksite constraints.",
+      "primaryFacts": [
+        "The announcement is dated June 15, 2026.",
+        "It distinguishes ventilation and noise-sensitive work from higher-output duties.",
+        "It discusses interchangeable battery packs in a defined product system."
+      ],
+      "sourceQuality": "primary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "medium",
+      "eligibleForArticle": true
+    },
+    {
+      "id": "REJECT-ACAR-2026-07-07",
+      "url": "https://www.acarkardeslersondaj.com/en/news/turkey-acr-h1000-hydraulic-water-well-drilling-rig-machine-in-action",
+      "sourceName": "Acar Kardesler Sondaj",
+      "title": "Hydraulic water-well drilling rig marketing update",
+      "publishedAt": "2026-07-07",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "drilling-equipment"
+      ],
+      "industries": [
+        "water well drilling"
+      ],
+      "summary": "Supplier promotional news item.",
+      "primaryFacts": [],
+      "sourceQuality": "secondary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "high",
+      "eligibleForArticle": false,
+      "rejectionReason": "Competitor marketing page cannot be the sole factual source."
+    },
+    {
+      "id": "REJECT-YGNE-2026-05-28",
+      "url": "https://www.ygnesolar.com/",
+      "sourceName": "YGNE",
+      "title": "Solar mobile CCTV trailer marketing article",
+      "publishedAt": "2026-05-28",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "mobile-lighting-systems"
+      ],
+      "industries": [
+        "remote site security"
+      ],
+      "summary": "Supplier marketing content.",
+      "primaryFacts": [],
+      "sourceQuality": "secondary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "high",
+      "eligibleForArticle": false,
+      "rejectionReason": "Competitor marketing content; no independent supporting evidence."
+    },
+    {
+      "id": "REJECT-BIGLUX-2026-06-19",
+      "url": "https://www.bigluxled.com/newslist-1",
+      "sourceName": "BIGLUX",
+      "title": "Solar security product-line update",
+      "publishedAt": "2026-06-19",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "mobile-lighting-systems"
+      ],
+      "industries": [
+        "remote site security"
+      ],
+      "summary": "Supplier promotional item.",
+      "primaryFacts": [],
+      "sourceQuality": "secondary",
+      "imageLicenseStatus": "not-usable",
+      "originalityRisk": "high",
+      "eligibleForArticle": false,
+      "rejectionReason": "Competitor marketing content; do not reuse claims, images or copy."
+    },
+    {
+      "id": "REJECT-REDDIT-2026-06-29",
+      "url": "https://www.reddit.com/r/WaterWellDrilling/comments/1uj11qy/a_drilled_well_will_be_done_soon_july_what_kind/",
+      "sourceName": "Reddit",
+      "title": "Water-well discussion thread",
+      "publishedAt": "2026-06-29",
+      "discoveredAt": "2026-08-14",
+      "productCategories": [
+        "drilling-equipment"
+      ],
+      "industries": [
+        "water well drilling"
+      ],
+      "summary": "Unverified community discussion.",
+      "primaryFacts": [],
+      "sourceQuality": "secondary",
+      "imageLicenseStatus": "unknown",
+      "originalityRisk": "high",
+      "eligibleForArticle": false,
+      "rejectionReason": "No controlled sourcing, author verification or reliable publication standard."
+    }
+  ]
+}

@@ -1,0 +1,1239 @@
+{
+  "generatedAt": "2026-08-14T05:22:19.773869+00:00",
+  "scope": "Research-only; no online website changes",
+  "categories": [
+    {
+      "category": "compressed-air-equipment",
+      "label": "Air Compressors",
+      "industries": [
+        "mining and quarrying",
+        "water well drilling",
+        "rock drilling and blasting",
+        "road and infrastructure construction",
+        "manufacturing workshops",
+        "shipyards",
+        "equipment rental"
+      ],
+      "useCases": [
+        "supply air to drilling tools or a DTH system after matching pressure and flow to the rig and hammer",
+        "operate workshop pneumatic tools where electrical supply and air treatment are available",
+        "support temporary site air demand using a portable package after checking transport, ventilation and fuel logistics"
+      ],
+      "selectionFactors": [
+        "required working pressure at the point of use",
+        "free-air-delivery demand and demand variation",
+        "electric versus diesel power availability",
+        "stationary versus portable installation",
+        "air quality, moisture and filtration requirement",
+        "ambient conditions, access and maintenance plan"
+      ],
+      "operationalWorkflow": [
+        "capture point-of-use pressure, flow and air-quality needs",
+        "identify simultaneous demand and peak events",
+        "select power source and portability",
+        "define filtration, condensate and distribution treatment",
+        "commission using measured system pressure and leak checks"
+      ],
+      "safetyConsiderations": [
+        "follow the approved manufacturer maintenance schedule",
+        "inspect filters, fluid levels and hose connections as applicable",
+        "manage condensate according to the application and local environmental rules",
+        "isolate and depressurize before service",
+        "check leaks and pressure loss as part of routine system review"
+      ],
+      "sourceIds": [
+        "SRC-CA-01"
+      ],
+      "productFamilies": [
+        {
+          "canonicalId": "cp-065-compressed-air-equipment-zd10lg-8",
+          "family": "Electric Screw Air Compressor",
+          "model": "ZD10LG-8",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-066-compressed-air-equipment-zd10lv-8",
+          "family": "Screw Air Compressor",
+          "model": "ZD10LV-8",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-068-compressed-air-equipment-zd20",
+          "family": "Variable-Speed Screw Air Compressor",
+          "model": "ZD20",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-069-compressed-air-equipment-zd30",
+          "family": "Screw Air Compressor",
+          "model": "ZD30",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-070-compressed-air-equipment-zd50lv-8",
+          "family": "Electric Portable Screw Air Compressor",
+          "model": "ZD50LV-8",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-071-compressed-air-equipment-kylc-18",
+          "family": "Electric Portable Screw Air Compressor",
+          "model": "KYLC-18",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-072-compressed-air-equipment-zdy75d-7",
+          "family": "Electric Portable Screw Air Compressor",
+          "model": "ZDY75D-7",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-073-compressed-air-equipment-zdy90d-7",
+          "family": "Electric Portable Screw Air Compressor",
+          "model": "ZDY90D-7",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-074-compressed-air-equipment-zdy132d-8",
+          "family": "Electric Screw Air Compressor",
+          "model": "ZDY132D-8",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-075-compressed-air-equipment-zdcy-5-8",
+          "family": "Diesel Portable Screw Air Compressor",
+          "model": "ZDCY 5-8",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-076-compressed-air-equipment-zdyl-20-20",
+          "family": "Diesel Portable Screw Air Compressor",
+          "model": "ZDYL-20/20",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-077-compressed-air-equipment-zd-40",
+          "family": "/25 Diesel Screw Air Compressor",
+          "model": "ZD-40",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-078-compressed-air-equipment-zd-20",
+          "family": "/20 Diesel Screw Air Compressor",
+          "model": "ZD-20",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-079-compressed-air-equipment-diesel-piston-air-compressor",
+          "family": "Diesel Piston Air Compressor",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-080-compressed-air-equipment-piston-air-compressor",
+          "family": "Piston Air Compressor",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-081-compressed-air-equipment-diesel-portable-piston-air-compressor",
+          "family": "Diesel Portable Piston Air Compressor",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-111-compressed-air-equipment-lb10",
+          "family": "Screw Air Compressor",
+          "model": "LB10",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-112-compressed-air-equipment-lb20",
+          "family": "Screw Air Compressor",
+          "model": "LB20",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-113-compressed-air-equipment-lb50",
+          "family": "Stationary Screw Air Compressor",
+          "model": "LB50",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-114-compressed-air-equipment-lb30",
+          "family": "Screw Air Compressor",
+          "model": "LB30",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-115-compressed-air-equipment-rm160-34",
+          "family": "/8 Screw Air Compressor",
+          "model": "RM160-34",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-116-compressed-air-equipment-zd-5",
+          "family": "/8 Diesel Stationary Screw Air Compressor",
+          "model": "ZD-5",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-117-compressed-air-equipment-zd-10",
+          "family": "/10 Diesel Portable Screw Air Compressor",
+          "model": "ZD-10",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-118-compressed-air-equipment-ztv90-8",
+          "family": "Electric Screw Air Compressor",
+          "model": "ZTV90-8",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-119-compressed-air-equipment-kszj18-17",
+          "family": "Diesel Portable Screw Air Compressor",
+          "model": "KSZJ18-17",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-125-compressed-air-equipment-kylc-580",
+          "family": "/17CY Diesel Screw Air Compressor",
+          "model": "KYLC-580",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-126-compressed-air-equipment-zd10",
+          "family": "Screw Air Compressor",
+          "model": "ZD10",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-127-compressed-air-equipment-zd-31",
+          "family": "/25 Diesel Screw Air Compressor",
+          "model": "ZD-31",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-133-compressed-air-equipment-lg10",
+          "family": "Stationary Screw Air Compressor",
+          "model": "LG10",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-134-compressed-air-equipment-zd300-8",
+          "family": "Diesel Portable Screw Air Compressor",
+          "model": "ZD300-8",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        }
+      ]
+    },
+    {
+      "category": "generator-systems",
+      "label": "Generator Systems",
+      "industries": [
+        "construction sites",
+        "remote infrastructure",
+        "telecom backup",
+        "emergency power",
+        "industrial facilities",
+        "rental fleets",
+        "remote mining operations"
+      ],
+      "useCases": [
+        "support a temporary construction distribution board after load schedule review",
+        "provide remote primary power where utility supply is unavailable",
+        "provide a backup source for selected essential loads with an approved transfer arrangement"
+      ],
+      "selectionFactors": [
+        "prime, standby or continuous duty as defined for the project",
+        "running load, starting load and load steps",
+        "phase, voltage and frequency",
+        "ambient temperature and altitude",
+        "open-frame versus enclosed installation",
+        "fuel storage, service access, noise and local compliance requirements"
+      ],
+      "operationalWorkflow": [
+        "build a load schedule including starting and step loads",
+        "confirm duty classification and operating hours",
+        "confirm voltage, frequency, phase and site conditions",
+        "define installation, fuel and exhaust requirements",
+        "validate the final selection with an electrical engineer for critical duties"
+      ],
+      "safetyConsiderations": [
+        "use the approved operation and maintenance manual for the exact set",
+        "inspect fluids, battery, filters, guards and connections before use",
+        "verify earthing, exhaust routing and protective devices with qualified personnel",
+        "test under the required site procedure",
+        "do not assume a rating or load capability without manufacturer confirmation"
+      ],
+      "sourceIds": [
+        "SRC-GEN-01",
+        "SRC-GEN-02"
+      ],
+      "productFamilies": [
+        {
+          "canonicalId": "cp-082-generator-systems-bf-150kva",
+          "family": "Silent Diesel Generator System",
+          "model": "BF-150KVA",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-083-generator-systems-zd-30",
+          "family": "Silent Diesel Generator System",
+          "model": "ZD-30",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-084-generator-systems-zd-20",
+          "family": "Silent Diesel Generator System",
+          "model": "ZD-20",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-085-generator-systems-zd-1000",
+          "family": "Silent Diesel Generator System",
+          "model": "ZD-1000",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-086-generator-systems-zd-80",
+          "family": "Diesel Generator System",
+          "model": "ZD-80",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-087-generator-systems-diesel-generator-system",
+          "family": "Diesel Generator System",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-106-generator-systems-ugt-1600",
+          "family": "Diesel Mobile Generator System",
+          "model": "UGT-1600",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-107-generator-systems-ugt-4000lm",
+          "family": "Diesel Generator System",
+          "model": "UGT-4000LM",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-108-generator-systems-ugt-4000-pm",
+          "family": "Diesel Mobile Generator System",
+          "model": "UGT-4000 PM",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-131-generator-systems-zd-100kw-open-frame-diesel-generator-system",
+          "family": "ZD-100kw Open-Frame Diesel Generator System",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        }
+      ]
+    },
+    {
+      "category": "drilling-equipment",
+      "label": "Drilling Rigs",
+      "industries": [
+        "water well drilling",
+        "agricultural irrigation",
+        "geothermal and ground-source projects",
+        "mining and quarrying",
+        "foundation and anchoring",
+        "geotechnical investigation",
+        "road and railway construction"
+      ],
+      "useCases": [
+        "water-well work that changes method between unconsolidated material and competent bedrock",
+        "DTH drilling in rock after matching hammer, bit, air supply and dust control",
+        "quarry or roadwork drilling where hole layout, geology and downstream blasting requirements are reviewed"
+      ],
+      "selectionFactors": [
+        "drilling method and formation",
+        "planned hole diameter and depth",
+        "torque, rotation and feed/pull requirements",
+        "air versus mud circulation plan",
+        "terrain, transport and crawler mobility",
+        "compatible hammer, bit, rod and compressor/mud equipment"
+      ],
+      "operationalWorkflow": [
+        "review geology and required borehole outcome",
+        "select circulation method and dust-control plan",
+        "match rig capacity, hammer/bit/rod and compressor or mud system",
+        "prepare stable access and rig-up area",
+        "drill, monitor cuttings and conditions, then inspect consumables and connections"
+      ],
+      "safetyConsiderations": [
+        "inspect mast, feed, hoses, guards, wire ropes and structural components before use",
+        "verify pressure ratings and compatible connections",
+        "control dust with an appropriate engineering method for the site",
+        "follow approved lubrication and maintenance procedures",
+        "keep personnel clear of moving drill string and suspended loads"
+      ],
+      "sourceIds": [
+        "SRC-DR-01",
+        "SRC-DR-02",
+        "SRC-DR-03",
+        "SRC-DR-04"
+      ],
+      "productFamilies": [
+        {
+          "canonicalId": "cp-088-drilling-equipment-fy300",
+          "family": "Water-Well Drilling Rig",
+          "model": "FY300",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-089-drilling-equipment-fy680",
+          "family": "Drilling Rig",
+          "model": "FY680",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-090-drilling-equipment-ht500",
+          "family": "Crawler Drilling Rig",
+          "model": "HT500",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-091-drilling-equipment-kh103",
+          "family": "Drilling Rig",
+          "model": "KH103",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-092-drilling-equipment-kh612",
+          "family": "DTH Crawler Drilling Rig",
+          "model": "KH612",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-093-drilling-equipment-kh712",
+          "family": "DTH Drilling Rig",
+          "model": "KH712",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-094-drilling-equipment-zdd100",
+          "family": "DTH Drilling Rig",
+          "model": "ZDD100",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-122-drilling-equipment-fy260",
+          "family": "Water-Well Drilling Rig",
+          "model": "FY260",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-124-drilling-equipment-cs110",
+          "family": "Anchoring Hydraulic Drilling Rig",
+          "model": "CS110",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-132-drilling-equipment-fy450",
+          "family": "Water-Well Drilling Rig",
+          "model": "FY450",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-135-drilling-equipment-fyl200",
+          "family": "Water-Well Rock Drilling Rig",
+          "model": "FYL200",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        }
+      ]
+    },
+    {
+      "category": "drilling-consumables",
+      "label": "Drilling Tools & Consumables",
+      "industries": [
+        "water well drilling",
+        "mining and quarrying",
+        "foundation and anchoring",
+        "geotechnical investigation",
+        "road and railway construction",
+        "rock drilling"
+      ],
+      "useCases": [
+        "replace worn DTH bits while preserving the required hammer and thread interface",
+        "build a drill string with compatible pipes, adapters and bit",
+        "select pneumatic rock-drill accessories after confirming the exact tool platform"
+      ],
+      "selectionFactors": [
+        "drilling method",
+        "rig and hammer interface",
+        "hole diameter",
+        "rock formation and abrasiveness",
+        "air pressure and flow where applicable",
+        "thread/shank compatibility",
+        "wear life and safe replacement practice"
+      ],
+      "operationalWorkflow": [
+        "confirm the rig and drilling method",
+        "verify interface, thread/shank and required hole geometry",
+        "inspect consumables for wear or damage",
+        "install using approved handling tools and torque procedure",
+        "monitor performance and replace before damaged parts create a safety or quality risk"
+      ],
+      "safetyConsiderations": [
+        "inspect threads, shanks, retainers, bits and pipes before assembly",
+        "use manufacturer-approved lubrication and torque practice",
+        "isolate air/hydraulic energy before service",
+        "do not force mismatched components",
+        "remove damaged components from service"
+      ],
+      "sourceIds": [
+        "SRC-DR-02",
+        "SRC-DR-03",
+        "SRC-DR-04"
+      ],
+      "productFamilies": [
+        {
+          "canonicalId": "cp-095-drilling-consumables-yt24",
+          "family": "Drilling Tool",
+          "model": "YT24",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-096-drilling-consumables-y24",
+          "family": "Drilling Tool",
+          "model": "Y24",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-097-drilling-consumables-button-bit-drilling-tool",
+          "family": "Button Bit Drilling Tool",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-098-drilling-consumables-drill-bit-drilling-tool",
+          "family": "Drill Bit Drilling Tool",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-099-drilling-consumables-zd-89",
+          "family": "Drilling Tool",
+          "model": "ZD-89",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-100-drilling-consumables-drill-pipe-drilling-tool",
+          "family": "Drill Pipe Drilling Tool",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-101-drilling-consumables-dth-hammer-drilling-tool",
+          "family": "DTH Hammer Drilling Tool",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-102-drilling-consumables-ql60",
+          "family": "DTH Hammer Drilling Tool",
+          "model": "QL60",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-120-drilling-consumables-yt27",
+          "family": "Drilling Tool",
+          "model": "YT27",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-121-drilling-consumables-yt29a",
+          "family": "Drilling Tool",
+          "model": "YT29A",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-123-drilling-consumables-yo20",
+          "family": "Drilling Tool",
+          "model": "YO20",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-128-drilling-consumables-yt28",
+          "family": "Drilling Tool",
+          "model": "YT28",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-129-drilling-consumables-yo18",
+          "family": "Drilling Tool",
+          "model": "YO18",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-130-drilling-consumables-drilling-tool",
+          "family": "Drilling Tool",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        }
+      ]
+    },
+    {
+      "category": "mobile-lighting-systems",
+      "label": "Solar & Mobile Light Towers",
+      "industries": [
+        "construction sites",
+        "roadworks",
+        "mining sites",
+        "remote camps",
+        "emergency response",
+        "event lighting",
+        "security and CCTV monitoring",
+        "rental fleets"
+      ],
+      "useCases": [
+        "temporary night construction lighting after a site lighting plan and glare review",
+        "remote-area lighting where solar yield, battery storage and backup power are assessed",
+        "security or CCTV monitoring only after confirming camera, communications and power configuration"
+      ],
+      "selectionFactors": [
+        "required work-area illumination and glare control",
+        "night-time operating duration",
+        "solar availability, shading and seasonal conditions",
+        "diesel, battery, solar or hybrid operating strategy",
+        "mast height, coverage study and wind/site constraints",
+        "trailer transport, levelling, service access and local road rules"
+      ],
+      "operationalWorkflow": [
+        "define required task illumination and operating hours",
+        "review location, shadows, weather and solar access",
+        "choose energy strategy and verify storage/runtime assumptions",
+        "transport, level and stabilize the unit as instructed for the exact model",
+        "aim luminaires, test controls and monitor operating conditions"
+      ],
+      "safetyConsiderations": [
+        "use the exact approved operating manual for mast, stabilizer and trailer procedures",
+        "inspect electrical cables, guards, hitch and stabilizers before use",
+        "keep clear of overhead power lines and do not exceed model-specific wind limits",
+        "manage battery systems under the approved charging and safety procedures",
+        "follow local illumination and work-zone requirements"
+      ],
+      "sourceIds": [
+        "SRC-LT-01",
+        "SRC-LT-02",
+        "SRC-LT-03",
+        "SRC-LT-04"
+      ],
+      "productFamilies": [
+        {
+          "canonicalId": "cp-037-mobile-lighting-systems-tower-ust300l-solar-mobile-light-tower",
+          "family": "TOWER-UST300L Solar Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-038-mobile-lighting-systems-ust600l",
+          "family": "Solar Mobile Light Tower",
+          "model": "UST600L",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-039-mobile-lighting-systems-site-ust900l-solar-mobile-light-tower",
+          "family": "SITE-UST900L Solar Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-040-mobile-lighting-systems-tower-ust1200l-solar-mobile-light-tower",
+          "family": "TOWER-UST1200L Solar Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-041-mobile-lighting-systems-tower-ust1800l-solar-mobile-light-tower",
+          "family": "TOWER-UST1800L Solar Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-042-mobile-lighting-systems-tower-ust2400l-solar-mobile-light-tower",
+          "family": "TOWER-UST2400L Solar Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-043-mobile-lighting-systems-solar-mobile-light-tower",
+          "family": "Solar Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-044-mobile-lighting-systems-ust-300s",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UST-300S",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-045-mobile-lighting-systems-ust-600s",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UST-600S",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-046-mobile-lighting-systems-ust-900s",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UST-900S",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-047-mobile-lighting-systems-ust1200",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UST1200",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-048-mobile-lighting-systems-block-ubt300s-solar-surveillance-mobile-light-to",
+          "family": "BLOCK-UBT300S Solar Surveillance Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-049-mobile-lighting-systems-solar-surveillance-mobile-light-tower",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-050-mobile-lighting-systems-ugt-10ql",
+          "family": "Mobile Light Tower",
+          "model": "UGT-10QL",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-051-mobile-lighting-systems-ugt-1600",
+          "family": "Diesel Mobile Light Tower",
+          "model": "UGT-1600",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-052-mobile-lighting-systems-gdq5a-4r",
+          "family": "Diesel Mobile Light Tower",
+          "model": "GDQ5A-4R",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-053-mobile-lighting-systems-ugt4000pled",
+          "family": "Diesel Mobile Light Tower",
+          "model": "UGT4000PLED",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-054-mobile-lighting-systems-ugt4000pmh",
+          "family": "Diesel Mobile Light Tower",
+          "model": "UGT4000PMH",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-055-mobile-lighting-systems-ugt-7000pled",
+          "family": "Diesel Mobile Light Tower",
+          "model": "UGT-7000PLED",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-056-mobile-lighting-systems-x-cube-x-cube-hybrid",
+          "family": "Diesel Mobile Light Tower",
+          "model": "X-CUBE X-CUBE HYBRID",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-057-mobile-lighting-systems-trailers-uht7000pled-mobile-light-tower",
+          "family": "TRAILERS-UHT7000PLED Mobile Light Tower",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-058-mobile-lighting-systems-t-720ap",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "T-720AP",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-059-mobile-lighting-systems-uni-t1",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UNI-T1",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-060-mobile-lighting-systems-ust-600",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UST-600",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-061-mobile-lighting-systems-uni-t2a",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UNI-T2A",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-062-mobile-lighting-systems-uni-t2c",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UNI-T2C",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-063-mobile-lighting-systems-uni-t2h",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UNI-T2H",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-064-mobile-lighting-systems-ust-1200s",
+          "family": "Solar Surveillance Mobile Light Tower",
+          "model": "UST-1200S",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-103-mobile-lighting-systems-ult-900",
+          "family": "Solar Mobile Light Tower",
+          "model": "ULT-900",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-104-mobile-lighting-systems-ult-1200",
+          "family": "Battery Mobile Light Tower",
+          "model": "ULT-1200",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-105-mobile-lighting-systems-ust1800",
+          "family": "Solar Mobile Light Tower",
+          "model": "UST1800",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-109-mobile-lighting-systems-ust-900l",
+          "family": "Solar Hybrid Mobile Light Tower",
+          "model": "UST-900L",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        },
+        {
+          "canonicalId": "cp-110-mobile-lighting-systems-gts-1200",
+          "family": "Solar Hybrid Mobile Light Tower",
+          "model": "GTS-1200",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        }
+      ]
+    },
+    {
+      "category": "magnetic-separators",
+      "label": "Magnetic Separators",
+      "industries": [
+        "mining and mineral processing",
+        "aggregate and quarrying",
+        "cement",
+        "coal handling",
+        "recycling and waste sorting",
+        "scrap metal processing",
+        "food and grain processing",
+        "plastics and chemicals",
+        "power plants and bulk material handling"
+      ],
+      "useCases": [
+        "remove tramp ferrous metal ahead of crushers, mills or shredders after verifying conveyor geometry and burden conditions",
+        "treat dry mineral feed where particle size, feed presentation and magnetic response are established",
+        "treat slurry with a wet-drum process after laboratory/process confirmation",
+        "recover conductive nonferrous material by eddy-current separation after upstream ferrous removal and feed preparation"
+      ],
+      "selectionFactors": [
+        "ferrous versus nonferrous recovery or tramp-metal removal objective",
+        "permanent versus electromagnetic field requirement",
+        "manual-clean versus self-cleaning duty",
+        "belt width, burden depth, suspension height and speed for conveyor installations",
+        "dry versus wet feed condition",
+        "particle size, liberation, capacity and material-flow behavior",
+        "food/process hygiene requirements only where independently verified"
+      ],
+      "operationalWorkflow": [
+        "characterize feed material and separation target",
+        "select dry, wet, suspended, drum, pulley, filter or eddy-current approach",
+        "record installation geometry and material-flow conditions",
+        "test or validate separation performance with representative material",
+        "inspect collection/discharge and maintain safe cleaning procedures"
+      ],
+      "safetyConsiderations": [
+        "isolate power and follow approved lockout procedures for electromagnets and drives",
+        "keep hands and ferromagnetic tools clear of strong magnetic fields",
+        "inspect belts, scrapers, guards, bearings and supports as applicable",
+        "use safe collection and discharge procedures for captured metal",
+        "do not claim hygienic or food-grade suitability without verified construction and validation evidence"
+      ],
+      "sourceIds": [
+        "SRC-MS-01",
+        "SRC-MS-02",
+        "SRC-MS-03",
+        "SRC-MS-04",
+        "SRC-MS-05"
+      ],
+      "productFamilies": [
+        {
+          "canonicalId": "cp-001-magnetic-separators-rcyd",
+          "family": "Automatic-Discharge Permanent Magnetic Separator",
+          "model": "RCYD",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-002-magnetic-separators-rcdd",
+          "family": "Electromagnetic Magnetic Separator",
+          "model": "RCDD",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-003-magnetic-separators-rcyb",
+          "family": "Permanent Magnetic Separator",
+          "model": "RCYB",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-004-magnetic-separators-rcdb",
+          "family": "Electromagnetic Magnetic Separator",
+          "model": "RCDB",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-005-magnetic-separators-magnetic-separator",
+          "family": "Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-006-magnetic-separators-dry-drum-magnetic-separator",
+          "family": "Dry Drum Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-007-magnetic-separators-wet-drum-magnetic-separator",
+          "family": "Wet Drum Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-008-magnetic-separators-wet-magnetic-separator",
+          "family": "Wet Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-009-magnetic-separators-drum-magnetic-separator",
+          "family": "Drum Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-010-magnetic-separators-dry-magnetic-separator",
+          "family": "Dry Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-011-magnetic-separators-rcda",
+          "family": "Electromagnetic Magnetic Separator",
+          "model": "RCDA",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-012-magnetic-separators-rcdc",
+          "family": "Automatic-Discharge Electromagnetic Magnetic Separator",
+          "model": "RCDC",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-013-magnetic-separators-rcde",
+          "family": "Electromagnetic Magnetic Separator",
+          "model": "RCDE",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-014-magnetic-separators-rcdf",
+          "family": "Automatic-Discharge Electromagnetic Magnetic Separator",
+          "model": "RCDF",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-015-magnetic-separators-rcdfj",
+          "family": "Automatic-Discharge Electromagnetic Magnetic Separator",
+          "model": "RCDFJ",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-016-magnetic-separators-rcps",
+          "family": "Automatic-Discharge Permanent Magnetic Separator",
+          "model": "RCPS",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-017-magnetic-separators-rcya",
+          "family": "Permanent Magnetic Separator",
+          "model": "RCYA",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-018-magnetic-separators-rcydii",
+          "family": "Automatic-Discharge Permanent Magnetic Separator",
+          "model": "RCYDII",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-019-magnetic-separators-rcye",
+          "family": "Automatic-Discharge Permanent Magnetic Separator",
+          "model": "RCYE",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-020-magnetic-separators-rcyf",
+          "family": "Permanent Magnetic Separator",
+          "model": "RCYF",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-021-magnetic-separators-rcyg",
+          "family": "Automatic-Discharge Permanent Magnetic Separator",
+          "model": "RCYG",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-022-magnetic-separators-rcyp",
+          "family": "Automatic-Discharge Manual-Clean Permanent Magnetic Separator",
+          "model": "RCYP",
+          "auditStatus": "requires-owner-confirmation",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-023-magnetic-separators-rcyz",
+          "family": "Permanent Magnetic Separator",
+          "model": "RCYZ",
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-024-magnetic-separators-wet-plate-magnetic-separator",
+          "family": "Wet Plate Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-025-magnetic-separators-permanent-dry-magnetic-separator",
+          "family": "Permanent Dry Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-026-magnetic-separators-permanent-suspended-magnetic-separator",
+          "family": "Permanent Suspended Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-027-magnetic-separators-electromagnetic-suspended-magnetic-separator",
+          "family": "Electromagnetic Suspended Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-028-magnetic-separators-metal-detection-magnetic-separator",
+          "family": "Metal-Detection Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-029-magnetic-separators-eddy-current-magnetic-separator",
+          "family": "Eddy-Current Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-030-magnetic-separators-permanent-overband-magnetic-separator",
+          "family": "Permanent Overband Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-031-magnetic-separators-roller-magnetic-separator",
+          "family": "Roller Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-032-magnetic-separators-wet-roller-magnetic-separator",
+          "family": "Wet Roller Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-033-magnetic-separators-permanent-magnetic-separator",
+          "family": "Permanent Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-034-magnetic-separators-electromagnetic-magnetic-separator",
+          "family": "Electromagnetic Magnetic Separator",
+          "model": null,
+          "auditStatus": "duplicate",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-035-magnetic-separators-automatic-discharge-electromagnetic-magnetic-separat",
+          "family": "Automatic-Discharge Electromagnetic Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-036-magnetic-separators-automatic-discharge-permanent-magnetic-separator",
+          "family": "Automatic-Discharge Permanent Magnetic Separator",
+          "model": null,
+          "auditStatus": "generic-series",
+          "contentConfidence": "low"
+        },
+        {
+          "canonicalId": "cp-067-magnetic-separators-zd15lv-8",
+          "family": "Permanent Magnetic Separator",
+          "model": "ZD15LV-8",
+          "auditStatus": "verified-model",
+          "contentConfidence": "moderate"
+        }
+      ]
+    }
+  ]
+}

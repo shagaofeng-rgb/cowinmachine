@@ -1,0 +1,122 @@
+{
+  "generatedAt": "2026-08-14",
+  "sources": [
+    {
+      "id": "SRC-DOE",
+      "name": "U.S. Department of Energy",
+      "priority": 1,
+      "quality": "government",
+      "url": "https://www.energy.gov/cmei/ito/compressed-air-systems",
+      "coverage": [
+        "compressed-air-equipment",
+        "generator-systems",
+        "mobile-lighting-systems"
+      ],
+      "use": "Technical context; verify publication date per item."
+    },
+    {
+      "id": "SRC-NGWA",
+      "name": "National Ground Water Association",
+      "priority": 1,
+      "quality": "association",
+      "url": "https://www.ngwa.org/publications-and-news/Newsroom",
+      "coverage": [
+        "drilling-equipment",
+        "drilling-consumables"
+      ],
+      "use": "Water-well industry developments and training context."
+    },
+    {
+      "id": "SRC-USGS",
+      "name": "U.S. Geological Survey",
+      "priority": 1,
+      "quality": "government",
+      "url": "https://www.usgs.gov/centers/national-minerals-information-center",
+      "coverage": [
+        "magnetic-separators"
+      ],
+      "use": "Minerals and processing context; not supplier performance evidence."
+    },
+    {
+      "id": "SRC-OSHA",
+      "name": "Occupational Safety and Health Administration",
+      "priority": 1,
+      "quality": "government",
+      "url": "https://www.osha.gov/",
+      "coverage": [
+        "compressed-air-equipment",
+        "drilling-equipment",
+        "mobile-lighting-systems"
+      ],
+      "use": "Safety context only."
+    },
+    {
+      "id": "SRC-ADNOC",
+      "name": "ADNOC Drilling",
+      "priority": 2,
+      "quality": "primary-company",
+      "url": "https://www.adnocdrilling.ae/en/news-and-media/news-releases",
+      "coverage": [
+        "drilling-equipment"
+      ],
+      "use": "Project and drilling-industry developments; isolate company-specific claims."
+    },
+    {
+      "id": "SRC-HONDA",
+      "name": "Honda Global Newsroom",
+      "priority": 2,
+      "quality": "primary-manufacturer",
+      "url": "https://global.honda/en/newsroom/",
+      "coverage": [
+        "generator-systems",
+        "mobile-lighting-systems"
+      ],
+      "use": "Power-system market context; no product claim transfer."
+    },
+    {
+      "id": "SRC-COTEC",
+      "name": "CoTec Holdings",
+      "priority": 2,
+      "quality": "primary-company",
+      "url": "https://www.cotec.ca/news",
+      "coverage": [
+        "magnetic-separators"
+      ],
+      "use": "Recycling-sector developments only."
+    },
+    {
+      "id": "SRC-MTN",
+      "name": "Metal Tech News",
+      "priority": 3,
+      "quality": "authoritative-media",
+      "url": "https://www.metaltechnews.com/section/mining_tech",
+      "coverage": [
+        "magnetic-separators"
+      ],
+      "use": "Independent mining and critical-minerals reporting."
+    },
+    {
+      "id": "SRC-INVESTEGATE",
+      "name": "Investegate",
+      "priority": 2,
+      "quality": "listed-company-announcement",
+      "url": "https://www.investegate.co.uk/",
+      "coverage": [
+        "drilling-equipment",
+        "drilling-consumables"
+      ],
+      "use": "Original exchange announcement distribution; identify issuer and date."
+    },
+    {
+      "id": "SRC-RING",
+      "name": "Ring Blog",
+      "priority": 2,
+      "quality": "primary-manufacturer",
+      "url": "https://blog.ring.com/",
+      "coverage": [
+        "mobile-lighting-systems"
+      ],
+      "use": "Remote-site security context; do not transfer product claims."
+    }
+  ]
+}
