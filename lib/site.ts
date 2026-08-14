@@ -1,20 +1,21 @@
 export const siteConfig = {
-  brandName: "COWIN MACHINE",
-  email: "davidsha@cowinmagnet.com",
-  phone: "+86 156 6513 5205",
-  whatsApp: "+8615665135205",
+  brandName: "cowinmachine",
+  legalName: "REVIEW REQUIRED — NEW_COMPANY_NAME",
+  email: "davidsha@cowinmachine.com",
+  phone: "+86 176 0125 5205",
+  whatsApp: "+8617601255205",
   address: {
-    line1: "Room 110, 1st Floor, Building 2",
-    line2: "Qushidai Future Building, Kecheng District",
-    city: "Quzhou City",
-    region: "Zhejiang Province",
-    country: "China",
+    line1: "REVIEW REQUIRED — NEW_ADDRESS",
+    line2: "",
+    city: "",
+    region: "",
+    country: "",
   },
-  defaultTitle: "COWIN MACHINE | Industrial Equipment Solutions",
+  defaultTitle: "cowinmachine | Magnetic Separation Systems",
   defaultDescription:
-    "COWIN MACHINE provides industrial equipment solutions for mining, construction, remote power and material processing applications.",
+    "cowinmachine is preparing an independent product range for magnetic separation equipment enquiries.",
   companyIntroduction:
-    "COWIN MACHINE provides industrial equipment solutions for global B2B buyers. Contact our team to discuss your application and equipment requirements.",
+    "cowinmachine is preparing independent product information for industrial buyers. Contact our team to discuss your application and equipment requirements.",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://cowinmachine.com",
 } as const;
 

@@ -1,8 +1,4 @@
-export type ProductCategorySlug =
-  | "air-compressors"
-  | "drilling-rigs"
-  | "solar-light-towers"
-  | "magnetic-separators";
+export type ProductCategorySlug = "magnetic-separators";
 
 export type Product = {
   id: string;
@@ -14,5 +10,5 @@ export type Product = {
   applications: string[];
   keySpecifications: { label: string; value: string }[];
   technicalSpecifications: { label: string; value: string }[];
-  status: "Replaceable placeholder";
+  status: "Review required";
 };

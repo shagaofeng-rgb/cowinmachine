@@ -5,75 +5,38 @@ export const productCategories: {
   name: string;
   summary: string;
   subcategories: string[];
-}[] = [
-  {
-    slug: "air-compressors",
-    name: "Air Compressors",
-    summary: "Replaceable equipment placeholders for compressed-air applications.",
-    subcategories: ["Diesel Screw Air Compressors", "Electric Screw Air Compressors", "Portable Air Compressors", "Industrial Air Compressors"],
-  },
-  {
-    slug: "drilling-rigs",
-    name: "Drilling Rigs",
-    summary: "Replaceable equipment placeholders for drilling applications.",
-    subcategories: ["DTH Drilling Rigs", "Water Well Drilling Rigs", "Crawler Drilling Rigs", "Rock Drilling Equipment"],
-  },
-  {
-    slug: "solar-light-towers",
-    name: "Solar Light Towers",
-    summary: "Replaceable equipment placeholders for temporary and remote lighting.",
-    subcategories: ["Solar Light Towers", "Hybrid Light Towers", "Diesel Light Towers", "Solar CCTV Trailers"],
-  },
-  {
-    slug: "magnetic-separators",
-    name: "Magnetic Separators",
-    summary: "Replaceable equipment placeholders for material separation applications.",
-    subcategories: ["Dry Magnetic Separators", "Wet Magnetic Separators", "High-Intensity Magnetic Separators", "Overband Magnetic Separators"],
-  },
-];
+}[] = [{
+  slug: "magnetic-separators",
+  name: "Magnetic Separators",
+  summary: "Independent magnetic separation configuration entries. Product facts are published only after verification.",
+  subcategories: ["Conveyor separation", "Dry material separation", "Wet process separation", "Process filtration"],
+}];
 
-function placeholder(category: ProductCategorySlug, slug: string, name: string): Product {
+function reviewProduct(slug: string, name: string, focus: string): Product {
   return {
     id: slug,
     slug,
     name,
-    category,
-    shortDescription: "Replaceable product placeholder. Confirm the application before preparing a recommendation.",
-    description: "TODO: Replace with verified product specifications.",
-    applications: ["TODO: Replace with verified application information."],
+    category: "magnetic-separators",
+    shortDescription: `A configuration review entry for ${focus}. No model, performance or material claim is published until approved evidence is received.`,
+    description: "REVIEW REQUIRED: Verified specifications, images, handling information and technical documentation must be approved before publication.",
+    applications: ["REVIEW REQUIRED: Confirm the process material and installation conditions before describing applicable use."],
     keySpecifications: [
-      { label: "Model", value: "TODO: Replace with verified model information." },
-      { label: "Configuration", value: "TODO: Replace with verified product specifications." },
-      { label: "Application", value: "TODO: Replace with verified application information." },
+      { label: "Configuration", value: "REVIEW REQUIRED" },
+      { label: "Operating conditions", value: "REVIEW REQUIRED" },
+      { label: "Technical data", value: "REVIEW REQUIRED" },
     ],
-    technicalSpecifications: [{ label: "Technical data", value: "TODO: Replace with verified product specifications." }],
-    status: "Replaceable placeholder",
+    technicalSpecifications: [{ label: "Verified specification record", value: "REVIEW REQUIRED" }],
+    status: "Review required",
   };
 }
 
 export const products: Product[] = [
-  placeholder("air-compressors", "demo-diesel-screw-air-compressor", "Demo Diesel Screw Air Compressor"),
-  placeholder("air-compressors", "demo-electric-screw-air-compressor", "Demo Electric Screw Air Compressor"),
-  placeholder("air-compressors", "demo-portable-air-compressor", "Demo Portable Air Compressor"),
-  placeholder("air-compressors", "demo-industrial-air-compressor", "Demo Industrial Air Compressor"),
-  placeholder("drilling-rigs", "demo-dth-drilling-rig", "Demo DTH Drilling Rig"),
-  placeholder("drilling-rigs", "demo-water-well-drilling-rig", "Demo Water Well Drilling Rig"),
-  placeholder("drilling-rigs", "demo-crawler-drilling-rig", "Demo Crawler Drilling Rig"),
-  placeholder("drilling-rigs", "demo-rock-drilling-rig", "Demo Rock Drilling Rig"),
-  placeholder("solar-light-towers", "demo-solar-light-tower", "Demo Solar Light Tower"),
-  placeholder("solar-light-towers", "demo-hybrid-light-tower", "Demo Hybrid Light Tower"),
-  placeholder("solar-light-towers", "demo-diesel-light-tower", "Demo Diesel Light Tower"),
-  placeholder("solar-light-towers", "demo-solar-cctv-trailer", "Demo Solar CCTV Trailer"),
-  placeholder("magnetic-separators", "demo-dry-magnetic-separator", "Demo Dry Magnetic Separator"),
-  placeholder("magnetic-separators", "demo-wet-magnetic-separator", "Demo Wet Magnetic Separator"),
-  placeholder("magnetic-separators", "demo-high-intensity-magnetic-separator", "Demo High-Intensity Magnetic Separator"),
-  placeholder("magnetic-separators", "demo-overband-magnetic-separator", "Demo Overband Magnetic Separator"),
+  reviewProduct("conveyor-separation-review", "Conveyor Separation Review", "conveyor-line magnetic separation"),
+  reviewProduct("dry-material-separation-review", "Dry Material Separation Review", "dry bulk material separation"),
+  reviewProduct("wet-process-separation-review", "Wet Process Separation Review", "wet-process magnetic separation"),
+  reviewProduct("process-filtration-review", "Process Filtration Review", "process-line magnetic filtration"),
 ];
 
-export function getCategory(slug: string) {
-  return productCategories.find((category) => category.slug === slug);
-}
-
-export function getProduct(category: string, slug: string) {
-  return products.find((product) => product.category === category && product.slug === slug);
-}
+export function getCategory(slug: string) { return productCategories.find((category) => category.slug === slug); }
+export function getProduct(category: string, slug: string) { return products.find((product) => product.category === category && product.slug === slug); }

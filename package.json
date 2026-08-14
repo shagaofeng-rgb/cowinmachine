@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audit:source-products": "node scripts/audit-source-products.mjs",
+    "check:public-boundary": "node scripts/public-boundary-guard.mjs",
+    "report:migration": "node scripts/generate-migration-reports.mjs",
+    "prebuild": "pnpm run check:public-boundary"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
