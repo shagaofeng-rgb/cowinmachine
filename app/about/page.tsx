@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { productCategories } from "@/lib/products";
 import { siteConfig } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "About", description: siteConfig.companyIntroduction };
+export const metadata = pageMetadata("About", siteConfig.companyIntroduction, "/about");
 export default function AboutPage() {
   return <><PageHero eyebrow="About cowinmachine" title="Independent Product Information" description={siteConfig.companyIntroduction} />
     <section className="section"><div className="content-wrap"><h2>Product Focus</h2><div className="grid">{productCategories.map((category) => <div className="card" key={category.slug}><h3>{category.name}</h3><p>{category.summary}</p></div>)}</div></div></section>

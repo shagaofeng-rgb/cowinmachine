@@ -10,8 +10,9 @@
     "typecheck": "tsc --noEmit",
     "audit:source-products": "node scripts/audit-source-products.mjs",
     "check:public-boundary": "node scripts/public-boundary-guard.mjs",
+    "check:content-similarity": "node scripts/content-similarity-guard.mjs",
     "report:migration": "node scripts/generate-migration-reports.mjs",
-    "prebuild": "pnpm run check:public-boundary"
+    "prebuild": "pnpm run check:public-boundary && pnpm run check:content-similarity"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",

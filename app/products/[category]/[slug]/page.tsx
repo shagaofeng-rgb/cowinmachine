@@ -4,13 +4,14 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 import { getCategory, getProduct, products } from "@/lib/products";
-import { siteConfig, whatsappHref } from "@/lib/site";
+import { whatsappHref } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() { return products.map((product) => ({ category: product.category, slug: product.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string; slug: string }> }): Promise<Metadata> {
   const { category, slug } = await params;
   const product = getProduct(category, slug);
-  return product ? { title: product.name, description: product.shortDescription, alternates: { canonical: `/products/${product.category}/${product.slug}` } } : {};
+  return product ? pageMetadata(product.name, product.shortDescription, `/products/${product.category}/${product.slug}`) : {};
 }
 export default async function ProductPage({ params }: { params: Promise<{ category: string; slug: string }> }) {
   const { category: categorySlug, slug } = await params;

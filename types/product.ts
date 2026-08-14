@@ -1,4 +1,7 @@
-export type ProductCategorySlug = "magnetic-separators";
+export type ProductCategorySlug =
+  | "solar-light-towers"
+  | "site-monitoring-trailers"
+  | "diesel-light-towers";
 
 export type Product = {
   id: string;

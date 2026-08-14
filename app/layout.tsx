@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   openGraph: { type: "website", title: siteConfig.defaultTitle, description: siteConfig.defaultDescription },
 };
+
+export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body><OrganizationJsonLd /><Header /><main>{children}</main><Footer /><MobileConversionBar /></body></html>;
