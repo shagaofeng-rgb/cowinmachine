@@ -6,14 +6,8 @@
     { "path": "/images/generated/about-planning-meeting.png", "usage": "About page hero", "reference": "app/about/page.tsx" },
     { "path": "/images/generated/quality-inspection-station.png", "usage": "Factory & Quality page hero", "reference": "app/factory-quality/page.tsx" },
     { "path": "/images/generated/cases-remote-infrastructure.png", "usage": "Cases page hero", "reference": "app/cases/page.tsx" },
-    { "path": "/images/generated/resources-technical-workbench.png", "usage": "Resources page hero", "reference": "app/resources/page.tsx" },
     { "path": "/images/generated/quote-requirements-desk.png", "usage": "Request a Quote page hero", "reference": "app/request-a-quote/page.tsx" },
     { "path": "/images/generated/contact-project-coordinator.png", "usage": "Contact page hero", "reference": "app/contact/page.tsx" },
-    { "path": "/images/generated/contact-logistics-coordination.png", "usage": "Contact page project-coordination visual", "reference": "app/contact/page.tsx", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No map", "No country or company claim", "No watermark"] },
-    { "path": "/images/generated/solutions-quarry-landscape.png", "usage": "Solutions page hero", "reference": "app/solutions/page.tsx" },
-    { "path": "/images/generated/solution-mining-quarrying.png", "usage": "Mining & Quarrying solution card", "reference": "app/solutions/page.tsx" },
-    { "path": "/images/generated/solution-road-infrastructure.png", "usage": "Road & Infrastructure solution card", "reference": "app/solutions/page.tsx" },
-    { "path": "/images/generated/solution-water-well-drilling.png", "usage": "Water Well Drilling solution card", "reference": "app/solutions/page.tsx" },
-    { "path": "/images/generated/solution-remote-lighting.png", "usage": "Remote Lighting solution card", "reference": "app/solutions/page.tsx" }
+    { "path": "/images/generated/contact-logistics-coordination.png", "usage": "Contact page project-coordination visual", "reference": "app/contact/page.tsx", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No map", "No country or company claim", "No watermark"] }
   ]
 }

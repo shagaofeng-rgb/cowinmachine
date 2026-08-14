@@ -73,8 +73,8 @@ For a configuration review, [send your project requirements](/request-a-quote) w
 ## Internal links
 
 - [/products/magnetic-separators/mag-zd15lv-8-124](/products/magnetic-separators/mag-zd15lv-8-124)
-- [/solutions](/solutions)
-- [/resources](/resources)
+- [/news](/news)
+- [/products](/products)
 
 ## Sources and further reading
 

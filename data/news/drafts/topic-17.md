@@ -47,6 +47,6 @@ TODO: Write original English analysis after source-to-fact review. Do not copy s
 
 ## Internal links
 - /products/drilling-equipment/rig-kh612-154
-- /solutions
-- /resources
+- /news
+- /products
 - /request-a-quote

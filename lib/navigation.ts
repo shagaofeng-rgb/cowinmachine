@@ -1,8 +1,7 @@
 export const desktopNavigation = [
   { href: "/", label: "Home" },
-  { href: "/solutions", label: "Solutions" },
+  { href: "/news", label: "News & Blog" },
   { href: "/about", label: "About Us" },
-  { href: "/resources", label: "Resources" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
@@ -17,10 +16,9 @@ export const productNavigation = [
 
 export const siteMenuNavigation = [
   { href: "/", label: "Home" },
-  { href: "/solutions", label: "Solutions" },
+  { href: "/news", label: "News & Blog" },
   { href: "/about", label: "About Us" },
   { href: "/factory-quality", label: "Factory & Quality" },
   { href: "/cases", label: "Cases" },
-  { href: "/resources", label: "Resources" },
   { href: "/contact", label: "Contact Us" },
 ] as const;

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "approvedAt": "2026-08-14",
+  "approvedBy": "COWIN MACHINE site owner",
+  "approvalBasis": "The site owner confirmed that the current local product images passed internal review and may be shown publicly on COWIN MACHINE.",
+  "scope": {
+    "catalogSource": "lib/authorized-catalog-products.ts",
+    "approvedDisplayRule": "Every local product image referenced by a product heroImage or gallery field may be displayed publicly.",
+    "approvedLocalImageCount": 201
+  },
+  "exceptionRecords": [
+    {
+      "route": "/products/magnetic-separators/mag-series-080-080",
+      "reason": "No local product image is currently assigned.",
+      "publicState": "approved product image pending"
+    }
+  ],
+  "reviewNote": "This approval records the owner's internal publication decision. Replace or withdraw individual assets if the owner later identifies a rights, watermark, or accuracy issue."
+}

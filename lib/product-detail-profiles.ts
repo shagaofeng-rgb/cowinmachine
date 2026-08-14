@@ -16,7 +16,7 @@ export function getProductDetailProfile(product: Product): ProductDetailProfile 
       model: null,
       publicationState: "configuration-review",
       reviewReason: "No canonical product-family mapping is available.",
-      imageStatus: "Image requires owner confirmation",
+      imageStatus: "Approved product image pending",
       content: {
         overview: "This catalog record requires a configuration review before technical content is published.",
         workingPrinciple: "Configuration subject to application review.",

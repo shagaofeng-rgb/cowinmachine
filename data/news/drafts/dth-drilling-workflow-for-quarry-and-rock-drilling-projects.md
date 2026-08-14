@@ -73,8 +73,8 @@ For a configuration review, [send your project requirements](/request-a-quote) w
 ## Internal links
 
 - [/products/drilling-equipment/rig-kh612-154](/products/drilling-equipment/rig-kh612-154)
-- [/solutions](/solutions)
-- [/resources](/resources)
+- [/news](/news)
+- [/products](/products)
 
 ## Sources and further reading
 

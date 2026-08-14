@@ -73,8 +73,8 @@ For a configuration review, [send your project requirements](/request-a-quote) w
 ## Internal links
 
 - [/products/mobile-lighting-systems/tower-ugt-10ql-102](/products/mobile-lighting-systems/tower-ugt-10ql-102)
-- [/solutions](/solutions)
-- [/resources](/resources)
+- [/news](/news)
+- [/products](/products)
 
 ## Sources and further reading
 
