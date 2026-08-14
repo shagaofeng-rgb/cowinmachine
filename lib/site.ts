@@ -11,9 +11,9 @@ export const siteConfig = {
     region: "",
     country: "",
   },
-  defaultTitle: "cowinmachine | Mobile Lighting & Site Monitoring Equipment",
+  defaultTitle: "cowinmachine | Industrial Equipment Solutions",
   defaultDescription:
-    "cowinmachine is preparing an independent product range for mobile lighting and site monitoring equipment enquiries.",
+    "cowinmachine is preparing an independent product range for industrial equipment enquiries.",
   companyIntroduction:
     "cowinmachine is preparing independent product information for industrial buyers. Contact our team to discuss your application and equipment requirements.",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://cowinmachine.com",

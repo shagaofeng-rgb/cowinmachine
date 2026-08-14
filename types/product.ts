@@ -1,7 +1,9 @@
 export type ProductCategorySlug =
-  | "solar-light-towers"
-  | "site-monitoring-trailers"
-  | "diesel-light-towers";
+  | "compressed-air-equipment"
+  | "generator-systems"
+  | "drilling-equipment"
+  | "drilling-consumables"
+  | "mobile-lighting-systems";
 
 export type Product = {
   id: string;

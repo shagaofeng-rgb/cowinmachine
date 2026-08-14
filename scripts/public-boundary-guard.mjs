@@ -2,13 +2,19 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 const roots = ["app", "components", "lib", "public", "types"];
+const textFromCodes = (...codes) => String.fromCharCode(...codes);
+const spacedPhone = (...codes) => codes.map((code) => `${String.fromCharCode(code).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*`).join("");
 const forbidden = [
-  new RegExp(["univ", "tower"].join(""), "gi"),
-  new RegExp(["cowin", "magnet\\.com"].join(""), "gi"),
-  new RegExp(["cowin", "\\s+magnet"].join(""), "gi"),
-  new RegExp(["quzhou", "\\s+qiying"].join(""), "gi"),
-  new RegExp(["factory", "\\s+in\\s+zhejiang"].join(""), "gi"),
-  /\+86\s*156\s*6513\s*5205/g,
+  new RegExp(textFromCodes(117, 110, 105, 118, 116, 111, 119, 101, 114), "gi"),
+  new RegExp(textFromCodes(109, 111, 100, 101, 114, 97, 116, 101, 109, 97, 99, 104, 105, 110, 101), "gi"),
+  new RegExp(`${textFromCodes(113, 117, 122, 104, 111, 117)}\\s+${textFromCodes(122, 104, 111, 110, 103, 100, 117)}`, "gi"),
+  new RegExp(textFromCodes(120, 105, 97, 64, 109, 111, 100, 101, 114, 97, 116, 101, 109, 97, 99, 104, 105, 110, 101, 46, 99, 111, 109), "gi"),
+  new RegExp(textFromCodes(99, 111, 119, 105, 110, 109, 97, 103, 110, 101, 116, 46, 99, 111, 109), "gi"),
+  new RegExp(`${textFromCodes(99, 111, 119, 105, 110)}\\s+${textFromCodes(109, 97, 103, 110, 101, 116)}`, "gi"),
+  new RegExp(`${textFromCodes(113, 117, 122, 104, 111, 117)}\\s+${textFromCodes(113, 105, 121, 105, 110, 103)}`, "gi"),
+  new RegExp(`${textFromCodes(102, 97, 99, 116, 111, 114, 121)}\\s+${textFromCodes(105, 110)}\\s+${textFromCodes(122, 104, 101, 106, 105, 97, 110, 103)}`, "gi"),
+  new RegExp(spacedPhone(43, 56, 54, 49, 53, 54, 54, 53, 49, 51, 53, 50, 48, 53), "g"),
+  new RegExp(spacedPhone(43, 56, 54, 49, 54, 54, 53, 55, 48, 48, 48, 48, 50), "g"),
 ];
 const allowedExtensions = new Set([".ts", ".tsx", ".js", ".mjs", ".css", ".json", ".html", ".txt", ".svg"]);
 const files = [];

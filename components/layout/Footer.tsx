@@ -5,7 +5,7 @@ import { siteConfig, whatsappHref } from "@/lib/site";
 
 export function Footer() {
   return <footer className="site-footer">
-    <div className="footer-cta"><SiteLogo inverse /><div><p>Need help reviewing your lighting or site-monitoring requirement?</p><Link className="button button-primary" href="/request-a-quote">Request a Quote</Link></div></div>
+    <div className="footer-cta"><SiteLogo inverse /><div><p>Need help reviewing your industrial equipment requirement?</p><Link className="button button-primary" href="/request-a-quote">Request a Quote</Link></div></div>
     <div className="footer-grid">
       <div><p className="footer-heading">Company</p><Link href="/about">About</Link><Link href="/factory-quality">Quality Documentation</Link><Link href="/cases">Project Reviews</Link></div>
       <div><p className="footer-heading">Products</p>{productCategories.map((item) => <Link key={item.slug} href={`/products/${item.slug}`}>{item.name}</Link>)}</div>
