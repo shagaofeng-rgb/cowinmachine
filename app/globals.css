@@ -41,3 +41,6 @@ main { min-height: 62vh; }.page-hero { background: var(--navy); color: white; pa
 .page-hero-image { z-index: -2; object-fit: cover; }
 .page-hero-content { width: min(100%, var(--container)); margin: auto; }
 .card-image { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.product-detail-image { width: 100%; height: auto; max-height: 620px; object-fit: contain; border: 1px solid var(--line); background: var(--surface); }
+.catalog-reference { color: var(--muted); font-size: .86rem; font-weight: 700; }
+.specification-table-wrap { overflow-x: auto; border: 1px solid var(--line); }.specification-table-wrap table { width: 100%; border-collapse: collapse; min-width: 460px; }.specification-table-wrap th, .specification-table-wrap td { padding: .75rem 1rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }.specification-table-wrap th { width: 38%; color: var(--navy); background: var(--surface); }

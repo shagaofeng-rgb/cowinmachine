@@ -19,7 +19,7 @@ const categoryMap = [
   [/(air-compressor|screw-air|piston-air|rotary-screw)/i, "compressed-air-equipment"],
   [/(diesel-generator|generator)/i, "generator-systems"],
   [/(light-tower|surveillance|cctv|lighting)/i, "mobile-lighting-systems"],
-  [/(univtower|solar-tower|hybrid-tower|diesel-tower)/i, "mobile-lighting-systems"],
+  [/(solar-tower|hybrid-tower|diesel-tower)/i, "mobile-lighting-systems"],
 ];
 
 const escapeCsv = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;

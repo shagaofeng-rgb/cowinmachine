@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "audit:source-products": "node scripts/audit-source-products.mjs",
+    "catalog:build": "node scripts/build-authorized-product-catalog.mjs",
     "check:public-boundary": "node scripts/public-boundary-guard.mjs",
     "check:content-similarity": "node scripts/content-similarity-guard.mjs",
     "report:migration": "node scripts/generate-migration-reports.mjs",

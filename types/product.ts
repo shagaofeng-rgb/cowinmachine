@@ -16,5 +16,7 @@ export type Product = {
   applications: string[];
   keySpecifications: { label: string; value: string }[];
   technicalSpecifications: { label: string; value: string }[];
-  status: "Review required";
+  heroImage?: string;
+  gallery: { src: string; alt: string }[];
+  status: "Configuration required";
 };
