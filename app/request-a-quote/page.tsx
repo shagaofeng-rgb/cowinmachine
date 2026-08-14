@@ -8,7 +8,7 @@ export const metadata = pageMetadata("Request a Quote", "Send cowinmachine your 
 
 export default function QuotePage() {
   return <>
-    <PageHero eyebrow="Request a Quote" title="Tell Us About Your Equipment Requirement" description="Provide your location, operating conditions and required quantity. No product claim is made until verified information is supplied." />
+    <PageHero eyebrow="Request a Quote" title="Tell Us About Your Equipment Requirement" description="Provide your location, operating conditions and required quantity. No product claim is made until verified information is supplied." image={{ src: "/images/generated/quote-requirements-desk.png", alt: "Technical inquiry requirements being prepared" }} />
     <section className="section section-alt"><div className="content-wrap"><h2>Contact Details · Equipment Requirements · Project Details</h2><InquiryForm /><p className="form-status">For an immediate conversation, email <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a> or <a href={whatsappHref}>message us on WhatsApp</a>.</p><Link className="button button-outline" href="/products">Return to Products</Link></div></section>
   </>;
 }
