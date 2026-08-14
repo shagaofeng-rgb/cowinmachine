@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
+    "@phosphor-icons/react": "^2.1.10",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

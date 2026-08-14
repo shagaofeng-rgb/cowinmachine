@@ -2,12 +2,18 @@
   "version": 1,
   "purpose": "Tracks non-product visual usage. Every file under public/images/generated must have exactly one public code reference; scripts/check-site-visual-usage.mjs enforces this during build.",
   "assets": [
-    { "path": "/images/generated/home-remote-jobsite.png", "usage": "Home page hero", "reference": "app/page.tsx" },
+    { "path": "/images/generated/home-technical-selection-hero.png", "usage": "Home page technical-selection hero", "reference": "app/page.tsx", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No customer or company claim", "No watermark"] },
     { "path": "/images/generated/about-planning-meeting.png", "usage": "About page hero", "reference": "app/about/page.tsx" },
     { "path": "/images/generated/quality-inspection-station.png", "usage": "Factory & Quality page hero", "reference": "app/factory-quality/page.tsx" },
     { "path": "/images/generated/cases-remote-infrastructure.png", "usage": "Cases page hero", "reference": "app/cases/page.tsx" },
     { "path": "/images/generated/quote-requirements-desk.png", "usage": "Request a Quote page hero", "reference": "app/request-a-quote/page.tsx" },
     { "path": "/images/generated/contact-project-coordinator.png", "usage": "Contact page hero", "reference": "app/contact/page.tsx" },
-    { "path": "/images/generated/contact-logistics-coordination.png", "usage": "Contact page project-coordination visual", "reference": "app/contact/page.tsx", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No map", "No country or company claim", "No watermark"] }
+    { "path": "/images/generated/contact-logistics-coordination.png", "usage": "Contact page project-coordination visual", "reference": "app/contact/page.tsx", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No map", "No country or company claim", "No watermark"] },
+    { "path": "/images/generated/home-category-air-compressors.png", "usage": "Home page air compressor category tile", "reference": "lib/home-product-families.ts", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No model number", "No watermark"] },
+    { "path": "/images/generated/home-category-generator-systems.png", "usage": "Home page generator category tile", "reference": "lib/home-product-families.ts", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No model number", "No watermark"] },
+    { "path": "/images/generated/home-category-drilling-equipment.png", "usage": "Home page drilling equipment category tile", "reference": "lib/home-product-families.ts", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No model number", "No watermark"] },
+    { "path": "/images/generated/home-category-drilling-tools.png", "usage": "Home page drilling tools category tile", "reference": "lib/home-product-families.ts", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No model number", "No watermark"] },
+    { "path": "/images/generated/home-category-mobile-light-towers.png", "usage": "Home page mobile light tower category tile", "reference": "lib/home-product-families.ts", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No model number", "No watermark"] },
+    { "path": "/images/generated/home-category-magnetic-separators.png", "usage": "Home page magnetic separator category tile", "reference": "lib/home-product-families.ts", "source": "AI-generated for this task", "constraints": ["No logo", "No text", "No model number", "No watermark"] }
   ]
 }
