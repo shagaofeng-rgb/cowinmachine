@@ -42,7 +42,7 @@ const asSource = (row: Record<string, unknown>): StoredNewsSource => ({
   lastUsedAt: row.last_used_at ? new Date(String(row.last_used_at)).toISOString() : null,
   usageCount: Number(row.usage_count ?? 0),
   notes: String(row.notes ?? ""),
-  seedReference: String(row.source_seed_ids?.[0] ?? ""),
+  seedReference: Array.isArray(row.source_seed_ids) ? String(row.source_seed_ids[0] ?? "") : "",
   sourceSeedIds: Array.isArray(row.source_seed_ids) ? row.source_seed_ids.map(String) : [],
   sourceNames: [],
   sourceGroups: [String(row.source_group) as StoredNewsSource["sourceGroup"]],
