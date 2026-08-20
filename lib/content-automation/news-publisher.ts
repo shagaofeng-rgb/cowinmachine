@@ -1,5 +1,7 @@
 import "server-only";
 
+import { randomUUID } from "node:crypto";
+
 import master from "@/data/product-audit/canonical-product-master.json";
 import { createHumanizedEditorialDraft } from "@/lib/content-automation/ai-editorial";
 import { contentAutomationConfig, isAutoPublishEnabled } from "@/lib/content-automation/config";
@@ -104,8 +106,8 @@ async function writeHumanizerAudit(input: {
       article_id, original_draft_hash, humanized_draft_hash, factual_fields_locked,
       removed_ai_patterns, prohibited_phrases_found, similarity_before,
       similarity_after, fact_delta_detected, passed, processed_at
-    ) VALUES ($1,$2,$3,$4::jsonb,$5::jsonb,$6::jsonb,$7,$8,$9,$10,NOW())`,
-    [input.articleId, input.originalDraftHash, input.humanizedDraftHash, JSON.stringify(["product", "industry", "scenario", "source title", "source date", "source URL"]), JSON.stringify([]), JSON.stringify(input.prohibitedPhrases), input.similarityBefore, input.similarityAfter, input.factDeltaDetected, input.passed],
+    ) VALUES ($1,$2,$3,$4::text[],$5::text[],$6::text[],$7,$8,$9,$10,NOW())`,
+    [input.articleId, input.originalDraftHash, input.humanizedDraftHash, ["product", "industry", "scenario", "source title", "source date", "source URL"], [], input.prohibitedPhrases, input.similarityBefore, input.similarityAfter, input.factDeltaDetected, input.passed],
   );
 }
 
@@ -166,17 +168,7 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
       const titleSimilarity = Math.max(0, ...recent.map((article) => tokenSimilarity(draft.title, article.title)));
       const bodySimilarity = Math.max(0, ...recent.map((article) => ngramSimilarity(body, article.body)));
       const passed = audit.passed && !factDeltaDetected && titleSimilarity < 0.4 && bodySimilarity < 0.5;
-      const id = `news-${now.getTime()}`;
-      await writeHumanizerAudit({
-        articleId: id,
-        originalDraftHash: String(draft.body.length),
-        humanizedDraftHash: String(body.length),
-        prohibitedPhrases: audit.found,
-        similarityBefore: titleSimilarity,
-        similarityAfter: bodySimilarity,
-        factDeltaDetected,
-        passed,
-      });
+      const id = randomUUID();
       if (!passed) {
         await updateCandidateStatus(candidate.id, "rejected", "Humanizer, fact lock, length, or similarity gate failed.");
         return { dryRun: false, status: "blocked", reasons: ["The selected candidate failed the mandatory editorial quality gate."] };
@@ -196,7 +188,17 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
         qualityReport: { passed, checks: [], titleSimilarity, bodySimilarity, internalLinkCount: internalLinks.length },
       };
       await store.write({ ...state, articles: [...state.articles, article], runs: [...state.runs, { id: `news-publish-${now.getTime()}`, startedAt: now.toISOString(), mode: contentAutomationConfig().mode, dryRun: false, result: article.status }] });
-      if (canPublish) await markSourceUsed(candidate.sourceId);
+      await writeHumanizerAudit({
+        articleId: id,
+        originalDraftHash: String(draft.body.length),
+        humanizedDraftHash: String(body.length),
+        prohibitedPhrases: audit.found,
+        similarityBefore: titleSimilarity,
+        similarityAfter: bodySimilarity,
+        factDeltaDetected,
+        passed,
+      });
+            if (canPublish) await markSourceUsed(candidate.sourceId);
       return { dryRun: false, status: canPublish ? "published" : "drafted", articleId: article.id, reasons: canPublish ? [] : ["Draft generated successfully; set CONTENT_MODE=publish and AUTO_PUBLISH=true to permit publication."] };
     } catch (error) {
       await updateCandidateStatus(candidate.id, "rejected", error instanceof Error ? error.message.slice(0, 240) : "News generation failed.");
