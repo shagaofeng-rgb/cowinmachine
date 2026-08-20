@@ -142,3 +142,63 @@ export async function markSourceUsed(sourceId: string) {
     [sourceId],
   );
 }
+
+
+export type StoredNewsCandidate = {
+  id: string;
+  sourceId: string;
+  sourceUrl: string;
+  title: string;
+  publishedAt: string;
+  productCategories: string[];
+  industries: string[];
+  summary: string;
+  primaryFacts: string[];
+  sourceQuality: "primary" | "authoritative-media" | "secondary";
+  sourceName: string;
+  sourceDomain: string;
+};
+
+export async function listFreshNewsCandidates(limit = 24): Promise<StoredNewsCandidate[]> {
+  const sql = newsSql();
+  const rows = await sql.query(
+    `SELECT c.id, c.source_id, c.source_url, c.title, c.published_at, c.product_categories,
+      c.industries, c.summary, c.primary_facts, c.source_quality, s.name AS source_name, s.domain AS source_domain
+     FROM news_candidates c
+     JOIN news_sources s ON s.id = c.source_id
+     WHERE c.status = 'discovered'
+       AND c.published_at >= NOW() - INTERVAL '90 days'
+       AND s.active_status = 'active'
+       AND s.robots_allowed IS TRUE
+       AND s.requires_login IS FALSE
+       AND s.paywalled IS FALSE
+     ORDER BY c.published_at DESC
+     LIMIT $1`,
+    [limit],
+  );
+  return rows.map((row) => {
+    const record = row as Record<string, unknown>;
+    return {
+      id: String(record.id),
+      sourceId: String(record.source_id),
+      sourceUrl: String(record.source_url),
+      title: String(record.title),
+      publishedAt: new Date(String(record.published_at)).toISOString(),
+      productCategories: Array.isArray(record.product_categories) ? record.product_categories.map(String) : [],
+      industries: Array.isArray(record.industries) ? record.industries.map(String) : [],
+      summary: String(record.summary ?? ""),
+      primaryFacts: Array.isArray(record.primary_facts) ? record.primary_facts.map(String) : [],
+      sourceQuality: String(record.source_quality) as StoredNewsCandidate["sourceQuality"],
+      sourceName: String(record.source_name),
+      sourceDomain: String(record.source_domain),
+    };
+  });
+}
+
+export async function updateCandidateStatus(id: string, status: "rejected" | "queued", rejectionReason?: string) {
+  const sql = newsSql();
+  await sql.query(
+    "UPDATE news_candidates SET status=$2, rejection_reason=$3 WHERE id=$1",
+    [id, status, rejectionReason ?? null],
+  );
+}
