@@ -1,6 +1,7 @@
 export const desktopNavigation = [
   { href: "/", label: "Home" },
-  { href: "/news", label: "News & Blog" },
+  { href: "/news", label: "News" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
 ] as const;
@@ -16,7 +17,8 @@ export const productNavigation = [
 
 export const siteMenuNavigation = [
   { href: "/", label: "Home" },
-  { href: "/news", label: "News & Blog" },
+  { href: "/news", label: "News" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
   { href: "/factory-quality", label: "Factory & Quality" },
   { href: "/cases", label: "Cases" },
