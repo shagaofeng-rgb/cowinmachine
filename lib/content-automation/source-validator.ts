@@ -126,3 +126,39 @@ export async function inspectNewsSource(source: NewsSource): Promise<{ health: S
     return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "inactive", robotsAllowed: false, error: error instanceof Error ? error.message.slice(0, 240) : "Unknown source inspection error." }, candidates: [] };
   }
 }
+
+
+function metaValue(html: string, property: string) {
+  const expression = new RegExp(`<meta[^>]+(?:property|name)=["']${property}["'][^>]+content=["']([^"']+)["'][^>]*>`, "i");
+  return html.match(expression)?.[1]?.replace(/&amp;/g, "&").trim();
+}
+
+function pageTitle(html: string) {
+  return metaValue(html, "og:title") ?? html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export async function validateDiscoveredArticle(input: { url: string; domain: string; expectedTitle: string; expectedPublishedAt: string }) {
+  let parsed: URL;
+  try { parsed = new URL(input.url); } catch { return { passed: false, reason: "Candidate URL is invalid." }; }
+  const hostname = parsed.hostname.replace(/^www\./, "");
+  if (parsed.protocol !== "https:" || (hostname !== input.domain && !hostname.endsWith(`.${input.domain}`))) {
+    return { passed: false, reason: "Candidate URL is outside its approved source domain." };
+  }
+  try {
+    const page = await fetchText(input.url);
+    if (!page.ok || !/text\/html|application\/xhtml\+xml/i.test(page.contentType)) {
+      return { passed: false, reason: `Candidate article returned HTTP ${page.status} or an unsupported content type.` };
+    }
+    const title = pageTitle(page.text) ?? "";
+    if (!title || title.toLowerCase().slice(0, 36) !== input.expectedTitle.toLowerCase().slice(0, 36)) {
+      return { passed: false, reason: "Candidate article title could not be confirmed on the original page." };
+    }
+    const date = metaValue(page.text, "article:published_time") ?? metaValue(page.text, "date") ?? "";
+    if (date && Number.isNaN(new Date(date).valueOf())) {
+      return { passed: false, reason: "Candidate article date metadata is invalid." };
+    }
+    return { passed: true, pageTitle: title, pageDate: date || input.expectedPublishedAt };
+  } catch (error) {
+    return { passed: false, reason: error instanceof Error ? error.message.slice(0, 180) : "Candidate article verification failed." };
+  }
+}
