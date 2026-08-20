@@ -22,7 +22,7 @@ type Canonical = {
   verifiedSpecifications: Record<string, string | number>;
 };
 
-const canonicalProducts = (master as { products: Canonical[] }).products;
+const canonicalProducts = (master as unknown as { products: Canonical[] }).products;
 const DAY = 86_400_000;
 const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 96);
 const age = (value: string, now: Date) => (now.valueOf() - new Date(value).valueOf()) / DAY;
@@ -180,7 +180,7 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
         id, slug: slugify(draft.title), title: draft.title, summary: draft.summary, body,
         productFamily: category, productUrl, industry, scenario, similarityKey: topicKey,
         sources: [source], internalLinks,
-        image: { src: selected.product.heroImage, alt: `${selected.product.name} for ${industry}`, source: "cowin-machine-authorized", licenseStatus: "authorized" },
+        image: { src: selected.product.heroImage ?? "", alt: `${selected.product.name} for ${industry}`, source: "cowin-machine-authorized", licenseStatus: "authorized" },
         status: canPublish ? "published" : "pending-review",
         createdAt: now.toISOString(), updatedAt: now.toISOString(),
         publishedAt: canPublish ? now.toISOString() : undefined,
