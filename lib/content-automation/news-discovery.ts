@@ -122,7 +122,7 @@ export async function discoverApprovedNews(options: { dryRun: boolean }) : Promi
           industries: industries[category],
           summary: candidate.summary,
           primaryFacts: [candidate.summary || "Article title and date require full-page verification before publication."],
-          sourceQuality: quality(source.trustTier),
+          sourceQuality: quality(source.trustTier === "discovery-only" ? "C" : source.trustTier),
           imageLicenseStatus: "unknown",
           originalityRisk: "medium",
           status: "discovered",
