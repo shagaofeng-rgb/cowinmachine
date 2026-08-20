@@ -21,7 +21,8 @@ export const siteConfig = {
 
 export const primaryNavigation = [
   { href: "/", label: "Home" },
-  { href: "/news", label: "News & Blog" },
+  { href: "/news", label: "News" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
 ] as const;
