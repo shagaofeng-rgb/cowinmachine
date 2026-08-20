@@ -7,6 +7,7 @@ import { createHumanizedEditorialDraft } from "@/lib/content-automation/ai-edito
 import { contentAutomationConfig, isAutoPublishEnabled } from "@/lib/content-automation/config";
 import { newsSql } from "@/lib/content-automation/database";
 import { markSourceUsed, listFreshNewsCandidates, updateCandidateStatus } from "@/lib/content-automation/news-source-store";
+import { validateDiscoveredArticle } from "@/lib/content-automation/source-validator";
 import { ngramSimilarity, tokenSimilarity } from "@/lib/content-automation/similarity";
 import { contentStore } from "@/lib/content-automation/storage";
 import { products } from "@/lib/products";
@@ -148,6 +149,17 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
 
     if (options.dryRun) {
       return { dryRun: true, status: "drafted", reasons: [`Eligible candidate selected: ${candidate.title}`] };
+    }
+
+    const articleEvidence = await validateDiscoveredArticle({
+      url: candidate.sourceUrl,
+      domain: candidate.sourceDomain,
+      expectedTitle: candidate.title,
+      expectedPublishedAt: candidate.publishedAt,
+    });
+    if (!articleEvidence.passed) {
+      await updateCandidateStatus(candidate.id, "rejected", articleEvidence.reason);
+      continue;
     }
 
     try {
