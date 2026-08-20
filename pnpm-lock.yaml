@@ -2122,6 +2122,8 @@ packages:
 
 snapshots:
 
+  '@neondatabase/serverless@1.1.0': {}
+
   '@alloc/quick-lru@5.2.0': {}
 
   '@babel/code-frame@7.29.7':
