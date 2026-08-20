@@ -18,7 +18,7 @@ export function ArticleStructuredData({ article }: { article: ContentArticle }) 
   const faq = extractFaqs(article.body);
   const schemas = [
     { "@context": "https://schema.org", "@type": "Article", headline: article.title, description: article.summary, datePublished: article.publishedAt, dateModified: article.updatedAt, mainEntityOfPage: url, publisher: { "@type": "Organization", name: siteConfig.brandName }, citation: article.sources.map((source) => source.url) },
-    { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: siteConfig.siteUrl }, { "@type": "ListItem", position: 2, name: "News & Blog", item: `${siteConfig.siteUrl}/news` }, { "@type": "ListItem", position: 3, name: article.title, item: url }] },
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: siteConfig.siteUrl }, { "@type": "ListItem", position: 2, name: "News", item: `${siteConfig.siteUrl}/news` }, { "@type": "ListItem", position: 3, name: article.title, item: url }] },
     ...(faq.length ? [{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq }] : []),
   ];
   return <>{schemas.map((schema, index) => <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: inlineJson(schema) }} />)}</>;
