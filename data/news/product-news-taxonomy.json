@@ -1,0 +1,131 @@
+{
+  "generatedAt": "2026-08-20T00:00:00.000Z",
+  "categories": [
+    {
+      "id": "compressed-air-equipment",
+      "name": "Air Compressors",
+      "industries": [
+        "mining",
+        "quarrying",
+        "water-well drilling",
+        "rock drilling",
+        "construction",
+        "industrial workshops",
+        "equipment rental"
+      ],
+      "selectionFields": [
+        "required pressure",
+        "free air delivery",
+        "power source",
+        "operating hours",
+        "application"
+      ]
+    },
+    {
+      "id": "generator-systems",
+      "name": "Generator Systems",
+      "industries": [
+        "remote construction",
+        "temporary site power",
+        "mining camps",
+        "emergency backup",
+        "telecom backup",
+        "industrial facilities",
+        "rental fleets"
+      ],
+      "selectionFields": [
+        "load requirement",
+        "voltage",
+        "frequency",
+        "phase",
+        "operating hours",
+        "site conditions"
+      ]
+    },
+    {
+      "id": "drilling-equipment",
+      "name": "Drilling Rigs",
+      "industries": [
+        "water wells",
+        "agricultural irrigation",
+        "mining",
+        "quarrying",
+        "anchoring",
+        "geotechnical works",
+        "road and railway construction"
+      ],
+      "selectionFields": [
+        "drilling depth",
+        "hole diameter",
+        "geology",
+        "drilling method",
+        "site conditions"
+      ]
+    },
+    {
+      "id": "drilling-consumables",
+      "name": "Drilling Tools & Consumables",
+      "industries": [
+        "hard-rock drilling",
+        "DTH drilling",
+        "quarrying",
+        "tunnel work",
+        "mining maintenance",
+        "water-well drilling"
+      ],
+      "selectionFields": [
+        "hammer type",
+        "shank",
+        "bit size",
+        "formation",
+        "drilling method"
+      ]
+    },
+    {
+      "id": "mobile-lighting-systems",
+      "name": "Solar & Mobile Light Towers",
+      "industries": [
+        "construction sites",
+        "roadworks",
+        "mining sites",
+        "remote camps",
+        "emergency response",
+        "temporary event lighting",
+        "security monitoring",
+        "rental fleets"
+      ],
+      "selectionFields": [
+        "lighting duration",
+        "project location",
+        "power availability",
+        "mast requirement",
+        "security needs"
+      ]
+    },
+    {
+      "id": "magnetic-separators",
+      "name": "Magnetic Separators",
+      "industries": [
+        "mining",
+        "mineral processing",
+        "recycling",
+        "waste sorting",
+        "cement",
+        "aggregates",
+        "coal handling",
+        "food and grain",
+        "plastics",
+        "chemicals",
+        "biomass",
+        "battery-material processing"
+      ],
+      "selectionFields": [
+        "belt width",
+        "burden depth",
+        "suspension height",
+        "material type",
+        "iron contamination level"
+      ]
+    }
+  ]
+}

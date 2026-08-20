@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-08-20T00:00:00.000Z",
+  "rules": [
+    {
+      "category": "compressed-air-equipment",
+      "scenarios": [
+        "DTH drilling air supply",
+        "water-well drilling",
+        "quarry air tools",
+        "remote construction compressors"
+      ]
+    },
+    {
+      "category": "generator-systems",
+      "scenarios": [
+        "temporary construction power",
+        "remote camp power",
+        "telecom backup planning",
+        "rental fleet power"
+      ]
+    },
+    {
+      "category": "drilling-equipment",
+      "scenarios": [
+        "water-well drilling",
+        "agricultural irrigation boreholes",
+        "geotechnical investigation",
+        "quarry blast-hole preparation"
+      ]
+    },
+    {
+      "category": "drilling-consumables",
+      "scenarios": [
+        "hard-rock DTH drilling",
+        "drill-string replacement planning",
+        "tunnel drilling maintenance",
+        "water-well tooling selection"
+      ]
+    },
+    {
+      "category": "mobile-lighting-systems",
+      "scenarios": [
+        "night roadworks",
+        "remote mining lighting",
+        "temporary site security",
+        "emergency response lighting"
+      ]
+    },
+    {
+      "category": "magnetic-separators",
+      "scenarios": [
+        "crusher protection on aggregate conveyors",
+        "ferrous removal in recycling",
+        "dry mineral separation",
+        "bulk-material tramp iron removal"
+      ]
+    }
+  ]
+}

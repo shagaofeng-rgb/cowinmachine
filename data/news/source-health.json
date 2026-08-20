@@ -1,0 +1,4005 @@
+{
+  "generatedAt": "2026-08-20T00:00:00.000Z",
+  "sources": [
+    {
+      "id": "src-001",
+      "domain": "magneticsmag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-002",
+      "domain": "magnetism.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-003",
+      "domain": "ukmagnetsoc.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-004",
+      "domain": "ieeemagnetics.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-005",
+      "domain": "pubs.aip.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-006",
+      "domain": "sciencedirect.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-007",
+      "domain": "msj.or.jp",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-008",
+      "domain": "intermag.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-009",
+      "domain": "emfl.eu",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-010",
+      "domain": "uki-media.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-011",
+      "domain": "buntingmagnetics.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-012",
+      "domain": "goudsmitmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-013",
+      "domain": "eriez.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-014",
+      "domain": "mastermagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-015",
+      "domain": "steinertglobal.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-016",
+      "domain": "magneticsforum.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-017",
+      "domain": "physicsworld.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-018",
+      "domain": "sciencedaily.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-019",
+      "domain": "phys.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-020",
+      "domain": "rareearthobserver.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-021",
+      "domain": "globalreas.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-022",
+      "domain": "criticalmineralsinstitute.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-023",
+      "domain": "asminternational.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-024",
+      "domain": "sciencedirect.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-025",
+      "domain": "mdpi.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-026",
+      "domain": "mdpi.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-027",
+      "domain": "azom.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-028",
+      "domain": "advancedsciencenews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-029",
+      "domain": "materialstoday.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-030",
+      "domain": "e-flux.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-031",
+      "domain": "smm25.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-032",
+      "domain": "magnetsociety.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-033",
+      "domain": "magneticsmag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-034",
+      "domain": "magnet-news.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-035",
+      "domain": "taylorandfrancis.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-036",
+      "domain": "mining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-037",
+      "domain": "im-mine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-038",
+      "domain": "miningmagazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-039",
+      "domain": "canadianminingjournal.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-040",
+      "domain": "australianmining.com.au",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-041",
+      "domain": "mining-technology.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-042",
+      "domain": "e-mj.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-043",
+      "domain": "mineng.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-044",
+      "domain": "miningweekly.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-045",
+      "domain": "sciencedirect.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-046",
+      "domain": "miningreview.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-047",
+      "domain": "globalminingreview.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-048",
+      "domain": "bulletin.ausimm.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-049",
+      "domain": "miningengineeringmagazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-050",
+      "domain": "skillings.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-051",
+      "domain": "miningdecisions.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-052",
+      "domain": "zambiamining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-053",
+      "domain": "journal.uma.edu.gh",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-054",
+      "domain": "drcminingweek.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-055",
+      "domain": "samining.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-056",
+      "domain": "miningmx.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-057",
+      "domain": "minerals processing.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-058",
+      "domain": "northernminer.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-059",
+      "domain": "mineriamagazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-060",
+      "domain": "brasilmineral.com.br",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-061",
+      "domain": "mch.cl",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-062",
+      "domain": "rumbominero.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-063",
+      "domain": "mineriafuturo.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-064",
+      "domain": "latinomineria.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-065",
+      "domain": "portalminero.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-066",
+      "domain": "minerios.com.br",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-067",
+      "domain": "mining-journal.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-068",
+      "domain": "resourceworld.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-069",
+      "domain": "northamericanmining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-070",
+      "domain": "guiaminera.cl",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-071",
+      "domain": "mexicominingreview.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-072",
+      "domain": "mineriaperuana.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-073",
+      "domain": "miningequipmentnews.co.nz",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-074",
+      "domain": "paydirt.com.au",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-075",
+      "domain": "minexforum.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-076",
+      "domain": "mdpi.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-077",
+      "domain": "saimm.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-078",
+      "domain": "tms.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-079",
+      "domain": "iom3.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-080",
+      "domain": "gmggroup.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-081",
+      "domain": "miningmachinerynews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-082",
+      "domain": "coalage.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-083",
+      "domain": "miningweekly.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-084",
+      "domain": "namibiamining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-085",
+      "domain": "botswanamining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-086",
+      "domain": "miningindex.co.zw",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-087",
+      "domain": "eastafricanmining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-088",
+      "domain": "mozambiqueresources.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-089",
+      "domain": "tanzaniaminingworld.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-090",
+      "domain": "northafricamining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-091",
+      "domain": "miningzimbabwe.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-092",
+      "domain": "madagascar-mining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-093",
+      "domain": "wacm.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-094",
+      "domain": "same.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-095",
+      "domain": "mes.org.uk",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-096",
+      "domain": "metsoc.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-097",
+      "domain": "emdigest.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-098",
+      "domain": "indonesiamining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-099",
+      "domain": "asiaminers.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-100",
+      "domain": "miningjournal.in",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-101",
+      "domain": "vietnammining.gov.vn",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-102",
+      "domain": "philippinesminingclub.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-103",
+      "domain": "rmg.ru",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-104",
+      "domain": "kazmining.kz",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-105",
+      "domain": "uzmining.uz",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-106",
+      "domain": "nordicmining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-107",
+      "domain": "madencilik.org.tr",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-108",
+      "domain": "miningsafety.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-109",
+      "domain": "miningindaba.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-110",
+      "domain": "minexpo.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-111",
+      "domain": "recyclingtoday.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-112",
+      "domain": "isri.org ",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-113",
+      "domain": "recycling-magazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-114",
+      "domain": "waste360.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-115",
+      "domain": "waste-management-world.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-116",
+      "domain": "resource-recycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-117",
+      "domain": "resource-recycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-118",
+      "domain": "biocycle.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-119",
+      "domain": "recyclingproductnews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-120",
+      "domain": "wastedive.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-121",
+      "domain": "wasteadvantagemag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-122",
+      "domain": "fastmarkets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-123",
+      "domain": "resource-recycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-124",
+      "domain": "ciwm-journal.co.uk",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-125",
+      "domain": "edie.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-126",
+      "domain": "global-recycling.info",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-127",
+      "domain": "cdrecycling.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-128",
+      "domain": "smr-forum.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-129",
+      "domain": "recycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-130",
+      "domain": "letsrecycle.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-131",
+      "domain": "scrapmonster.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-132",
+      "domain": "americanrecycler.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-133",
+      "domain": "reciclagem.com.br",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-134",
+      "domain": "rewaste.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-135",
+      "domain": "waste360.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-136",
+      "domain": "recycling.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-137",
+      "domain": "mra.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-138",
+      "domain": "iwmsa.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-139",
+      "domain": "circulareconomyafrica.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-140",
+      "domain": "ewasa.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-141",
+      "domain": "wasteplan.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-142",
+      "domain": "plasticsmag.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-143",
+      "domain": "euric.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-144",
+      "domain": "bir.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-145",
+      "domain": "biffa.co.uk",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-146",
+      "domain": "veolia.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-147",
+      "domain": "suez.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-148",
+      "domain": "remondis.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-149",
+      "domain": "tomra.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-150",
+      "domain": "ifat.de",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-151",
+      "domain": "isriconvention.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-152",
+      "domain": "inforeciclagem.com.br",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-153",
+      "domain": "recyclinginternational.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-154",
+      "domain": "whenmag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-155",
+      "domain": "metaltechnews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-156",
+      "domain": "azocleantech.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-157",
+      "domain": "pollutionequipmentnews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-158",
+      "domain": "envirotech-online.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-159",
+      "domain": "rema.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-160",
+      "domain": "mdpi.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-161",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-162",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-163",
+      "domain": "scrapforum.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-164",
+      "domain": "ewaste-exhibition.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-165",
+      "domain": "mrai.org.in",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-166",
+      "domain": "bmrme.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-167",
+      "domain": "recyclingworld.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-168",
+      "domain": "autorecycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-169",
+      "domain": "shreddernews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-170",
+      "domain": "nonferrous-news.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-171",
+      "domain": "heavyscrap.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-172",
+      "domain": "batteryrecyclingtoday.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-173",
+      "domain": "slagrecycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-174",
+      "domain": "glassrecycling.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-175",
+      "domain": "biomassrecycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-176",
+      "domain": "textilerecycling.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-177",
+      "domain": "tirerecycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-178",
+      "domain": "mswmagazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-179",
+      "domain": "ashrecycling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-180",
+      "domain": "foundrysand.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-181",
+      "domain": "pcbrecycling.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-182",
+      "domain": "scrap.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-183",
+      "domain": "recyclingtodayeurope.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-184",
+      "domain": "wastemanagementreview.com.au",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-185",
+      "domain": "recycleasia.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-186",
+      "domain": "powderbulksolids.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-187",
+      "domain": "bulk-inside.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-188",
+      "domain": "bulk-solids-handling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-189",
+      "domain": "powderprocess.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-190",
+      "domain": "drycargomag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-191",
+      "domain": "processingmag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-192",
+      "domain": "powderbulk.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-193",
+      "domain": "bulktransporter.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-194",
+      "domain": "flowcontrolnetwork.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-195",
+      "domain": "pneu-con.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-196",
+      "domain": "bulk.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-197",
+      "domain": "industrialbuyer.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-198",
+      "domain": "ippt.ca",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-199",
+      "domain": "cemanet.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-200",
+      "domain": "bulkhandlingreview.com.au",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-201",
+      "domain": "powdertechnology.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-202",
+      "domain": "vibratingfeeders.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-203",
+      "domain": "conveyortech.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-204",
+      "domain": "pneumaticconveying.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-205",
+      "domain": "bulkstorage.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-206",
+      "domain": "wiley.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-207",
+      "domain": "sciencedirect.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-208",
+      "domain": "mhnetwork.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-209",
+      "domain": "bulksolidseurope.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-210",
+      "domain": "powdersci.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-211",
+      "domain": "magneticfiltration.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-212",
+      "domain": "machinerylubrication.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-213",
+      "domain": "fluidpowerjournal.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-214",
+      "domain": "process-heating.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-215",
+      "domain": "chemengonline.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-216",
+      "domain": "chemicalprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-217",
+      "domain": "pim-international.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-218",
+      "domain": "metal-am.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-219",
+      "domain": "millingandgrain.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-220",
+      "domain": "ceramicindustry.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-221",
+      "domain": "glassprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-222",
+      "domain": "batterypowder.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-223",
+      "domain": "emerald.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-224",
+      "domain": "cementbulk.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-225",
+      "domain": "aggregateconveying.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-226",
+      "domain": "portbulk.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-227",
+      "domain": "stevedoring.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-228",
+      "domain": "railbulk.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-229",
+      "domain": "silotechnology.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-230",
+      "domain": "foodmagnetcleaners.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-231",
+      "domain": "magnetictraps.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-232",
+      "domain": "drawermagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-233",
+      "domain": "gratemagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-234",
+      "domain": "rotarymagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-235",
+      "domain": "magneticrollers.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-236",
+      "domain": "eddycurrentseparators.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-237",
+      "domain": "sensorsorting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-238",
+      "domain": "airseparators.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-239",
+      "domain": "demagnetizers.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-240",
+      "domain": "magneticconveyors.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-241",
+      "domain": "steelorbis.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-242",
+      "domain": "metalcenternews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-243",
+      "domain": "afsinc.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-244",
+      "domain": "foundrymag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-245",
+      "domain": "steeltimesint.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-246",
+      "domain": "aist.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-247",
+      "domain": "fastmarkets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-248",
+      "domain": "meps.co.uk",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-249",
+      "domain": "fastmarkets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-250",
+      "domain": "casting-plant.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-251",
+      "domain": "mpt-international.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-252",
+      "domain": "hoistmagazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-253",
+      "domain": "cranestodaymagazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-254",
+      "domain": "khl.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-255",
+      "domain": "khl.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-256",
+      "domain": "liftingafrica.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-257",
+      "domain": "castingssa.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-258",
+      "domain": "seifsa.org.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-259",
+      "domain": "pyrometallurgy.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-260",
+      "domain": "foundrytradejournal.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-261",
+      "domain": "steelguru.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-262",
+      "domain": "aist.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-263",
+      "domain": "modernmetals.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-264",
+      "domain": "metalprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-265",
+      "domain": "deacero.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-266",
+      "domain": "scraprecranes.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-267",
+      "domain": "slabhandling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-268",
+      "domain": "magnetliftersafety.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-269",
+      "domain": "epm-lifting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-270",
+      "domain": "crane-magnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-271",
+      "domain": "milldutymagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-272",
+      "domain": "grapple-magnet.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-273",
+      "domain": "steellifting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-274",
+      "domain": "coillifting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-275",
+      "domain": "hitempmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-276",
+      "domain": "underwatermagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-277",
+      "domain": "cranealliance.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-278",
+      "domain": "worldsteel.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-279",
+      "domain": "eurofer.eu",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-280",
+      "domain": "china-steel-news.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-281",
+      "domain": "indiasteelreview.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-282",
+      "domain": "alacero.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-283",
+      "domain": "metalcenterjournal.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-284",
+      "domain": "pipelifting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-285",
+      "domain": "steelframelifting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-286",
+      "domain": "pigironhandling.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-287",
+      "domain": "skullcrackermagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-288",
+      "domain": "smeltingshop.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-289",
+      "domain": "furnacecharging.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-290",
+      "domain": "continuouscasting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-291",
+      "domain": "emstirrer.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-292",
+      "domain": "slagpotmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-293",
+      "domain": "foundryironremover.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-294",
+      "domain": "heavyforginglifting.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-295",
+      "domain": "shipyardmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-296",
+      "domain": "worldcement.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-297",
+      "domain": "globalcement.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-298",
+      "domain": "cementamericas.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-299",
+      "domain": "pitandquarry.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-300",
+      "domain": "rockproducts.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-301",
+      "domain": "aggregateresearch.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-302",
+      "domain": "aggbusiness.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-303",
+      "domain": "quarryingafrica.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-304",
+      "domain": "quarrymagazine.com.au",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-305",
+      "domain": "concreteproducts.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-306",
+      "domain": "ccsa.org.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-307",
+      "domain": "zkg.de",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-308",
+      "domain": "glass-international.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-309",
+      "domain": "glassworldwide.co.uk",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-310",
+      "domain": "cemnet.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-311",
+      "domain": "cddebris.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-312",
+      "domain": "crusherprotection.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-313",
+      "domain": "gypsumprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-314",
+      "domain": "silicasandiron.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-315",
+      "domain": "kaolinpurification.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-316",
+      "domain": "feldsparmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-317",
+      "domain": "concreterecycling.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-318",
+      "domain": "asphaltrecycling.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-319",
+      "domain": "brickmaterials.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-320",
+      "domain": "refractorymaterials.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-321",
+      "domain": "slagaggregate.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-322",
+      "domain": "mobilecrushing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-323",
+      "domain": "portablescreening.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-324",
+      "domain": "ballmilltramp.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-325",
+      "domain": "vsi-crusher.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-326",
+      "domain": "jawcrusher.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-327",
+      "domain": "conecrusher.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-328",
+      "domain": "limestonemining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-329",
+      "domain": "marbleslurry.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-330",
+      "domain": "mineralwoolslag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-331",
+      "domain": "expandedclay.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-332",
+      "domain": "clinkercooler.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-333",
+      "domain": "rawmill.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-334",
+      "domain": "quarrysafety.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-335",
+      "domain": "nssga.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-336",
+      "domain": "uepg.eu",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-337",
+      "domain": "quarrying.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-338",
+      "domain": "ficem.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-339",
+      "domain": "aseancement.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-340",
+      "domain": "sand-stone.org.cn",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-341",
+      "domain": "cene.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-342",
+      "domain": "mechtech.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-343",
+      "domain": "planthire.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-344",
+      "domain": "constructionworld.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-345",
+      "domain": "planteng.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-346",
+      "domain": "maintenancetechnology.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-347",
+      "domain": "ien.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-348",
+      "domain": "mmh.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-349",
+      "domain": "mhlnews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-350",
+      "domain": "equipmentworld.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-351",
+      "domain": "designworldonline.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-352",
+      "domain": "machinedesign.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-353",
+      "domain": "engineering.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-354",
+      "domain": "automationworld.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-355",
+      "domain": "controleng.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-356",
+      "domain": "thomasnet.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-357",
+      "domain": "directindustry.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-358",
+      "domain": "globalspec.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-359",
+      "domain": "oemoffhighway.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-360",
+      "domain": "heavyequipmentguide.ca",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-361",
+      "domain": "ien.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-362",
+      "domain": "efficientplantmag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-363",
+      "domain": "machinetech.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-364",
+      "domain": "sae.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-365",
+      "domain": "saimeche.org.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-366",
+      "domain": "saeec.org.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-367",
+      "domain": "vdma.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-368",
+      "domain": "vdma.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-369",
+      "domain": "jsme.or.jp",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-370",
+      "domain": "ksme.or.kr",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-371",
+      "domain": "heavymachinerydigest.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-372",
+      "domain": "iaasiaonline.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-373",
+      "domain": "plantservices.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-374",
+      "domain": "industrialrepair.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-375",
+      "domain": "magnetcouplings.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-376",
+      "domain": "magneticbrakes.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-377",
+      "domain": "linearactuators.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-378",
+      "domain": "rectifiers-magnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-379",
+      "domain": "suspensionmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-380",
+      "domain": "beltcleaners.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-381",
+      "domain": "conveyorcomponents.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-382",
+      "domain": "ex-magnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-383",
+      "domain": "waterproofmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-384",
+      "domain": "magnetbelts.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-385",
+      "domain": "neodymiumindex.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-386",
+      "domain": "ferritemagnets.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-387",
+      "domain": "smcomagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-388",
+      "domain": "superconductingmagnets.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-389",
+      "domain": "feamagnetics.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-390",
+      "domain": "gaussmeters.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-391",
+      "domain": "foodprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-392",
+      "domain": "foodmanufacturing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-393",
+      "domain": "fbr.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-394",
+      "domain": "africanfarming.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-395",
+      "domain": "millingandgrain.africa",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-396",
+      "domain": "world-grain.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-397",
+      "domain": "feedandgrain.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-398",
+      "domain": "agroprocessing.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-399",
+      "domain": "foodprocessingafrica.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-400",
+      "domain": "feedsa.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-401",
+      "domain": "sasa.org.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-402",
+      "domain": "grainsa.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-403",
+      "domain": "chemengonline.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-404",
+      "domain": "chemweek.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-405",
+      "domain": "packagingdigest.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-406",
+      "domain": "pharmtech.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-407",
+      "domain": "plasticsnews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-408",
+      "domain": "ptonline.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-409",
+      "domain": "biofuelsdigest.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-410",
+      "domain": "timberprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-411",
+      "domain": "woodworkingnetwork.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-412",
+      "domain": "pulpandpapercanada.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-413",
+      "domain": "tappi.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-414",
+      "domain": "nonwovens-industry.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-415",
+      "domain": "textileworld.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-416",
+      "domain": "autonews.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-417",
+      "domain": "rubberworld.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-418",
+      "domain": "tobaccojournal.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-419",
+      "domain": "coffeeprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-420",
+      "domain": "teaprocessing.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-421",
+      "domain": "spicescleaning.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-422",
+      "domain": "starchprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-423",
+      "domain": "edibleoilrefining.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-424",
+      "domain": "petfoodprocessing.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-425",
+      "domain": "eupc.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-426",
+      "domain": "pelletheat.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-427",
+      "domain": "sawmillequipment.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-428",
+      "domain": "paperrecycling.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-429",
+      "domain": "cottonginning.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-430",
+      "domain": "culletprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-431",
+      "domain": "lithiummaterials.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-432",
+      "domain": "graphitepurification.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-433",
+      "domain": "quartzsand.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-434",
+      "domain": "coalwaterslurry.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-435",
+      "domain": "fertilizermanufacturing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-436",
+      "domain": "potashprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-437",
+      "domain": "saltprocessing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-438",
+      "domain": "siliconpowder.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-439",
+      "domain": "carbonblack.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-440",
+      "domain": "catalystrecovery.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-441",
+      "domain": "cnbcafrica.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-442",
+      "domain": "businesslive.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-443",
+      "domain": "creamermedia.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-444",
+      "domain": "africaoutlookmag.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-445",
+      "domain": "enterprise-africa.net",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-446",
+      "domain": "ceomagazine.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-447",
+      "domain": "bizcommunity.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-448",
+      "domain": "africanbusinessmagazine.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-449",
+      "domain": "africanreview.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-450",
+      "domain": "engineeringnews.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-451",
+      "domain": "electramining.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-452",
+      "domain": "kznindustrial.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-453",
+      "domain": "capeindustrial.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-454",
+      "domain": "ifat.de",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-455",
+      "domain": "achema.de",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-456",
+      "domain": "bauma.de",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-457",
+      "domain": "hannovermesse.de",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-458",
+      "domain": "cantonfair.org.cn",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-459",
+      "domain": "smeannualconference.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-460",
+      "domain": "convention.cim.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-461",
+      "domain": "euroblech.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-462",
+      "domain": "conexpoconagg.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-463",
+      "domain": "hillhead.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-464",
+      "domain": "powtech.de",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-465",
+      "domain": "ipackima.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-466",
+      "domain": "compamed-tradefair.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-467",
+      "domain": "heavyforum.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-468",
+      "domain": "gmggroup.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-469",
+      "domain": "ihexpo.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-470",
+      "domain": "plantmaintenanceexpo.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-471",
+      "domain": "mhefi.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-472",
+      "domain": "aem.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-473",
+      "domain": "orgalim.eu",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-474",
+      "domain": "asianengineering.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-475",
+      "domain": "b2bindustrial.org",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-476",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-477",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-478",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-479",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-480",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-481",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-482",
+      "domain": "reddit.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-483",
+      "domain": "eng-tips.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-484",
+      "domain": "physicsforums.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-485",
+      "domain": "finishing.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-486",
+      "domain": "heavyequipmentforums.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-487",
+      "domain": "mybroadband.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-488",
+      "domain": "4x4community.co.za",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-489",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-490",
+      "domain": "facebook.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-491",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-492",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-493",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-494",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-495",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-496",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-497",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-498",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-499",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    },
+    {
+      "id": "src-500",
+      "domain": "linkedin.com",
+      "activeStatus": "unknown",
+      "robotsAllowed": null,
+      "lastCheckedAt": null,
+      "lastError": null
+    }
+  ]
+}

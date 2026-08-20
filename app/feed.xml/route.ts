@@ -7,6 +7,6 @@ const escapeXml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, 
 export async function GET() {
   const articles = await getPublishedArticles();
   const items = articles.map((article) => `<item><title>${escapeXml(article.title)}</title><link>${siteConfig.siteUrl}/news/${article.slug}</link><guid isPermaLink="true">${siteConfig.siteUrl}/news/${article.slug}</guid><pubDate>${new Date(article.publishedAt ?? article.updatedAt).toUTCString()}</pubDate><description>${escapeXml(article.summary)}</description></item>`).join("");
-  const xml = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>${escapeXml(siteConfig.brandName)} News &amp; Blog</title><link>${siteConfig.siteUrl}/news</link><description>Original industry context and equipment selection guidance.</description>${items}</channel></rss>`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>${escapeXml(siteConfig.brandName)} News</title><link>${siteConfig.siteUrl}/news</link><description>Original industry context and equipment selection guidance.</description>${items}</channel></rss>`;
   return new Response(xml, { headers: { "Content-Type": "application/rss+xml; charset=utf-8", "Cache-Control": "public, max-age=300" } });
 }
