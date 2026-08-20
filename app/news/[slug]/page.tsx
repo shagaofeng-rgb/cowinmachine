@@ -51,7 +51,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
     <ArticleStructuredData article={article} />
     <article className="section">
       <div className="content-wrap">
-        <nav aria-label="Breadcrumb"><Link href="/">Home</Link> / <Link href="/news">News &amp; Blog</Link> / <span>{article.title}</span></nav>
+        <nav aria-label="Breadcrumb"><Link href="/">Home</Link> / <Link href="/news">News</Link> / <span>{article.title}</span></nav>
         <p className="eyebrow">{article.industry}</p>
         <h1>{article.title}</h1>
         <p>{article.summary}</p>
