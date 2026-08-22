@@ -41,7 +41,7 @@ async function fetchText(url: string): Promise<FetchResult> {
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
     const response = await fetch(url, {
-      headers: { "User-Agent": USER_AGENT, Accept: "application/rss+xml, application/atom+xml, text/html;q=0.9, */*;q=0.1" },
+      headers: { "User-Agent": USER_AGENT, Accept: "application/rss+xml, application/atom+xml, application/ld+json, text/html;q=0.9, */*;q=0.1" },
       redirect: "follow",
       signal: controller.signal,
       cache: "no-store",
@@ -67,8 +67,17 @@ function feedFromHtml(html: string, source: NewsSource) {
   return sameHost(feed, source) ? feed : undefined;
 }
 
+function decodeEntities(value: string) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
 function stripMarkup(value: string) {
-  return value.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return decodeEntities(value.replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
 }
 
 function tagValue(item: string, tags: string[]) {
@@ -85,21 +94,97 @@ function linkValue(item: string) {
   return atom ?? rss;
 }
 
-function dateValue(value: string) {
+function dateValue(value: string | undefined) {
+  if (!value) return undefined;
   const parsed = new Date(value);
   return Number.isNaN(parsed.valueOf()) ? undefined : parsed.toISOString();
 }
 
+function qualityFor(source: NewsSource) {
+  return source.trustTier === "A" ? "primary" as const : source.trustTier === "B" ? "authoritative-media" as const : "secondary" as const;
+}
+
+function candidate(source: NewsSource, value: { url?: string; title?: string; publishedAt?: string; summary?: string }) {
+  if (!value.url || !value.title || !value.publishedAt || !sameHost(value.url, source)) return undefined;
+  const publishedAt = dateValue(value.publishedAt);
+  if (!publishedAt) return undefined;
+  return {
+    sourceId: source.id,
+    sourceName: source.name,
+    url: value.url,
+    title: stripMarkup(value.title).slice(0, 320),
+    publishedAt,
+    summary: stripMarkup(value.summary ?? "").slice(0, 700),
+    sourceQuality: qualityFor(source),
+  } satisfies DiscoveredCandidate;
+}
+
 function parseFeed(xml: string, source: NewsSource): DiscoveredCandidate[] {
   const entries = xml.match(/<(?:item|entry)\b[\s\S]*?<\/(?:item|entry)>/gi) ?? [];
-  const quality = source.trustTier === "A" ? "primary" : source.trustTier === "B" ? "authoritative-media" : "secondary";
   return entries.slice(0, 30).flatMap((entry) => {
-    const url = linkValue(entry);
-    const title = tagValue(entry, ["title"]);
-    const publishedAt = dateValue(tagValue(entry, ["pubDate", "published", "updated", "dc:date"]));
-    if (!url || !title || !publishedAt || !sameHost(url, source)) return [];
-    return [{ sourceId: source.id, sourceName: source.name, url, title, publishedAt, summary: tagValue(entry, ["description", "summary", "content"]).slice(0, 700), sourceQuality: quality }];
+    const item = candidate(source, {
+      url: linkValue(entry),
+      title: tagValue(entry, ["title"]),
+      publishedAt: tagValue(entry, ["pubDate", "published", "updated", "dc:date"]),
+      summary: tagValue(entry, ["description", "summary", "content"]),
+    });
+    return item ? [item] : [];
   });
+}
+
+function allJsonLd(value: unknown, output: Record<string, unknown>[]) {
+  if (Array.isArray(value)) value.forEach((entry) => allJsonLd(entry, output));
+  else if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    if (record["@graph"]) allJsonLd(record["@graph"], output);
+    const types = Array.isArray(record["@type"]) ? record["@type"] : [record["@type"]];
+    if (types.some((type) => typeof type === "string" && /(?:news)?article/i.test(type))) output.push(record);
+    Object.values(record).forEach((entry) => {
+      if (entry && typeof entry === "object" && entry !== record["@graph"]) allJsonLd(entry, output);
+    });
+  }
+}
+
+function jsonLdCandidates(html: string, source: NewsSource): DiscoveredCandidate[] {
+  const scripts = html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi) ?? [];
+  const records: Record<string, unknown>[] = [];
+  for (const script of scripts) {
+    const raw = script.replace(/^<script[^>]*>/i, "").replace(/<\/script>$/i, "").trim();
+    try { allJsonLd(JSON.parse(raw), records); } catch { /* Invalid structured data is ignored. */ }
+  }
+  return records.flatMap((record) => {
+    const url = typeof record.url === "string" ? new URL(record.url, source.homepage).toString() : undefined;
+    const title = typeof record.headline === "string" ? record.headline : typeof record.name === "string" ? record.name : undefined;
+    const date = typeof record.datePublished === "string" ? record.datePublished : typeof record.dateModified === "string" ? record.dateModified : undefined;
+    const summary = typeof record.description === "string" ? record.description : "";
+    const item = candidate(source, { url, title, publishedAt: date, summary });
+    return item ? [item] : [];
+  });
+}
+
+function attribute(fragment: string, name: string) {
+  return fragment.match(new RegExp(name + "\\s*=\\s*[\"']([^\"']+)[\"']", "i"))?.[1];
+}
+
+function homepageCandidates(html: string, source: NewsSource): DiscoveredCandidate[] {
+  const articles = html.match(/<article\b[\s\S]{0,30000}?<\/article>/gi) ?? [];
+  return articles.slice(0, 80).flatMap((article) => {
+    const heading = article.match(/<h[1-4][^>]*>([\s\S]*?)<\/h[1-4]>/i)?.[1];
+    const link = article.match(/<a[^>]+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/i);
+    const url = link?.[1] ? new URL(link[1], source.homepage).toString() : undefined;
+    const title = heading ? stripMarkup(heading) : link?.[2] ? stripMarkup(link[2]) : undefined;
+    const timeTag = article.match(/<time\b[^>]*>([\s\S]*?)<\/time>/i);
+    const date = timeTag ? attribute(timeTag[0], "datetime") ?? stripMarkup(timeTag[1]) : undefined;
+    const summary = article.match(/<p[^>]*>([\s\S]*?)<\/p>/i)?.[1] ?? "";
+    const item = candidate(source, { url, title, publishedAt: date, summary });
+    return item ? [item] : [];
+  });
+}
+
+function dedupeCandidates(candidates: DiscoveredCandidate[]) {
+  return [...new Map(candidates.map((item) => [item.url, item])).values()]
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+    .slice(0, 30);
 }
 
 export async function inspectNewsSource(source: NewsSource): Promise<{ health: SourceHealth; candidates: DiscoveredCandidate[] }> {
@@ -117,16 +202,16 @@ export async function inspectNewsSource(source: NewsSource): Promise<{ health: S
     if (!home.ok) return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: home.status === 401 || home.status === 403 ? "blocked" : "inactive", robotsAllowed: true, error: "Homepage returned HTTP " + home.status + "." }, candidates: [] };
 
     const feedUrl = feedFromHtml(home.text, source);
-    if (!feedUrl) return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "active", robotsAllowed: true }, candidates: [] };
+    const pageCandidates = dedupeCandidates([...jsonLdCandidates(home.text, source), ...homepageCandidates(home.text, source)]);
+    if (!feedUrl) return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "active", robotsAllowed: true }, candidates: pageCandidates };
 
     const feed = await fetchText(feedUrl);
-    if (!feed.ok) return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "active", robotsAllowed: true, feedUrl, error: "Feed returned HTTP " + feed.status + "." }, candidates: [] };
-    return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "active", robotsAllowed: true, feedUrl }, candidates: parseFeed(feed.text, source) };
+    if (!feed.ok) return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "active", robotsAllowed: true, feedUrl, error: "Feed returned HTTP " + feed.status + "." }, candidates: pageCandidates };
+    return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "active", robotsAllowed: true, feedUrl }, candidates: dedupeCandidates([...parseFeed(feed.text, source), ...pageCandidates]) };
   } catch (error) {
     return { health: { sourceId: source.id, checkedAt: new Date().toISOString(), activeStatus: "inactive", robotsAllowed: false, error: error instanceof Error ? error.message.slice(0, 240) : "Unknown source inspection error." }, candidates: [] };
   }
 }
-
 
 function metaValue(html: string, property: string) {
   const expression = new RegExp(`<meta[^>]+(?:property|name)=["']${property}["'][^>]+content=["']([^"']+)["'][^>]*>`, "i");
