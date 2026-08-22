@@ -23,7 +23,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const profile = getProductDetailProfile(product);
   const title = profile.publicationState === "full-technical-content" ? `${product.name}${profile.model ? ` (${profile.model})` : ""}` : `${product.name} | Request Configuration Review`;
   const description = profile.publicationState === "full-technical-content" ? product.shortDescription : "This product record requires a configuration review before model-specific technical information is published.";
-  return pageMetadata(title, description, productPath(product.category, product.slug));
+  const metadata = pageMetadata(title, description, productPath(product.category, product.slug));
+
+  // Records without verified, publishable technical data remain accessible for enquiries
+  // but are excluded from search results until their configuration is confirmed.
+  if (profile.publicationState === "configuration-review") {
+    return { ...metadata, robots: { index: false, follow: true } };
+  }
+
+  return metadata;
 }
 
 function ListSection({ title, items }: { title: string; items: string[] }) {
