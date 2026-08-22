@@ -150,3 +150,53 @@ Summary: ${input.source.sourceSummary}`,
 
   return { draft: result, audit: auditEditorialLanguage(result), factDeltaDetected, lockedFacts };
 }
+
+
+export function createTechnicalBriefDraft(input: {
+  productName: string;
+  productCategory: string;
+  productModel?: string;
+  productDescription: string;
+  industry: string;
+  scenario: string;
+  technicalCta: string;
+}) {
+  const identity = input.productModel ? input.productName + " (" + input.productModel + ")" : input.productName;
+  const lockedFacts = {
+    productName: input.productName,
+    productCategory: input.productCategory,
+    productModel: input.productModel ?? "",
+    industry: input.industry,
+    scenario: input.scenario,
+    technicalCta: input.technicalCta,
+  };
+  const title = "Technical Brief: Planning " + identity + " for " + input.scenario;
+  const summary = identity + " selection starts with the actual " + input.scenario + " rather than a catalogue comparison alone. This technical brief explains the information a buyer should prepare, the operating questions that affect configuration, and the review steps that help align equipment with site conditions. It is based on verified COWIN MACHINE product context and is not a report of a current external industry event.";
+  const productContext = input.productDescription || identity + " is listed in the COWIN MACHINE " + input.productCategory + " range. Configuration remains subject to application review.";
+  const body = [
+    "## Product and application context\n\n" + productContext + "\n\nFor a " + input.scenario + ", the useful starting point is to describe the work to be done, the material or medium involved, the expected duty pattern, and the site limits. A product family name can help start a conversation, but it cannot replace application details. Buyers should identify the process stage where the equipment will be used, what sits upstream and downstream, and who will operate or maintain it. This turns an early enquiry into a configuration review rather than a request based only on a familiar model name.\n\nThe same product category can be used in more than one project type. For that reason, a specification should be checked against the site workflow, not assumed from an earlier job. If a requirement is uncertain, it should be marked for review instead of being converted into a performance claim.",
+    "## What buyers should prepare\n\nA concise project brief makes selection faster and reduces avoidable revisions. Start with the application, location, operating hours, material or medium, and the equipment already installed. Add any site access limits, transport constraints, electrical or fuel availability, operator preference, and safety rules that apply locally. When the equipment interfaces with a conveyor, drilling system, power distribution, lighting layout, or process line, include the dimensions and operating conditions of that interface.\n\nIt is also useful to separate essential requirements from preferences. Essential requirements are the conditions the equipment must meet to work in the proposed application. Preferences cover items such as control layout, optional monitoring, accessory choices, or future expansion. This distinction helps the technical review focus on what is necessary first. It also prevents a quotation from appearing more specific than the available project information supports.",
+    "## Operational considerations\n\nOperating conditions influence both configuration and service planning. Dust, moisture, temperature, uneven ground, changing material conditions, intermittent demand, and restricted access can all affect how a project team should review equipment. A site may need routine inspection access, space for safe loading or positioning, and a clear method for isolating equipment before maintenance. These points should be discussed before equipment is selected, especially where multiple machines share the same work area.\n\nThe project team should also confirm who will supply utilities, consumables, lifting support, and routine maintenance. If these responsibilities are not clear, a technically suitable unit may still be difficult to use effectively. The goal of the review is not to predict every operating result. It is to identify practical constraints early and define the information needed for a fit-for-application recommendation.",
+    "## How the equipment fits the workflow\n\nIn a " + input.scenario + ", equipment should be considered as part of a working sequence. The review should identify what enters the process, what action the equipment performs, what result is required, and what happens next. This sequence helps determine interface requirements, operator tasks, inspection points, and any compatible equipment or consumables that may be needed.\n\nA clear workflow also helps buyers compare alternatives responsibly. Instead of asking only which model is available, the team can ask which configuration is appropriate for the stated conditions, what information is still missing, and what should be verified before finalizing an order. Where a project changes over time, the same workflow can be used to reassess the configuration without assuming that a previous selection remains suitable.",
+    "## Configuration and buying considerations\n\nBefore requesting a quotation, confirm the intended application, the required quantity, the project location, and the timing of the decision. Provide drawings, photos, process descriptions, or existing equipment details where available. These materials can clarify interfaces that a short written message cannot show. If a figure, rating, material grade, certificate, or option is required for the decision, ask for verified documentation rather than relying on a generic description.\n\nA useful review normally ends with an agreed list of requested configuration points, any information still needed from the buyer, and the assumptions that must be confirmed. COWIN MACHINE can use that information to discuss an appropriate equipment configuration. Configuration subject to application review.",
+    "## Technical inquiry\n\n" + input.technicalCta + "\n\nPlease also include your country, company name, project timeframe, and any drawings or photos that clarify the installation or operating conditions. If a particular model is being considered, reference it as a starting point and identify which requirements are already confirmed."
+  ].join("\n\n");
+  const faq = [
+    { question: "What information is most useful for a " + identity + " enquiry?", answer: "Start with the application, the site conditions, the required quantity, the project location, and any interface or operating constraints. Add drawings, photos, or existing equipment details when available." },
+    { question: "Can a model name alone determine the final configuration?", answer: "No. A model reference can begin a review, but the final configuration should be checked against the application and the confirmed project requirements." },
+    { question: "Which specifications should be treated carefully?", answer: "Any parameter, option, material, rating, certificate, or performance figure that is important to the project should be verified for the requested configuration before a purchasing decision." },
+    { question: "Why are site conditions included in the technical review?", answer: "Site conditions affect interfaces, access, utilities, operating routines, and maintenance planning. They help determine whether a proposed configuration is appropriate for the stated workflow." },
+    { question: "What happens after a technical inquiry is submitted?", answer: "The requirements can be reviewed with the available product context. Missing or project-specific items should be confirmed before a final configuration is recommended." }
+  ];
+  const draft = { title, summary, body, faq };
+  return { draft, audit: auditTechnicalBriefLanguage(draft), factDeltaDetected: !JSON.stringify(draft).includes(input.productName), lockedFacts };
+}
+
+export function auditTechnicalBriefLanguage(draft: EditorialDraft) {
+  const corpus = [draft.title, draft.summary, draft.body, ...draft.faq.flatMap((entry) => [entry.question, entry.answer])].join("\n");
+  const found = prohibitedPatterns.filter((pattern) => corpus.toLowerCase().includes(pattern.toLowerCase()));
+  const wordCount = corpus.trim().split(/\s+/).filter(Boolean).length;
+  const summaryWords = draft.summary.split(/\s+/).filter(Boolean).length;
+  const hasHeadings = ["## Product and application context", "## What buyers should prepare", "## Operational considerations", "## How the equipment fits the workflow", "## Configuration and buying considerations", "## Technical inquiry"].every((heading) => draft.body.includes(heading));
+  return { passed: found.length === 0 && wordCount >= 900 && wordCount <= 1650 && summaryWords >= 50 && summaryWords <= 80 && hasHeadings && draft.faq.length >= 4, found, wordCount, summaryWords, hasHeadings };
+}
