@@ -80,13 +80,13 @@ export type PaginatedResult<T> = {
 };
 
 export const adminSections = [
-  { href: "/internal/admin", label: "Overview" },
-  { href: "/internal/admin/analytics", label: "Traffic analytics" },
-  { href: "/internal/admin/leads", label: "Leads & RFQ" },
-  { href: "/internal/admin/products", label: "Product intelligence" },
-  { href: "/internal/admin/news", label: "News operations" },
-  { href: "/internal/admin/seo", label: "SEO hub" },
-  { href: "/internal/admin/markets", label: "Markets & languages" },
-  { href: "/internal/admin/data-health", label: "Data health" },
-  { href: "/internal/content-operations", label: "Content automation" },
+  { href: "/internal/admin", label: "总览" },
+  { href: "/internal/admin/analytics", label: "流量分析" },
+  { href: "/internal/admin/leads", label: "询盘与 RFQ" },
+  { href: "/internal/admin/products", label: "产品洞察" },
+  { href: "/internal/admin/news", label: "新闻运营" },
+  { href: "/internal/admin/seo", label: "SEO 中心" },
+  { href: "/internal/admin/markets", label: "市场与语言" },
+  { href: "/internal/admin/data-health", label: "数据健康度" },
+  { href: "/internal/content-operations", label: "内容自动化" },
 ] as const;
