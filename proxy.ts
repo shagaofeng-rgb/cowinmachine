@@ -17,6 +17,7 @@ export function proxy(request: NextRequest) {
   }
 
   const isProtectedContentRoute =
+    request.nextUrl.pathname.startsWith("/internal/admin") ||
     request.nextUrl.pathname.startsWith("/internal/content-operations") ||
     request.nextUrl.pathname.startsWith("/api/content-automation/manual");
 
