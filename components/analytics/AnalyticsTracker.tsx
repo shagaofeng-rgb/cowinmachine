@@ -58,6 +58,12 @@ function send(eventName: AnalyticsEventName, pathname: string, metadata?: Record
   void fetch("/api/analytics/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), keepalive: true }).catch(() => undefined);
 }
 
+export function getAnalyticsRequestHeaders() {
+  if (typeof window === "undefined" || readCookie(consentKey) !== "granted") return {};
+  const { visitorId, sessionId } = analyticsIds();
+  return { "x-cowin-visitor-id": visitorId, "x-cowin-session-id": sessionId };
+}
+
 export function AnalyticsTracker() {
   const pathname = usePathname();
   const [consent, setConsent] = useState<"pending" | "granted" | "rejected">("pending");
