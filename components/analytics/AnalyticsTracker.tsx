@@ -69,7 +69,7 @@ export function AnalyticsTracker() {
 
   useEffect(() => {
     if (consent === "granted") {
-      send(pathname === "/" ? "/" : pathname, pathname === "/" ? "/" : pathname);
+      send("page_view", pathname);
       if (pathname.startsWith("/products/") && pathname.split("/").filter(Boolean).length === 3) send("product_view", pathname);
       if (pathname.startsWith("/news/") && pathname !== "/news") send("news_view", pathname);
     }
