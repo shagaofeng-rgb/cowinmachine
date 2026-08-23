@@ -1,5 +1,6 @@
 "use client";
 
+import { getAnalyticsRequestHeaders } from "@/components/analytics/AnalyticsTracker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
