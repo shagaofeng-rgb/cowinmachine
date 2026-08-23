@@ -27,27 +27,27 @@ export function readAdminDateRange(values: { preset?: string; start?: string; en
   if (preset === "custom" && values.start && values.end && /^\d{4}-\d{2}-\d{2}$/.test(values.start) && /^\d{4}-\d{2}-\d{2}$/.test(values.end)) {
     const start = new Date(`${values.start}T00:00:00.000Z`);
     const end = addDays(new Date(`${values.end}T00:00:00.000Z`), 1);
-    if (start < end) return { preset, start: start.toISOString(), end: end.toISOString(), label: `${values.start} to ${values.end}` };
+    if (start < end) return { preset, start: start.toISOString(), end: end.toISOString(), label: `${values.start} 至 ${values.end}` };
   }
 
   switch (preset) {
     case "today":
-      return { preset, start: today.toISOString(), end: addDays(today, 1).toISOString(), label: "Today" };
+      return { preset, start: today.toISOString(), end: addDays(today, 1).toISOString(), label: "今日" };
     case "yesterday": {
       const start = addDays(today, -1);
-      return { preset, start: start.toISOString(), end: today.toISOString(), label: "Yesterday" };
+      return { preset, start: start.toISOString(), end: today.toISOString(), label: "昨日" };
     }
     case "last-7-days":
-      return { preset, start: addDays(today, -6).toISOString(), end: addDays(today, 1).toISOString(), label: "Last 7 days" };
+      return { preset, start: addDays(today, -6).toISOString(), end: addDays(today, 1).toISOString(), label: "近 7 天" };
     case "this-month":
-      return { preset, start: monthStart(today).toISOString(), end: addDays(today, 1).toISOString(), label: "This month" };
+      return { preset, start: monthStart(today).toISOString(), end: addDays(today, 1).toISOString(), label: "本月" };
     case "last-month": {
       const current = monthStart(today);
       const previous = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth() - 1, 1));
-      return { preset, start: previous.toISOString(), end: current.toISOString(), label: "Last month" };
+      return { preset, start: previous.toISOString(), end: current.toISOString(), label: "上月" };
     }
     default:
-      return { preset: "last-30-days", start: addDays(today, -29).toISOString(), end: addDays(today, 1).toISOString(), label: "Last 30 days" };
+      return { preset: "last-30-days", start: addDays(today, -29).toISOString(), end: addDays(today, 1).toISOString(), label: "近 30 天" };
   }
 }
 
