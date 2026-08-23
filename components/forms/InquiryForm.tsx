@@ -1,5 +1,6 @@
 "use client";
 
+import { getAnalyticsRequestHeaders } from "@/components/analytics/AnalyticsTracker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +31,7 @@ export function InquiryForm({ productModel, productUrl, compact = false, default
   const onSubmit = async (data: FormData) => {
     setServerMessage(undefined);
     try {
-      const response = await fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      const response = await fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json", ...getAnalyticsRequestHeaders() }, body: JSON.stringify(data) });
       const result = await response.json() as { message?: string };
       if (!response.ok) throw new Error(result.message ?? "We could not submit your request. Please try again.");
       setServerMessage("Your request has been received. Our sales team will reply within 24 hours.");
