@@ -58,7 +58,7 @@ function send(eventName: AnalyticsEventName, pathname: string, metadata?: Record
   void fetch("/api/analytics/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), keepalive: true }).catch(() => undefined);
 }
 
-export function getAnalyticsRequestHeaders() {
+export function getAnalyticsRequestHeaders(): Record<string, string> {
   if (typeof window === "undefined" || readCookie(consentKey) !== "granted") return {};
   const { visitorId, sessionId } = analyticsIds();
   return { "x-cowin-visitor-id": visitorId, "x-cowin-session-id": sessionId };
