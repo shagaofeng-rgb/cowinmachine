@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { MobileConversionBar } from "@/components/layout/MobileConversionBar";
 import { OrganizationJsonLd } from "@/components/OrganizationJsonLd";
 import { siteConfig } from "@/lib/site";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,5 +18,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" data-scroll-behavior="smooth"><body><OrganizationJsonLd /><Header /><main>{children}</main><Footer /><MobileConversionBar /></body></html>;
+  return <html lang="en" data-scroll-behavior="smooth"><body><OrganizationJsonLd /><Header /><main>{children}</main><Footer /><MobileConversionBar /><AnalyticsTracker /></body></html>;
 }
