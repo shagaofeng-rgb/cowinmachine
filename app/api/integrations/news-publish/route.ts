@@ -96,7 +96,7 @@ async function readInput(request: Request): Promise<WebhookInput> {
 }
 
 export async function POST(request: Request) {
-  const expectedSecret = process.env.EXTERNAL_NEWS_WEBHOOK_SECRET;
+  const expectedSecret = process.env.EXTERNAL_NEWS_WEBHOOK_SECRET?.trim();
   if (!expectedSecret) return response(0, "发布接口未配置");
   const input = await readInput(request);
 
