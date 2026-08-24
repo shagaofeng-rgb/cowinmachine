@@ -103,7 +103,7 @@ export async function POST(request: Request) {
 
   if (!input.sign || !sameSecret(input.sign, expectedSecret)) {
     console.warn("external-news-webhook-auth-failed", {
-      configuredLength: rawExpectedSecret.length,
+      configuredLength: rawExpectedSecret?.length ?? 0,
       normalizedLength: expectedSecret.length,
       receivedLength: input.sign.length,
     });
