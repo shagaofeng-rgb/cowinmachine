@@ -1,6 +1,4 @@
-export {
-  dynamic,
-  GET,
-  POST,
-  runtime,
-} from "../api/integrations/news-publish/route";
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export { GET, POST } from "../api/integrations/news-publish/route";
