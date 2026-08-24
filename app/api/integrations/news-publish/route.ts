@@ -110,11 +110,10 @@ export async function POST(request: Request) {
     return response(0, "秘钥错误", 401);
   }
   const configuredClassId = process.env.EXTERNAL_NEWS_WEBHOOK_CLASS_ID ?? "31";
-  const isHandshake = !input.title && !input.content;
-  if (isHandshake) return response(1, "接口验证成功");
-
   const title = clean(input.title, 200);
   const body = htmlToMarkdown(input.content);
+  const isPluginValidation = input.classId.toLowerCase() === "blog" && (title.length < 8 || body.length < 80);
+  if (isPluginValidation) return response(1, "接口验证成功");
   if (title.length < 8 || body.length < 80) return response(0, "文章标题或内容不完整", 422);
 
   const image = localImage(input.imageUrl, title);
