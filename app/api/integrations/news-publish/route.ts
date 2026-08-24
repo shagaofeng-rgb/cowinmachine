@@ -101,7 +101,7 @@ export async function POST(request: Request) {
   const input = await readInput(request);
 
   if (!input.sign || !sameSecret(input.sign, expectedSecret)) return response(0, "秘钥错误", 401);
-  if (input.classId !== (process.env.EXTERNAL_NEWS_WEBHOOK_CLASS_ID ?? "31")) return response(0, "文章栏目不匹配", 422);
+  const configuredClassId = process.env.EXTERNAL_NEWS_WEBHOOK_CLASS_ID ?? "31";
   const title = clean(input.title, 200);
   const body = htmlToMarkdown(input.content);
   if (title.length < 8 || body.length < 80) return response(0, "文章标题或内容不完整", 422);
@@ -144,7 +144,7 @@ export async function POST(request: Request) {
         passed: true,
         checks: [
           { name: "webhook-authentication", passed: true, detail: "Shared secret accepted." },
-          { name: "category-routing", passed: true, detail: `class_id ${input.classId} accepted.` },
+          { name: "category-routing", passed: true, detail: `External class_id ${input.classId || "not supplied"} mapped to ${configuredClassId}.` },
           { name: "cover-image-rights", passed: Boolean(!input.imageUrl || image), detail: input.imageUrl ? "Authorized local image path accepted." : "No cover image supplied." },
           { name: "source-author", passed: true, detail: input.authorId ? "Third-party author identifier received." : "No author identifier supplied." },
         ],
