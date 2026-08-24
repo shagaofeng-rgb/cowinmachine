@@ -14,13 +14,14 @@ export async function proxy(request: NextRequest) {
     const headers = new Headers(request.headers);
     headers.delete("host");
 
+    const body = await request.arrayBuffer();
+
     return fetch(target, {
       method: request.method,
       headers,
-      body: request.body,
-      duplex: "half",
+      body,
       redirect: "manual",
-    } as RequestInit & { duplex: "half" });
+    });
   }
 
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
