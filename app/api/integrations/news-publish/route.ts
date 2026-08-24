@@ -96,11 +96,19 @@ async function readInput(request: Request): Promise<WebhookInput> {
 }
 
 export async function POST(request: Request) {
-  const expectedSecret = process.env.EXTERNAL_NEWS_WEBHOOK_SECRET?.trim();
+  const rawExpectedSecret = process.env.EXTERNAL_NEWS_WEBHOOK_SECRET;
+  const expectedSecret = rawExpectedSecret?.trim();
   if (!expectedSecret) return response(0, "发布接口未配置");
   const input = await readInput(request);
 
-  if (!input.sign || !sameSecret(input.sign, expectedSecret)) return response(0, "秘钥错误", 401);
+  if (!input.sign || !sameSecret(input.sign, expectedSecret)) {
+    console.warn("external-news-webhook-auth-failed", {
+      configuredLength: rawExpectedSecret.length,
+      normalizedLength: expectedSecret.length,
+      receivedLength: input.sign.length,
+    });
+    return response(0, "秘钥错误", 401);
+  }
   const configuredClassId = process.env.EXTERNAL_NEWS_WEBHOOK_CLASS_ID ?? "31";
   const title = clean(input.title, 200);
   const body = htmlToMarkdown(input.content);
