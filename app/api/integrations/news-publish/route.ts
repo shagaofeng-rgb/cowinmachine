@@ -110,7 +110,7 @@ export async function POST(request: Request) {
     return response(0, "秘钥错误", 401);
   }
   const configuredClassId = process.env.EXTERNAL_NEWS_WEBHOOK_CLASS_ID ?? "31";
-  const isHandshake = !input.title && !input.content && !input.authorId && !input.imageUrl;
+  const isHandshake = !input.title && !input.content;
   if (isHandshake) return response(1, "接口验证成功");
 
   const title = clean(input.title, 200);
