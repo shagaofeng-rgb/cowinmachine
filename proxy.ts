@@ -10,18 +10,7 @@ export async function proxy(request: NextRequest) {
   const isRootWebhookPost = request.method === "POST" && request.nextUrl.pathname === "/";
 
   if (isRootWebhookPost) {
-    const target = new URL("/api/integrations/news-publish", request.url);
-    const headers = new Headers(request.headers);
-    headers.delete("host");
-
-    const body = await request.arrayBuffer();
-
-    return fetch(target, {
-      method: request.method,
-      headers,
-      body,
-      redirect: "manual",
-    });
+    return NextResponse.rewrite(new URL("/api/integrations/news-publish", request.url));
   }
 
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
