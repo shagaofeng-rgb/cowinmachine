@@ -33,7 +33,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
   if (!article) notFound();
   const published = article.publishedAt ? new Intl.DateTimeFormat("en", { dateStyle: "long" }).format(new Date(article.publishedAt)) : "Pending";
   const updated = new Intl.DateTimeFormat("en", { dateStyle: "long" }).format(new Date(article.updatedAt));
-  const type = article.sources.length ? "Industry update" : "Technical brief";
+  const type = article.productFamily === "external-news" || article.sources.length ? "Industry update" : "Technical brief";
   return <><ArticleStructuredData article={article} /><main className="news-article">
     <section className="news-article-hero"><div className="content-wrap">
       <nav className="news-breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/news">News</Link><span>/</span><span>{type}</span></nav>

@@ -24,7 +24,7 @@ export default async function NewsPage() {
         {featured ? <article className="news-featured-card">
           <div className="news-featured-copy">
             <div className="news-card-meta"><span>{featured.industry}</span><span>{formatDate(featured.publishedAt)}</span></div>
-            <p className="news-type-label">{featured.sources.length ? "Industry update" : "Technical brief"}</p>
+            <p className="news-type-label">{featured.productFamily === "external-news" || featured.sources.length ? "Industry update" : "Technical brief"}</p>
             <h2><Link href={"/news/" + featured.slug}>{featured.title}</Link></h2>
             <p>{featured.summary}</p><Link className="news-read-link" href={"/news/" + featured.slug}>Read the brief <span aria-hidden="true">→</span></Link>
           </div>
