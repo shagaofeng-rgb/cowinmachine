@@ -7,6 +7,12 @@ function adminEnabled() {
 }
 
 export function proxy(request: NextRequest) {
+  const isRootWebhookPost = request.method === "POST" && request.nextUrl.pathname === "/";
+
+  if (isRootWebhookPost) {
+    return NextResponse.rewrite(new URL("/api/integrations/news-publish", request.url));
+  }
+
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
 
   if (host === `www.${canonicalHost}`) {
