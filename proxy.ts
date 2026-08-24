@@ -6,11 +6,21 @@ function adminEnabled() {
   return process.env.CONTENT_ADMIN_ENABLED === "true" && Boolean(process.env.CONTENT_ADMIN_USER && process.env.CONTENT_ADMIN_PASSWORD);
 }
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const isRootWebhookPost = request.method === "POST" && request.nextUrl.pathname === "/";
 
   if (isRootWebhookPost) {
-    return NextResponse.rewrite(new URL("/api/integrations/news-publish", request.url));
+    const target = new URL("/api/integrations/news-publish", request.url);
+    const headers = new Headers(request.headers);
+    headers.delete("host");
+
+    return fetch(target, {
+      method: request.method,
+      headers,
+      body: request.body,
+      duplex: "half",
+      redirect: "manual",
+    } as RequestInit & { duplex: "half" });
   }
 
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
