@@ -70,7 +70,10 @@ export function AnalyticsTracker() {
 
   useEffect(() => {
     const value = readCookie(consentKey);
-    setConsent(value === "granted" || value === "rejected" ? value : "pending");
+    const timer = window.setTimeout(() => {
+      setConsent(value === "granted" || value === "rejected" ? value : "pending");
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {

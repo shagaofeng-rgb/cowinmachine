@@ -7,6 +7,7 @@ import { createHumanizedEditorialDraft, createTechnicalBriefDraft } from "@/lib/
 import { contentAutomationConfig, isAutoPublishEnabled } from "@/lib/content-automation/config";
 import { newsSql } from "@/lib/content-automation/database";
 import { markSourceUsed, listFreshNewsCandidates, updateCandidateStatus } from "@/lib/content-automation/news-source-store";
+import { evaluateFallbackPublication, rankFallbackPublishingOptions } from "@/lib/content-automation/publishing-policy";
 import { validateDiscoveredArticle } from "@/lib/content-automation/source-validator";
 import { ngramSimilarity, tokenSimilarity } from "@/lib/content-automation/similarity";
 import { contentStore } from "@/lib/content-automation/storage";
@@ -46,6 +47,45 @@ const fallbackScenario: Record<string, string> = {
   "magnetic-separators": "material-separation configuration review",
 };
 
+const fallbackAngles: Record<string, Array<{ industry: string; scenario: string }>> = {
+  "compressed-air-equipment": [
+    { industry: "construction and drilling projects", scenario: "field air-supply planning" },
+    { industry: "industrial facilities", scenario: "compressor duty-cycle review" },
+    { industry: "remote worksites", scenario: "power-source and installation planning" },
+    { industry: "mining and quarrying", scenario: "service-access and maintenance planning" },
+  ],
+  "generator-systems": [
+    { industry: "temporary site power", scenario: "temporary-power configuration review" },
+    { industry: "remote construction", scenario: "load and power-distribution planning" },
+    { industry: "industrial facilities", scenario: "backup-power duty review" },
+    { industry: "mining sites", scenario: "fuel, runtime and service-access planning" },
+  ],
+  "drilling-equipment": [
+    { industry: "water well and site drilling", scenario: "site drilling configuration review" },
+    { industry: "agricultural irrigation", scenario: "depth, geology and access planning" },
+    { industry: "geotechnical works", scenario: "drilling-method and site-layout review" },
+    { industry: "mining and quarrying", scenario: "rig mobility and support-equipment planning" },
+  ],
+  "drilling-consumables": [
+    { industry: "hard-rock drilling operations", scenario: "drilling-tool selection review" },
+    { industry: "water-well drilling", scenario: "hammer, bit and shank compatibility review" },
+    { industry: "quarrying", scenario: "formation and wear-planning review" },
+    { industry: "mining maintenance", scenario: "consumables inventory and replacement planning" },
+  ],
+  "mobile-lighting-systems": [
+    { industry: "remote and temporary jobsites", scenario: "temporary site-lighting review" },
+    { industry: "roadworks", scenario: "coverage, mast and placement planning" },
+    { industry: "construction sites", scenario: "runtime and power-availability review" },
+    { industry: "remote camps", scenario: "mobility, security and maintenance planning" },
+  ],
+  "magnetic-separators": [
+    { industry: "bulk material handling and processing", scenario: "material-separation configuration review" },
+    { industry: "mineral processing", scenario: "feed, burden and installation planning" },
+    { industry: "recycling", scenario: "contaminant-removal and sorting review" },
+    { industry: "aggregates", scenario: "conveyor interface and suspension planning" },
+  ],
+};
+
 function shanghaiDay(value: Date) {
   const parts = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(value);
   const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
@@ -77,13 +117,30 @@ function formatTechnicalBriefBody(input: {
 }
 
 
+function verifiedProductsForCategory(category: string) {
+  return canonicalProducts.flatMap((canonical) => {
+    if (canonical.category !== category || canonical.productStatus !== "verified-model" || canonical.currentUrls.length === 0) return [];
+    let publicPath: string;
+    try { publicPath = new URL(canonical.currentUrls[0]).pathname; }
+    catch { return []; }
+    const product = products.find((entry) => `/products/${entry.category}/${entry.slug}` === publicPath);
+    return product?.heroImage ? [{ canonical, product, path: publicPath }] : [];
+  });
+}
+
 function selectVerifiedProduct(category: string) {
-  const canonical = canonicalProducts.find((entry) => entry.category === category && entry.productStatus === "verified-model" && entry.currentUrls.length > 0);
-  if (!canonical) return undefined;
-  const path = new URL(canonical.currentUrls[0]).pathname;
-  const product = products.find((entry) => `/products/${entry.category}/${entry.slug}` === path);
-  if (!product?.heroImage) return undefined;
-  return { canonical, product, path };
+  return verifiedProductsForCategory(category)[0];
+}
+
+function fallbackPublishingOptions() {
+  return categoryOrder.flatMap((category) => verifiedProductsForCategory(category).flatMap((selected) =>
+    (fallbackAngles[category] ?? [{ industry: fallbackIndustry[category], scenario: fallbackScenario[category] }]).map((angle) => ({
+      key: `technical-brief:${selected.canonical.canonicalId}:${angle.scenario}`,
+      category,
+      productUrl: selected.path,
+      payload: { selected, ...angle },
+    })),
+  ));
 }
 
 function cta(category: string) {
@@ -171,14 +228,35 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
   const now = new Date();
   const store = contentStore();
   const state = await store.read();
+  const day = shanghaiDay(now);
+  const finish = async (result: NewsPublishResult, article?: ContentArticle) => {
+    if (!options.dryRun) {
+      const runId = `news-publish:${day}:${result.status}`;
+      const runResult = [result.status, ...result.reasons].join(":").slice(0, 480);
+      await store.write({
+        ...state,
+        articles: article
+          ? [...state.articles.filter((entry) => entry.id !== article.id && entry.slug !== article.slug), article]
+          : state.articles,
+        runs: [
+          ...state.runs.filter((run) => run.id !== runId),
+          { id: runId, startedAt: now.toISOString(), mode: contentAutomationConfig().mode, dryRun: false, result: runResult },
+        ],
+      });
+    }
+    console.info(JSON.stringify({ event: "news.publish.result", day, ...result }));
+    return result;
+  };
+
   if (state.articles.some((article) => article.publishedAt && shanghaiDay(new Date(article.publishedAt)) === shanghaiDay(now))) {
-    return { dryRun: options.dryRun, status: "nothing-eligible", reasons: ["A News article has already been published for this UTC day."] };
+    return finish({ dryRun: options.dryRun, status: "nothing-eligible", reasons: ["A News article has already been published for this Shanghai calendar day."] });
   }
 
   const candidates = (await listFreshNewsCandidates()).filter((candidate) =>
     candidate.sourceQuality !== "secondary"
     && candidate.productCategories.some((category) => relevance(candidate, category)),
   );
+  const candidateRejections: string[] = [];
 
   for (const candidate of candidates) {
     const category = candidate.productCategories.find((entry) => relevance(candidate, entry));
@@ -192,7 +270,7 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
     const topicKey = `${selected.canonical.canonicalId}:${industry}:${candidate.sourceId}`;
     const recent = state.articles.filter((article) => age(article.publishedAt ?? article.createdAt, now) <= 90);
     if (recent.some((article) => article.similarityKey === topicKey)) continue;
-    if (recent.filter((article) => article.productFamily === category).slice(0, 2).length >= 2) continue;
+    if (recent.filter((article) => article.productFamily === category && article.sources.length > 0).length >= 2) continue;
     if (recent.some((article) => article.sources.some((source) => source.url === candidate.sourceUrl))) continue;
 
     if (options.dryRun) {
@@ -207,6 +285,7 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
     });
     if (!articleEvidence.passed) {
       await updateCandidateStatus(candidate.id, "rejected", articleEvidence.reason);
+      candidateRejections.push(`${candidate.sourceName}: ${articleEvidence.reason}`);
       continue;
     }
 
@@ -231,7 +310,8 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
       const id = randomUUID();
       if (!passed) {
         await updateCandidateStatus(candidate.id, "rejected", "Humanizer, fact lock, length, or similarity gate failed.");
-        return { dryRun: false, status: "blocked", reasons: ["The selected candidate failed the mandatory editorial quality gate."] };
+        candidateRejections.push(`${candidate.sourceName}: editorial quality gate failed.`);
+        continue;
       }
 
       const source: ContentSource = { id: candidate.sourceId, name: `${candidate.sourceName}: ${candidate.title}`, url: candidate.sourceUrl, publishedAt: candidate.publishedAt, sourceQuality: candidate.sourceQuality, primaryFact: candidate.summary || "Current industry context cited in the article." };
@@ -247,7 +327,8 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
         discoveryStatus: canPublish ? "included-in-sitemap" : "crawl-status-unknown",
         qualityReport: { passed, checks: [], titleSimilarity, bodySimilarity, internalLinkCount: internalLinks.length },
       };
-      await store.write({ ...state, articles: [...state.articles, article], runs: [...state.runs, { id: `news-publish-${now.getTime()}`, startedAt: now.toISOString(), mode: contentAutomationConfig().mode, dryRun: false, result: article.status }] });
+      const result: NewsPublishResult = { dryRun: false, status: canPublish ? "published" : "drafted", articleId: article.id, reasons: canPublish ? [] : ["Draft generated successfully; set CONTENT_MODE=publish and AUTO_PUBLISH=true to permit publication."] };
+      await finish(result, article);
       await writeHumanizerAudit({
         articleId: id,
         originalDraftHash: String(draft.body.length),
@@ -258,56 +339,97 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
         factDeltaDetected,
         passed,
       });
-            if (canPublish) await markSourceUsed(candidate.sourceId);
-      return { dryRun: false, status: canPublish ? "published" : "drafted", articleId: article.id, reasons: canPublish ? [] : ["Draft generated successfully; set CONTENT_MODE=publish and AUTO_PUBLISH=true to permit publication."] };
+      if (canPublish) await markSourceUsed(candidate.sourceId);
+      return result;
     } catch (error) {
-      await updateCandidateStatus(candidate.id, "rejected", error instanceof Error ? error.message.slice(0, 240) : "News generation failed.");
-      return { dryRun: false, status: "blocked", reasons: [error instanceof Error ? error.message : "News generation failed."] };
+      const reason = error instanceof Error ? error.message : "News generation failed.";
+      await updateCandidateStatus(candidate.id, "rejected", reason.slice(0, 240));
+      candidateRejections.push(`${candidate.sourceName}: ${reason}`);
     }
   }
 
   // A daily visible News item is required. If every designated external source fails the
   // validation gates, publish an accurately-labelled technical brief instead of inventing news.
   const fallbackRecent = state.articles.filter((article) => age(article.publishedAt ?? article.createdAt, now) <= 90);
-  let fallbackCategory: string | undefined;
-  let selected: ReturnType<typeof selectVerifiedProduct> | undefined;
-  for (let index = 0; index < categoryOrder.length; index += 1) {
-    const category = categoryOrder[(state.articles.length + index) % categoryOrder.length];
-    const candidateProduct = selectVerifiedProduct(category);
-    if (candidateProduct) {
-      fallbackCategory = category;
-      selected = candidateProduct;
-      break;
+  const rankedOptions = rankFallbackPublishingOptions(fallbackPublishingOptions(), state.articles, now);
+  const fallbackFailures: string[] = [];
+  let fallback: {
+    fallbackCategory: string;
+    selected: NonNullable<ReturnType<typeof selectVerifiedProduct>>;
+    industry: string;
+    scenario: string;
+    topicKey: string;
+    internalLinks: string[];
+    draft: ReturnType<typeof createTechnicalBriefDraft>["draft"];
+    audit: ReturnType<typeof createTechnicalBriefDraft>["audit"];
+    factDeltaDetected: boolean;
+    body: string;
+    titleSimilarity: number;
+    bodySimilarity: number;
+    checks: Array<{ name: string; passed: boolean; detail: string }>;
+  } | undefined;
+
+  for (const option of rankedOptions) {
+    const { selected, industry, scenario } = option.payload;
+    const internalLinks = [selected.path, "/solutions/" + (option.category === "magnetic-separators" ? "mineral-processing-recycling" : "construction-sites"), "/request-a-quote"];
+    const { draft, audit, factDeltaDetected } = createTechnicalBriefDraft({
+      productName: selected.product.name,
+      productCategory: option.category,
+      productModel: selected.canonical.model ?? undefined,
+      productDescription: selected.product.description,
+      industry,
+      scenario,
+      technicalCta: cta(option.category),
+    });
+    const body = formatTechnicalBriefBody({ body: draft.body, faq: draft.faq, internalLinks, technicalCta: cta(option.category) });
+    const titleSimilarity = Math.max(0, ...fallbackRecent.map((article) => tokenSimilarity(draft.title, article.title)));
+    const bodySimilarity = Math.max(0, ...fallbackRecent.map((article) => ngramSimilarity(body, article.body)));
+    const topicRepeatedWithin180Days = state.articles.some((article) =>
+      article.similarityKey === option.key && age(article.publishedAt ?? article.createdAt, now) <= 180,
+    );
+    const gate = evaluateFallbackPublication({ auditPassed: audit.passed, factDeltaDetected, titleSimilarity, bodySimilarity, topicRepeatedWithin180Days });
+    if (!gate.passed) {
+      fallbackFailures.push(`${selected.product.name}: ${gate.checks.filter((check) => !check.passed).map((check) => check.name).join(", ")}`);
+      continue;
     }
+    fallback = {
+      fallbackCategory: option.category,
+      selected,
+      industry,
+      scenario,
+      topicKey: option.key,
+      internalLinks,
+      draft,
+      audit,
+      factDeltaDetected,
+      body,
+      titleSimilarity,
+      bodySimilarity,
+      checks: gate.checks,
+    };
+    break;
   }
-  if (!fallbackCategory || !selected) {
-    return { dryRun: options.dryRun, status: "blocked", reasons: ["No verified product with an authorized local image is available for the daily technical brief."] };
+
+  if (!fallback) {
+    return finish({
+      dryRun: options.dryRun,
+      status: "blocked",
+      reasons: [
+        rankedOptions.length ? "Every verified product and editorial angle failed the technical-brief quality gate." : "No verified product with an authorized local image is available for the daily technical brief.",
+        ...candidateRejections.slice(0, 2),
+        ...fallbackFailures.slice(0, 2),
+      ],
+    });
   }
-  const industry = fallbackIndustry[fallbackCategory];
-  const scenario = fallbackScenario[fallbackCategory];
-  const topicKey = selected.canonical.canonicalId + ":" + industry + ":" + scenario + ":" + shanghaiDay(now);
+
+  const { fallbackCategory, selected, industry, scenario, topicKey, internalLinks, draft, audit, factDeltaDetected, body, titleSimilarity, bodySimilarity, checks } = fallback;
   if (options.dryRun) {
-    return { dryRun: true, status: "drafted", reasons: ["No eligible external news; audited technical-brief fallback selected for daily publication."] };
+    return finish({ dryRun: true, status: "drafted", reasons: [`Audited technical brief selected: ${draft.title}`] });
   }
-  const internalLinks = [selected.path, "/solutions/" + (fallbackCategory === "magnetic-separators" ? "mineral-processing-recycling" : "construction-sites"), "/request-a-quote"];
-  const { draft, audit, factDeltaDetected } = createTechnicalBriefDraft({
-    productName: selected.product.name,
-    productCategory: fallbackCategory,
-    productModel: selected.canonical.model ?? undefined,
-    productDescription: selected.product.description,
-    industry,
-    scenario,
-    technicalCta: cta(fallbackCategory),
-  });
-  const body = formatTechnicalBriefBody({ body: draft.body, faq: draft.faq, internalLinks, technicalCta: cta(fallbackCategory) });
-  const titleSimilarity = Math.max(0, ...fallbackRecent.map((article) => tokenSimilarity(draft.title, article.title)));
-  const bodySimilarity = Math.max(0, ...fallbackRecent.map((article) => ngramSimilarity(body, article.body)));
-  const passed = audit.passed && !factDeltaDetected && titleSimilarity < 0.4 && bodySimilarity < 0.5;
-  if (!passed) {
-    return { dryRun: false, status: "blocked", reasons: ["The daily technical brief failed the language, fact-lock, or similarity gate."] };
-  }
+
   const id = randomUUID();
   const canPublish = isAutoPublishEnabled();
+  const passed = true;
   const article: ContentArticle = {
     id,
     slug: slugify(draft.title + "-" + shanghaiDay(now)),
@@ -327,9 +449,17 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
     updatedAt: now.toISOString(),
     publishedAt: canPublish ? now.toISOString() : undefined,
     discoveryStatus: canPublish ? "included-in-sitemap" : "crawl-status-unknown",
-    qualityReport: { passed, checks: [{ name: "technical-brief-fallback", passed: true, detail: "Published because no designated-source news passed the daily validation gates." }], titleSimilarity, bodySimilarity, internalLinkCount: internalLinks.length },
+    qualityReport: { passed, checks: [{ name: "technical-brief-fallback", passed: true, detail: "Published because no designated-source news passed the daily validation gates." }, ...checks], titleSimilarity, bodySimilarity, internalLinkCount: internalLinks.length },
   };
-  await store.write({ ...state, articles: [...state.articles, article], runs: [...state.runs, { id: "news-technical-brief-" + now.getTime(), startedAt: now.toISOString(), mode: contentAutomationConfig().mode, dryRun: false, result: article.status }] });
+  const result: NewsPublishResult = {
+    dryRun: false,
+    status: canPublish ? "published" : "drafted",
+    articleId: id,
+    reasons: canPublish
+      ? ["Published a labelled technical brief because no external News candidate passed validation."]
+      : ["Technical brief generated successfully; publication is disabled by configuration."],
+  };
+  await finish(result, article);
   await writeHumanizerAudit({
     articleId: id,
     originalDraftHash: String(draft.body.length),
@@ -340,5 +470,5 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
     factDeltaDetected,
     passed,
   });
-  return { dryRun: false, status: canPublish ? "published" : "drafted", articleId: id, reasons: canPublish ? ["Published a labelled technical brief because no external News candidate passed validation."] : ["Technical brief generated successfully; publication is disabled by configuration."] };
+  return result;
 }

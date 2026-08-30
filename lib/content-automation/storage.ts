@@ -43,7 +43,7 @@ export class NeonContentStore implements ContentStore {
     const sql = newsSql();
     const [articles, runs] = await Promise.all([
       sql.query("SELECT * FROM news_articles ORDER BY COALESCE(published_at, created_at) DESC"),
-      sql.query("SELECT id, started_at, status FROM news_runs ORDER BY started_at DESC LIMIT 120"),
+      sql.query("SELECT idempotency_key AS id, started_at, status FROM news_runs ORDER BY started_at DESC LIMIT 120"),
     ]);
     return { version: 1, articles: articles.map((row) => toArticle(row as Record<string, unknown>)), runs: runs.map((row) => ({ id: String(row.id), startedAt: date(row.started_at) ?? new Date().toISOString(), mode: "publish", dryRun: false, result: String(row.status) })) };
   }

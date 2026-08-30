@@ -11,10 +11,14 @@ async function execute(request: Request) {
 
   const dryRun = new URL(request.url).searchParams.get("dryRun") === "true";
   try {
-    return Response.json(await discoverApprovedNews({ dryRun }));
+    const result = await discoverApprovedNews({ dryRun });
+    console.info(JSON.stringify({ event: "news.discover.cron", ...result }));
+    return Response.json(result);
   } catch (error) {
+    const message = error instanceof Error ? error.message : "News discovery failed.";
+    console.error(JSON.stringify({ event: "news.discover.error", message }));
     return Response.json(
-      { error: error instanceof Error ? error.message : "News discovery failed." },
+      { error: message },
       { status: 503 },
     );
   }

@@ -16,6 +16,7 @@
     "report:migration": "node scripts/generate-migration-reports.mjs",
     "content:schedule": "node scripts/run-content-automation.mjs",
     "content:validate": "node scripts/validate-content-automation.mjs",
+    "test:news": "tsx --test tests/content-automation/news-publishing-policy.test.ts",
     "prebuild": "pnpm run check:public-boundary && pnpm run check:content-similarity && pnpm run check:site-visuals"
   },
   "dependencies": {
@@ -36,6 +37,7 @@
     "eslint": "^9.21.0",
     "eslint-config-next": "latest",
     "tailwindcss": "latest",
+    "tsx": "^4.20.5",
     "typescript": "^5.7.3"
   }
 }

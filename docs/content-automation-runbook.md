@@ -1,16 +1,24 @@
 # COWIN MACHINE content automation runbook
 
+## Daily News publishing guarantee
+
+- `/api/cron/news-discover` stores source health and eligible external candidates before the publishing window.
+- `/api/cron/news-publish` publishes a verified external update when one passes every source and editorial gate.
+- When no external candidate is eligible, the publisher selects a verified COWIN MACHINE product and an unused editorial angle. Product URLs are cooled down for 60 days and exact product-angle topics are blocked for 180 days.
+- Shared compliance wording in technical briefs is measured and saved in the quality report, but it does not block an otherwise unique product topic. Near-exact titles, repeated topics, language failures and fact-lock failures still block publication.
+- Every publish result is written to `news_runs` and emitted as a structured `news.publish.result` log. A blocked cron responds with HTTP 503 so monitoring cannot mistake it for a successful publication.
+- The News index, detail routes, sitemap and RSS feed read published articles directly from the persistent content store and require no redeploy after a scheduled publication.
+
 ## Current deployment and persistence finding
 
-The repository is linked to a Vercel project, but the checked configuration contains no database, KV, CMS or durable content-store settings. The only local deployment variable is Vercel's OIDC token. A Vercel function filesystem is not a durable content database, so the shipped `file` adapter is intentionally limited to local development or a self-hosted Node deployment with persistent disk.
-
-On Vercel, a write attempt with the file adapter returns a configuration error instead of silently losing a draft. Before enabling a hosted scheduler, implement a `ContentStore` adapter with durable reads/writes and configure it with server-only environment variables. This repository does not select a cloud vendor on the owner's behalf.
+Production uses the Neon content-store adapter selected by `DATABASE_URL` or `POSTGRES_URL`. The file adapter remains limited to local development and refuses Vercel writes so a deployment cannot silently lose generated content.
 
 ## Default operating mode
 
-- Schedule expression: `CONTENT_SCHEDULE="0 8 */2 * *"`.
-- Mode: `CONTENT_MODE="draft"`.
-- Auto publish: `AUTO_PUBLISH="false"`.
+- Discovery schedule: `10 0 * * *` UTC.
+- Publishing schedule: `45 1 * * *` UTC.
+- Mode defaults to `publish` unless `CONTENT_MODE=draft` is set.
+- Auto publish defaults to enabled unless `AUTO_PUBLISH=false` is set.
 - Published state: only an article whose stored status is `published` appears on `/news`, `/news/[slug]`, `/sitemap.xml`, or `/feed.xml`.
 
 ## Scheduler invocation
@@ -48,12 +56,11 @@ The current adapter reports only truthful configuration state: `not-configured` 
 
 ## Enabling automatic publication
 
-1. Implement and test a durable `ContentStore` adapter.
-2. Add all server-only credentials to the deployment environment.
-3. Enable protected administration and review the first draft-mode runs.
-4. Set `CONTENT_MODE=publish` and `AUTO_PUBLISH=true`.
-5. Configure the scheduler with the documented cron expression and bearer token.
-6. Verify sitemap/RSS, metadata, JSON-LD, canonical URLs and source links after the first publication.
+1. Confirm Neon database and `CRON_SECRET` are configured for Production.
+2. Keep `CONTENT_MODE=publish` and `AUTO_PUBLISH=true`, or rely on their production defaults.
+3. Confirm the two News cron routes are present in the production deployment.
+4. Verify the first result in `news_runs` and the structured Vercel runtime log.
+5. Verify the News index, article detail, sitemap, RSS, metadata, JSON-LD, canonical URLs and source links.
 
 ## Rollback
 
