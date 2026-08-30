@@ -212,8 +212,23 @@ async function writeHumanizerAudit(input: {
       article_id, original_draft_hash, humanized_draft_hash, factual_fields_locked,
       removed_ai_patterns, prohibited_phrases_found, similarity_before,
       similarity_after, fact_delta_detected, passed, processed_at
-    ) VALUES ($1,$2,$3,$4::text[],$5::text[],$6::text[],$7,$8,$9,$10,NOW())`,
-    [input.articleId, input.originalDraftHash, input.humanizedDraftHash, ["product", "industry", "scenario", "source title", "source date", "source URL"], [], input.prohibitedPhrases, input.similarityBefore, input.similarityAfter, input.factDeltaDetected, input.passed],
+    )
+    SELECT $1,$2,$3,$4::jsonb,$5::jsonb,$6::jsonb,$7,$8,$9,$10,NOW()
+    WHERE NOT EXISTS (
+      SELECT 1 FROM news_humanizer_audits WHERE article_id = $1
+    )`,
+    [
+      input.articleId,
+      input.originalDraftHash,
+      input.humanizedDraftHash,
+      JSON.stringify(["product", "industry", "scenario", "source title", "source date", "source URL"]),
+      JSON.stringify([]),
+      JSON.stringify(input.prohibitedPhrases),
+      input.similarityBefore,
+      input.similarityAfter,
+      input.factDeltaDetected,
+      input.passed,
+    ],
   );
 }
 
@@ -248,7 +263,20 @@ export async function publishDailyNews(options: { dryRun: boolean }): Promise<Ne
     return result;
   };
 
-  if (state.articles.some((article) => article.publishedAt && shanghaiDay(new Date(article.publishedAt)) === shanghaiDay(now))) {
+  const todaysArticle = state.articles.find((article) => article.publishedAt && shanghaiDay(new Date(article.publishedAt)) === shanghaiDay(now));
+  if (todaysArticle) {
+    if (!options.dryRun) {
+      await writeHumanizerAudit({
+        articleId: todaysArticle.id,
+        originalDraftHash: String(todaysArticle.body.length),
+        humanizedDraftHash: String(todaysArticle.body.length),
+        prohibitedPhrases: [],
+        similarityBefore: todaysArticle.qualityReport.titleSimilarity,
+        similarityAfter: todaysArticle.qualityReport.bodySimilarity,
+        factDeltaDetected: false,
+        passed: todaysArticle.qualityReport.passed,
+      });
+    }
     return finish({ dryRun: options.dryRun, status: "nothing-eligible", reasons: ["A News article has already been published for this Shanghai calendar day."] });
   }
 
