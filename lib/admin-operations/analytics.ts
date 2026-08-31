@@ -69,10 +69,7 @@ function ipHash(request: Request) {
   return ip ? createHash("sha256").update(secret).update(":").update(ip).digest("hex") : null;
 }
 
-export async function checkInquiryRateLimit(request: Request) {
-  const key = ipHash(request);
-  if (!key) return true;
-
+export async function ensureInquiryRateLimitTable() {
   const sql = adminSql();
   inquiryRateLimitTable ??= sql.query(
     `CREATE TABLE IF NOT EXISTS inquiry_rate_limits (
@@ -83,6 +80,14 @@ export async function checkInquiryRateLimit(request: Request) {
     )`,
   );
   await inquiryRateLimitTable;
+}
+
+export async function checkInquiryRateLimit(request: Request) {
+  const key = ipHash(request);
+  if (!key) return true;
+
+  await ensureInquiryRateLimitTable();
+  const sql = adminSql();
 
   const rows = await sql.query(
     `WITH cleanup AS (
