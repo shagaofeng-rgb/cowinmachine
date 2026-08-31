@@ -10,13 +10,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "",
     "/products",
+    "/solutions",
+    "/solutions/construction-sites",
+    "/solutions/mineral-processing-recycling",
     "/about",
-    "/factory-quality",
-    "/cases",
     "/contact",
     "/request-a-quote",
     "/news",
-    "/blog",
   ];
   const articles = await getPublishedArticles();
   const indexableProducts = products.filter(

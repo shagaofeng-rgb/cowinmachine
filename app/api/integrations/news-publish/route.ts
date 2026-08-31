@@ -96,10 +96,13 @@ async function readInput(request: Request): Promise<WebhookInput> {
 }
 
 export async function POST(request: Request) {
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > 262_144) return response(0, "请求内容过大", 413);
   const rawExpectedSecret = process.env.EXTERNAL_NEWS_WEBHOOK_SECRET;
   const expectedSecret = rawExpectedSecret?.trim();
   if (!expectedSecret) return response(0, "发布接口未配置");
   const input = await readInput(request);
+  if (input.content.length > 160_000) return response(0, "文章内容过长", 413);
 
   if (!input.sign || !sameSecret(input.sign, expectedSecret)) {
     console.warn("external-news-webhook-auth-failed", {

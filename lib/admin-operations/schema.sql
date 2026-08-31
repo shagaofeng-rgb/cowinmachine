@@ -70,6 +70,13 @@ CREATE TABLE IF NOT EXISTS b2b_lead_activities (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS inquiry_rate_limits (
+  fingerprint text NOT NULL,
+  bucket_start timestamptz NOT NULL,
+  attempts integer NOT NULL DEFAULT 1,
+  PRIMARY KEY (fingerprint, bucket_start)
+);
+
 CREATE TABLE IF NOT EXISTS seo_search_snapshots (
   id text PRIMARY KEY,
   observed_at timestamptz NOT NULL DEFAULT now(),

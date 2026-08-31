@@ -7,10 +7,11 @@ import { productCategories, products } from "@/lib/products";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig, whatsappHref } from "@/lib/site";
 
-export const metadata = pageMetadata(
-  "Industrial Equipment Solutions",
+const homeMetadata = pageMetadata(
+  siteConfig.defaultTitle,
   "Explore COWIN MACHINE equipment categories and begin a project-based technical review for mining, construction, remote power and material processing applications.",
 );
+export const metadata = { ...homeMetadata, title: { absolute: siteConfig.defaultTitle } };
 
 const representativeProducts = productCategories
   .map((category) => products.find((product) => product.category === category.slug))

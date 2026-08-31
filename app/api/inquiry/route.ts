@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createLead } from "@/lib/admin-operations/analytics";
+import { checkInquiryRateLimit, createLead } from "@/lib/admin-operations/analytics";
 
 export const runtime = "nodejs";
 
@@ -13,11 +13,35 @@ const inquirySchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const payload = await request.json().catch(() => null);
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > 32_768) return NextResponse.json({ message: "The inquiry payload is too large." }, { status: 413 });
+
+  const origin = request.headers.get("origin");
+  if (origin) {
+    try {
+      if (new URL(origin).origin !== new URL(request.url).origin) {
+        return NextResponse.json({ message: "Cross-origin inquiry submission is not allowed." }, { status: 403 });
+      }
+    } catch {
+      return NextResponse.json({ message: "Cross-origin inquiry submission is not allowed." }, { status: 403 });
+    }
+  }
+
+  const raw = await request.text().catch(() => "");
+  if (raw.length > 32_768) return NextResponse.json({ message: "The inquiry payload is too large." }, { status: 413 });
+  const payload = (() => { try { return JSON.parse(raw) as unknown; } catch { return null; } })();
+
+  if (payload && typeof payload === "object" && "website" in payload && typeof payload.website === "string" && payload.website.trim()) {
+    return NextResponse.json({ ok: true, message: "Your request has been received." });
+  }
+
   const parsed = inquirySchema.safeParse(payload);
   if (!parsed.success) return NextResponse.json({ message: "Please correct the highlighted fields and try again." }, { status: 400 });
 
   try {
+    if (!await checkInquiryRateLimit(request)) {
+      return NextResponse.json({ message: "Too many inquiry attempts. Please wait before trying again." }, { status: 429 });
+    }
     await createLead({
       ...parsed.data,
       visitorId: request.headers.get("x-cowin-visitor-id") ?? undefined,
@@ -25,7 +49,7 @@ export async function POST(request: Request) {
       landingPath: request.headers.get("referer") ?? undefined,
       sourceChannel: request.headers.get("x-cowin-source-channel") ?? undefined,
     });
-    return NextResponse.json({ ok: true, message: "Your request has been received. Our sales team will reply within 24 hours." });
+    return NextResponse.json({ ok: true, message: "Your request has been received. Our team will review the details and contact you using the information provided." });
   } catch (error) {
     console.error("inquiry-store-failed", error instanceof Error ? error.message : "unknown");
     return NextResponse.json({ message: "Our inquiry system is temporarily unavailable. Please contact us by email or WhatsApp." }, { status: 503 });

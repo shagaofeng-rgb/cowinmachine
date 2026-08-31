@@ -6,6 +6,7 @@ import type { AdminDateRange, AdminLead, AnalyticsEventPayload, DeviceType, Lead
 
 const allowedEvents = new Set(["page_view", "product_view", "category_view", "news_view", "quote_click", "whatsapp_click", "email_click", "inquiry_started", "inquiry_submitted", "filter_used"]);
 const safeIdentifier = /^[A-Za-z0-9-]{12,100}$/;
+let inquiryRateLimitTable: Promise<unknown> | null = null;
 
 function text(value: unknown, maximum = 180) {
   return typeof value === "string" ? value.trim().slice(0, maximum) : "";
@@ -66,6 +67,36 @@ function ipHash(request: Request) {
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
   const ip = forwarded || request.headers.get("x-real-ip");
   return ip ? createHash("sha256").update(secret).update(":").update(ip).digest("hex") : null;
+}
+
+export async function checkInquiryRateLimit(request: Request) {
+  const key = ipHash(request);
+  if (!key) return true;
+
+  const sql = adminSql();
+  inquiryRateLimitTable ??= sql.query(
+    `CREATE TABLE IF NOT EXISTS inquiry_rate_limits (
+      fingerprint text NOT NULL,
+      bucket_start timestamptz NOT NULL,
+      attempts integer NOT NULL DEFAULT 1,
+      PRIMARY KEY (fingerprint, bucket_start)
+    )`,
+  );
+  await inquiryRateLimitTable;
+
+  const rows = await sql.query(
+    `WITH cleanup AS (
+       DELETE FROM inquiry_rate_limits WHERE bucket_start < now() - interval '2 days'
+     ), updated AS (
+       INSERT INTO inquiry_rate_limits (fingerprint, bucket_start, attempts)
+       VALUES ($1, date_trunc('hour', now()) + floor(date_part('minute', now()) / 15) * interval '15 minutes', 1)
+       ON CONFLICT (fingerprint, bucket_start) DO UPDATE SET attempts = inquiry_rate_limits.attempts + 1
+       RETURNING attempts
+     )
+     SELECT attempts FROM updated`,
+    [key],
+  );
+  return Number(rows[0]?.attempts ?? 1) <= 5;
 }
 
 function asIso(value: unknown) {
@@ -159,11 +190,15 @@ export async function createLead(input: {
   const id = randomUUID();
   const sql = adminSql();
   await sql.query(
-    `INSERT INTO b2b_leads (id,name,company,country,email,whatsapp,category,product_model,product_url,application,material,quantity,message,project_requirements,visitor_id,session_id,source_channel,landing_path)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
-    [id,input.name,input.company,input.country,input.email,input.whatsapp || null,input.category,input.productModel || null,input.productUrl || null,input.application || null,input.material || null,input.quantity || null,input.message,input.projectRequirements || null,safeIdentifier.test(input.visitorId ?? "") ? input.visitorId : null,safeIdentifier.test(input.sessionId ?? "") ? input.sessionId : null,input.sourceChannel || null,input.landingPath ? safePath(input.landingPath) : null],
+    `WITH inserted_lead AS (
+      INSERT INTO b2b_leads (id,name,company,country,email,whatsapp,category,product_model,product_url,application,material,quantity,message,project_requirements,visitor_id,session_id,source_channel,landing_path)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+      RETURNING id
+    )
+    INSERT INTO b2b_lead_activities (id,lead_id,activity_type,note)
+    SELECT $19,id,'created','Created from website inquiry form' FROM inserted_lead`,
+    [id,input.name,input.company,input.country,input.email,input.whatsapp || null,input.category,input.productModel || null,input.productUrl || null,input.application || null,input.material || null,input.quantity || null,input.message,input.projectRequirements || null,safeIdentifier.test(input.visitorId ?? "") ? input.visitorId : null,safeIdentifier.test(input.sessionId ?? "") ? input.sessionId : null,input.sourceChannel || null,input.landingPath ? safePath(input.landingPath) : null,randomUUID()],
   );
-  await sql.query(`INSERT INTO b2b_lead_activities (id,lead_id,activity_type,note) VALUES ($1,$2,'created','Created from website inquiry form')`, [randomUUID(), id]);
   return id;
 }
 

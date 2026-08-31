@@ -34,7 +34,7 @@ export function InquiryForm({ productModel, productUrl, compact = false, default
       const response = await fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json", ...getAnalyticsRequestHeaders() }, body: JSON.stringify(data) });
       const result = await response.json() as { message?: string };
       if (!response.ok) throw new Error(result.message ?? "We could not submit your request. Please try again.");
-      setServerMessage("Your request has been received. Our sales team will reply within 24 hours.");
+      setServerMessage(result.message ?? "Your request has been received. Our team will review the details and contact you using the information provided.");
       reset({ category: data.category, productModel: productModel ?? "", productUrl: productUrl ?? "", website: "" });
     } catch (error) { setServerMessage(error instanceof Error ? error.message : "We could not submit your request. Please try again."); }
   };

@@ -14,7 +14,7 @@ export function ProductJsonLd({ product, profile }: { product: Product; profile:
     url,
     additionalProperty: profile.specifications.filter((item) => item.value !== "Configuration subject to application review.").map((item) => ({ "@type": "PropertyValue", name: item.label, value: item.value })),
   };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
 }
 
 export function BreadcrumbJsonLd({ items }: { items: Array<{ name: string; url?: string }> }) {
@@ -28,5 +28,5 @@ export function BreadcrumbJsonLd({ items }: { items: Array<{ name: string; url?:
       item: item.url,
     })),
   };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
 }

@@ -120,8 +120,9 @@ function expandedArticle(text, product, topic) {
 
 function reviewContent(product, canonical) {
   const label = categoryLabels[product.category];
+  const productName = product.currentH1 || product.modelReference || "This product";
   return {
-    overview: `${product.name} is retained as a ${label} catalog reference, but its model identity, configuration or supporting specification evidence requires owner review before technical claims are published. Share the intended application, material or medium, required quantity, country and project conditions so COWIN MACHINE can request the correct configuration information.`,
+    overview: `${productName} is retained as a ${label} catalog reference, but its model identity, configuration or supporting specification evidence requires owner review before technical claims are published. Share the intended application, material or medium, required quantity, country and project conditions so COWIN MACHINE can request the correct configuration information.`,
     workingPrinciple: `Technical operating content is intentionally withheld for this record until the exact model or product family is confirmed. Configuration subject to application review.`,
     applications: ["Application review required before suitability is stated"],
     selectionGuide: ["Provide the existing model marking or a clear product photo", "Describe the process, material or medium and operating environment", "Confirm installation space, utilities and required quantity", "Request approved model-specific specifications before procurement"],
@@ -140,8 +141,8 @@ const profiles = inventory.records.map((product) => {
     canonicalId: canonical?.canonicalId ?? null,
     model: canonical?.model ?? product.modelReference ?? null,
     publicationState: "configuration-review",
-    reviewReason: canonical ? `Audit status: ${canonical.productStatus}.` : "No canonical product-family mapping is available.",
-    imageStatus: localImage ? "Authorized project image available" : "Image requires owner confirmation",
+    reviewReason: canonical ? "Model-specific supporting information is pending review." : "A confirmed product-family mapping is not yet available.",
+    imageStatus: localImage ? "Local catalog image available" : "Image pending review",
     content: reviewContent(product, canonical), specifications: [], standardConfiguration: ["Request Configuration Review"], optionalConfiguration: ["Request verified model and configuration information"], relatedProductSlugs: [],
   };
   const template = shared[canonical.category];
@@ -152,7 +153,7 @@ const profiles = inventory.records.map((product) => {
     model: canonical.model,
     publicationState: "full-technical-content",
     reviewReason: null,
-    imageStatus: localImage ? "Authorized project image available" : "Image requires owner confirmation",
+    imageStatus: localImage ? "Local catalog image available" : "Image pending review",
     content: {
       overview: expandedArticle(template.overview(product.currentH1, canonical.model), product, "overview"),
       workingPrinciple: expandedArticle(template.principle, product, "working-principle guidance"),
@@ -173,4 +174,4 @@ const profiles = inventory.records.map((product) => {
 const output = { generatedAt: new Date().toISOString(), totalRoutes: profiles.length, profiles };
 fs.mkdirSync(path.join(root, "data/product-detail"), { recursive: true });
 fs.writeFileSync(path.join(root, "data/product-detail/product-detail-content.json"), JSON.stringify(output, null, 2) + "\n");
-console.log(JSON.stringify({ routes: profiles.length, full: profiles.filter((p) => p.publicationState === "full-technical-content").length, review: profiles.filter((p) => p.publicationState === "configuration-review").length, missingImages: profiles.filter((p) => p.imageStatus !== "Authorized project image available").length }, null, 2));
+console.log(JSON.stringify({ routes: profiles.length, full: profiles.filter((p) => p.publicationState === "full-technical-content").length, review: profiles.filter((p) => p.publicationState === "configuration-review").length, missingImages: profiles.filter((p) => p.imageStatus !== "Local catalog image available").length }, null, 2));

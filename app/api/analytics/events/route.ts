@@ -23,7 +23,11 @@ const eventSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const payload = await request.json().catch(() => null);
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > 16_384) return NextResponse.json({ ok: false, message: "Analytics payload is too large." }, { status: 413 });
+  const raw = await request.text().catch(() => "");
+  if (raw.length > 16_384) return NextResponse.json({ ok: false, message: "Analytics payload is too large." }, { status: 413 });
+  const payload = (() => { try { return JSON.parse(raw) as unknown; } catch { return null; } })();
   const parsed = eventSchema.safeParse(payload);
   if (!parsed.success) return NextResponse.json({ ok: false, message: "Invalid analytics payload." }, { status: 400 });
 

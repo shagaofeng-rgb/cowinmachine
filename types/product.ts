@@ -45,7 +45,7 @@ export type ProductDetailProfile = {
   model: string | null;
   publicationState: "full-technical-content" | "configuration-review";
   reviewReason: string | null;
-  imageStatus: "Authorized project image available" | "Image requires owner confirmation" | "Approved product image pending";
+  imageStatus: "Local catalog image available" | "Image pending review";
   content: ProductContent;
   specifications: { label: string; value: string }[];
   standardConfiguration: string[];

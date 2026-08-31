@@ -9,9 +9,10 @@ export function SiteMenuDrawer({ open, onClose, dialogRef, closeButtonRef }: { o
     <button className="navigation-backdrop" aria-label="Close site menu" onClick={onClose} />
     <aside ref={dialogRef} id="site-menu-drawer" className="site-menu-drawer" role="dialog" aria-modal="true" aria-label="Site menu">
       <div className="site-menu-drawer-top"><p>COWIN MACHINE</p><button ref={closeButtonRef} className="close-button" type="button" onClick={onClose} aria-label="Close menu">×</button></div>
+      <Link className="button button-primary site-menu-primary-cta" href="/request-a-quote" onClick={onClose}>Get a Quote</Link>
       <div className="desktop-drawer-navigation"><nav aria-label="Site navigation"><ul>{siteMenuNavigation.map((item) => <li key={item.href}><Link href={item.href} onClick={onClose}>{item.label}</Link></li>)}</ul></nav></div>
       <MobileNavigation onNavigate={onClose} />
-      <div className="site-menu-drawer-contact"><Link className="button button-primary" href="/request-a-quote" onClick={onClose}>Get a Quote</Link><a href={`mailto:${siteConfig.email}`}>Email: {siteConfig.email}</a><a href={whatsappHref}>WhatsApp: {siteConfig.phone}</a><p>Factory in Quzhou, China</p></div>
+      <div className="site-menu-drawer-contact"><a href={`mailto:${siteConfig.email}`}>Email: {siteConfig.email}</a><a href={whatsappHref}>WhatsApp: {siteConfig.phone}</a><p>Factory in Quzhou, China</p></div>
     </aside>
   </>;
 }

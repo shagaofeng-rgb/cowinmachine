@@ -1,8 +1,9 @@
 import { PageHero } from "@/components/PageHero";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata("Project Reviews", "A review-gated area for verified industrial equipment project information.", "/cases");
+const baseMetadata = pageMetadata("Project Reviews", "Request relevant industrial equipment project references for a confirmed application.", "/cases");
+export const metadata = { ...baseMetadata, robots: { index: false, follow: true } };
 
 export default function CasesPage() {
-  return <><PageHero eyebrow="Project reviews" title="Verified Project Information" description="No project record is published until the application, equipment and approval scope are verified." image={{ src: "/images/generated/cases-remote-infrastructure.png", alt: "Remote infrastructure worksite under review" }} /><section className="section"><div className="content-wrap"><div className="card"><h2>REVIEW REQUIRED</h2><p>Project data, images, customer permissions and application claims must be verified before publication.</p></div></div></section></>;
+  return <><PageHero eyebrow="Project reviews" title="Application Reference Review" description="Relevant project references depend on the application, equipment scope and permission to share customer information." image={{ src: "/images/generated/cases-remote-infrastructure.png", alt: "Remote infrastructure worksite under review" }} /><section className="section"><div className="content-wrap"><div className="card"><h2>Request a Relevant Reference</h2><p>Send your application, operating environment and target equipment category. Our team will review whether a suitable, shareable project reference is available.</p></div></div></section></>;
 }

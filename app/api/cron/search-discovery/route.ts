@@ -1,35 +1,13 @@
 import { createSign } from "node:crypto";
 import { isSchedulerRequest } from "@/lib/content-automation/auth";
+import { getGoogleSearchConsoleConfig, type GoogleServiceAccount } from "@/lib/content-automation/google-search-console-config";
 import { getPublishedArticles } from "@/lib/content-automation/storage";
 import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
 
-type GoogleServiceAccount = {
-  client_email: string;
-  private_key: string;
-  token_uri?: string;
-};
-
 function base64Url(value: string) {
   return Buffer.from(value).toString("base64url");
-}
-
-function getServiceAccount(): GoogleServiceAccount | null {
-  const value = process.env.GOOGLE_SEARCH_CONSOLE_CREDENTIALS_JSON;
-  if (!value) return null;
-
-  try {
-    const parsed = JSON.parse(value) as Partial<GoogleServiceAccount>;
-    if (typeof parsed.client_email !== "string" || typeof parsed.private_key !== "string") return null;
-    return {
-      client_email: parsed.client_email,
-      private_key: parsed.private_key,
-      token_uri: typeof parsed.token_uri === "string" ? parsed.token_uri : undefined,
-    };
-  } catch {
-    return null;
-  }
 }
 
 async function getGoogleAccessToken(serviceAccount: GoogleServiceAccount) {
@@ -64,9 +42,8 @@ async function getGoogleAccessToken(serviceAccount: GoogleServiceAccount) {
   return payload.access_token;
 }
 
-async function submitSitemap(property: string, serviceAccount: GoogleServiceAccount) {
+async function submitSitemap(property: string, sitemapUrl: string, serviceAccount: GoogleServiceAccount) {
   const accessToken = await getGoogleAccessToken(serviceAccount);
-  const sitemapUrl = `${siteConfig.siteUrl}/sitemap.xml`;
   const response = await fetch(
     `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(property)}/sitemaps/${encodeURIComponent(sitemapUrl)}`,
     { method: "PUT", headers: { Authorization: `Bearer ${accessToken}` } },
@@ -80,10 +57,10 @@ async function execute(request: Request) {
   if (!isSchedulerRequest(request)) return Response.json({ error: "Scheduler authorization is required." }, { status: 401 });
 
   const articles = await getPublishedArticles();
-  const property = process.env.GOOGLE_SEARCH_CONSOLE_PROPERTY;
-  const serviceAccount = getServiceAccount();
+  const config = getGoogleSearchConsoleConfig();
+  const sitemapUrl = config.sitemapUrl ?? `${siteConfig.siteUrl}/sitemap.xml`;
 
-  if (!property || !serviceAccount) {
+  if (!config.property || !config.serviceAccount) {
     return Response.json({
       status: "search-console-not-configured",
       sitemap: "/sitemap.xml",
@@ -94,7 +71,7 @@ async function execute(request: Request) {
   }
 
   try {
-    const sitemap = await submitSitemap(property, serviceAccount);
+    const sitemap = await submitSitemap(config.property, sitemapUrl, config.serviceAccount);
     return Response.json({
       status: "sitemap-submitted",
       sitemap,

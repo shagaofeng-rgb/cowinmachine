@@ -18,7 +18,7 @@ export default function ContactPage() {
           <p><strong>Email:</strong> <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></p>
           <p><strong>WhatsApp:</strong> <a href={whatsappHref}>{siteConfig.phone}</a></p>
           <p><strong>Address:</strong><br />{address.map((line) => <span key={line}>{line}<br /></span>)}</p>
-          <p><strong>Business hours:</strong> REVIEW REQUIRED</p>
+          <p><strong>Response handling:</strong> Messages are reviewed during China business hours.</p>
           <figure className="contact-coordination-visual">
             <Image src="/images/generated/contact-logistics-coordination.png" alt="Project coordinator reviewing equipment requirements beside an industrial logistics yard" width={1536} height={1024} sizes="(max-width: 800px) 92vw, 50vw" />
             <figcaption>Project coordination visual. Contact our team to discuss your equipment requirements.</figcaption>

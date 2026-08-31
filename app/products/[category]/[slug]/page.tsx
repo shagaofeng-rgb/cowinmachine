@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/product/ProductJsonLd";
@@ -41,6 +41,7 @@ function ListSection({ title, items }: { title: string; items: string[] }) {
 export default async function ProductPage({ params }: PageProps) {
   const { category: categorySlug, slug } = await params;
   const product = getProduct(categorySlug, slug); const category = getCategory(categorySlug);
+  if (categorySlug === "category") permanentRedirect("/products");
   if (!product || !category) notFound();
   const profile = getProductDetailProfile(product); const path = productPath(product.category, product.slug);
   const related = profile.relatedProductSlugs.map((route) => { const [relatedCategory, relatedSlug] = route.split("/"); return getProduct(relatedCategory, relatedSlug); }).filter((item): item is Product => Boolean(item));
@@ -54,9 +55,8 @@ export default async function ProductPage({ params }: PageProps) {
       <article>
         <div className="product-showcase">
           <div className="product-gallery" aria-label={`${product.name} image gallery`}>
-            {product.heroImage ? <Image className="product-detail-image" src={product.heroImage} alt={product.gallery[0]?.alt ?? `${product.name} product view`} width={1200} height={900} priority sizes="(max-width: 800px) 92vw, (max-width: 1180px) 58vw, 720px" /> : <div className="placeholder-image">Approved product image pending.</div>}
+            {product.heroImage ? <Image className="product-detail-image" src={product.heroImage} alt={product.gallery[0]?.alt ?? `${product.name} product view`} width={1200} height={900} priority sizes="(max-width: 800px) 92vw, (max-width: 1180px) 58vw, 720px" /> : <div className="placeholder-image">Product image pending review.</div>}
             <div className="product-thumbnail-row">{product.gallery.slice(0, 3).map((image) => <span className="product-thumbnail" key={image.src}><Image src={image.src} alt="" width={88} height={66} sizes="88px" /></span>)}</div>
-            <p className="image-status">Image status: {profile.imageStatus}</p>
           </div>
           <div className="product-identity"><p className="eyebrow">{profile.publicationState === "full-technical-content" ? "Identified model" : "Configuration review required"}</p><h1>{product.name}</h1><p className="catalog-reference">Model reference: {profile.model ?? "Awaiting confirmation"}</p><p>{product.shortDescription}</p><div className="product-tags"><span>{category.name}</span><span>{profile.publicationState === "full-technical-content" ? "Technical content available" : "Request Configuration Review"}</span></div></div>
         </div>

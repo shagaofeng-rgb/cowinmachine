@@ -5,6 +5,8 @@ export function OrganizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: siteConfig.brandName,
+    url: siteConfig.siteUrl,
+    logo: `${siteConfig.siteUrl}/images/cowin-machine-logo.jpg`,
     email: siteConfig.email,
     telephone: siteConfig.phone,
     address: {
@@ -15,5 +17,5 @@ export function OrganizationJsonLd() {
       addressCountry: "CN",
     },
   };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
 }
