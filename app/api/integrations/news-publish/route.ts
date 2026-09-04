@@ -45,7 +45,7 @@ function htmlToMarkdown(value: string) {
     .replace(/&amp;/gi, "&")
     .replace(/&lt;/gi, "<")
     .replace(/&gt;/gi, ">")
-    .replace(/&quot;/gi, "\\"")
+    .replace(/&quot;/gi, String.fromCharCode(34))
     .replace(/&#39;/gi, "'")
     .replace(/\n{3,}/g, "\n\n")
     .trim()
