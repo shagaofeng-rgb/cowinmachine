@@ -1,5 +1,6 @@
 export type ContentMode = "draft" | "publish";
 export type ContentStatus = "queued" | "drafted" | "pending-review" | "published" | "blocked";
+export type ContentChannel = "news" | "blog";
 export type DiscoveryStatus = "published" | "included-in-sitemap" | "discovery-pending" | "crawl-status-unknown" | "indexed-confirmed" | "not-indexed";
 
 export type ContentSource = {
@@ -32,6 +33,7 @@ export type ContentArticle = {
   title: string;
   summary: string;
   body: string;
+  channel?: ContentChannel;
   productFamily: string;
   productUrl: string;
   industry: string;

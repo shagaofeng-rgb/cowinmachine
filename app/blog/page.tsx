@@ -1,14 +1,26 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { ContentIndex } from "@/components/content-automation/ContentIndex";
+import { getPublishedBlogArticles } from "@/lib/content-automation/storage";
 import { pageMetadata } from "@/lib/seo";
 
-const baseMetadata: Metadata = pageMetadata(
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = pageMetadata(
   "Blog",
   "Practical equipment-selection notes and application guidance from COWIN MACHINE.",
   "/blog",
 );
-export const metadata: Metadata = { ...baseMetadata, robots: { index: false, follow: true } };
 
-export default function BlogPage() {
-  return <section className="section"><div className="content-wrap"><p className="eyebrow">Equipment guidance</p><h1>Blog</h1><p>Practical notes help B2B buyers prepare equipment requirements, compare configurations and discuss application conditions with our team.</p><div className="card"><h2>Start with the current technical briefs</h2><p>Read source-reviewed industry context in News, use the product catalog to review equipment categories, or send your project conditions for a configuration review.</p><div className="cta-row"><Link className="button button-outline" href="/news">Read Technical Briefs</Link><Link className="button button-primary" href="/request-a-quote">Request a Technical Review</Link></div></div></div></section>;
+export default async function BlogPage() {
+  const articles = await getPublishedBlogArticles();
+  return (
+    <ContentIndex
+      articles={articles}
+      sectionPath="/blog"
+      kicker="COWIN MACHINE / EQUIPMENT GUIDES"
+      title="Blog & Equipment Guidance"
+      description="Practical notes for preparing equipment requirements, comparing configurations and planning technical inquiries."
+      emptyTitle="The first equipment guide is being prepared."
+      emptyDescription="Third-party editorial submissions and practical equipment guidance will appear here after publication."
+    />
+  );
 }

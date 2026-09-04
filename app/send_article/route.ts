@@ -1,4 +1,4 @@
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export { GET, POST } from "../api/integrations/news-publish/route";
+export { GET, POST } from "../api/integrations/blog-publish/route";

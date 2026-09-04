@@ -10,12 +10,12 @@ export async function proxy(request: NextRequest) {
   const isRootWebhookPost = request.method === "POST" && request.nextUrl.pathname === "/";
 
   if (isRootWebhookPost) {
-    return NextResponse.rewrite(new URL("/api/integrations/news-publish", request.url));
+    return NextResponse.rewrite(new URL("/api/integrations/blog-publish", request.url));
   }
 
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
 
-  if (host === `www.${canonicalHost}`) {
+  if (host === "www." + canonicalHost) {
     const canonicalUrl = request.nextUrl.clone();
     canonicalUrl.protocol = "https:";
     canonicalUrl.host = canonicalHost;
@@ -30,7 +30,7 @@ export async function proxy(request: NextRequest) {
   if (!isProtectedContentRoute) return NextResponse.next();
   if (!adminEnabled()) return new NextResponse(null, { status: 404 });
 
-  const expected = `Basic ${btoa(`${process.env.CONTENT_ADMIN_USER}:${process.env.CONTENT_ADMIN_PASSWORD}`)}`;
+  const expected = "Basic " + btoa(process.env.CONTENT_ADMIN_USER + ":" + process.env.CONTENT_ADMIN_PASSWORD);
   if (request.headers.get("authorization") === expected) return NextResponse.next();
 
   return new NextResponse("Authentication required.", {

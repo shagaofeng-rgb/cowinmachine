@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ContentArticlePage } from "@/components/content-automation/ContentArticlePage";
 import {
   getArticleChannel,
@@ -9,14 +9,15 @@ import {
 export const dynamic = "force-dynamic";
 
 async function getArticle(slug: string) {
-  return (await getPublishedArticles()).find((article) => article.slug === slug);
+  return (await getPublishedArticles()).find(
+    (article) => article.slug === slug && getArticleChannel(article) === "blog",
+  );
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const article = await getArticle((await params).slug);
   if (!article) return { robots: { index: false, follow: false } };
-  const isBlog = getArticleChannel(article) === "blog";
-  const url = (isBlog ? "/blog/" : "/news/") + article.slug;
+  const url = "/blog/" + article.slug;
   return {
     title: article.title,
     description: article.summary,
@@ -30,13 +31,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       modifiedTime: article.updatedAt,
       images: article.image ? [{ url: article.image.src, alt: article.image.alt }] : undefined,
     },
-    robots: { index: !isBlog, follow: true },
+    robots: { index: true, follow: true },
   };
 }
 
-export default async function NewsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const article = await getArticle((await params).slug);
   if (!article) notFound();
-  if (getArticleChannel(article) === "blog") redirect("/blog/" + article.slug);
-  return <ContentArticlePage article={article} sectionName="News" sectionPath="/news" />;
+  return <ContentArticlePage article={article} sectionName="Blog" sectionPath="/blog" />;
 }

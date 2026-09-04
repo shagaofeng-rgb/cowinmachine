@@ -45,7 +45,7 @@ function htmlToMarkdown(value: string) {
     .replace(/&amp;/gi, "&")
     .replace(/&lt;/gi, "<")
     .replace(/&gt;/gi, ">")
-    .replace(/&quot;/gi, "\"")
+    .replace(/&quot;/gi, String.fromCharCode(34))
     .replace(/&#39;/gi, "'")
     .replace(/\n{3,}/g, "\n\n")
     .trim()
@@ -60,7 +60,7 @@ function localImage(imageUrl: string, title: string): ContentImage | undefined {
     if (!/\.(avif|gif|jpe?g|png|webp)$/i.test(url.pathname)) return undefined;
     return {
       src: url.pathname,
-      alt: `${title} — COWIN MACHINE News`,
+      alt: `${title} — COWIN MACHINE Blog`,
       source: "user-provided",
       licenseStatus: "authorized",
     };
@@ -82,7 +82,6 @@ async function readInput(request: Request): Promise<WebhookInput> {
       imageUrl: clean(payload.image_url, 2_000),
     };
   }
-
   const form = await request.formData().catch(() => null);
   const read = (name: string, maximum: number) => clean(form?.get(name), maximum);
   return {
@@ -98,21 +97,22 @@ async function readInput(request: Request): Promise<WebhookInput> {
 export async function POST(request: Request) {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (contentLength > 262_144) return response(0, "请求内容过大", 413);
+
   const rawExpectedSecret = process.env.EXTERNAL_NEWS_WEBHOOK_SECRET;
   const expectedSecret = rawExpectedSecret?.trim();
   if (!expectedSecret) return response(0, "发布接口未配置");
+
   const input = await readInput(request);
   if (input.content.length > 160_000) return response(0, "文章内容过长", 413);
-
   if (!input.sign || !sameSecret(input.sign, expectedSecret)) {
-    console.warn("external-news-webhook-auth-failed", {
+    console.warn("external-blog-webhook-auth-failed", {
       configuredLength: rawExpectedSecret?.length ?? 0,
       normalizedLength: expectedSecret.length,
       receivedLength: input.sign.length,
     });
     return response(0, "秘钥错误", 401);
   }
-  const configuredClassId = process.env.EXTERNAL_NEWS_WEBHOOK_CLASS_ID ?? "31";
+
   const title = clean(input.title, 200);
   const body = htmlToMarkdown(input.content);
   const isPluginValidation = input.classId.toLowerCase() === "blog" && (title.length < 8 || body.length < 80);
@@ -123,16 +123,16 @@ export async function POST(request: Request) {
   if (input.imageUrl && !image) return response(0, "封面图必须是本站已授权的 HTTPS 图片地址", 422);
 
   const digest = createHash("sha256").update(`${title}\n${body}`).digest("hex");
-  const similarityKey = `external-webhook:${digest}`;
+  const similarityKey = `external-blog:${digest}`;
   const store = contentStore();
 
   try {
     const state = await store.read();
-    if (state.articles.some((article) => article.similarityKey === similarityKey)) {
+    if (state.articles.some((article) => article.similarityKey === similarityKey || article.similarityKey === `external-webhook:${digest}`)) {
       return response(1, "发布成功（重复请求已忽略）");
     }
 
-    const slugBase = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 72) || "industry-news";
+    const slugBase = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 72) || "equipment-guide";
     const now = new Date().toISOString();
     const article: ContentArticle = {
       id: randomUUID(),
@@ -140,13 +140,14 @@ export async function POST(request: Request) {
       title,
       summary: body.replace(/^##[^\n]*\n?/, "").replace(/\s+/g, " ").slice(0, 330),
       body,
-      productFamily: "external-news",
+      channel: "blog",
+      productFamily: "external-blog",
       productUrl: "/products",
-      industry: "Industry news",
+      industry: "Equipment guidance",
       scenario: "Third-party editorial publication",
       similarityKey,
       sources: [],
-      internalLinks: ["/products", "/solutions", "/request-a-quote"],
+      internalLinks: ["/products", "/blog", "/request-a-quote"],
       image,
       status: "published",
       createdAt: now,
@@ -157,7 +158,7 @@ export async function POST(request: Request) {
         passed: true,
         checks: [
           { name: "webhook-authentication", passed: true, detail: "Shared secret accepted." },
-          { name: "category-routing", passed: true, detail: `External class_id ${input.classId || "not supplied"} mapped to ${configuredClassId}.` },
+          { name: "category-routing", passed: true, detail: `External class_id ${input.classId || "not supplied"} routed to Blog.` },
           { name: "cover-image-rights", passed: Boolean(!input.imageUrl || image), detail: input.imageUrl ? "Authorized local image path accepted." : "No cover image supplied." },
           { name: "source-author", passed: true, detail: input.authorId ? "Third-party author identifier received." : "No author identifier supplied." },
         ],
@@ -166,14 +167,19 @@ export async function POST(request: Request) {
         internalLinkCount: 3,
       },
     };
-    await store.write({ ...state, articles: [article, ...state.articles], runs: [...state.runs, { id: `external-webhook-${article.id}`, startedAt: now, mode: "publish", dryRun: false, result: "published" }] });
-    revalidatePath("/news");
-    revalidatePath(`/news/${article.slug}`);
+
+    await store.write({
+      ...state,
+      articles: [article, ...state.articles],
+      runs: [...state.runs, { id: `external-blog-${article.id}`, startedAt: now, mode: "publish", dryRun: false, result: "published:blog" }],
+    });
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${article.slug}`);
     revalidatePath("/sitemap.xml");
-    revalidatePath("/feed.xml");
+    revalidatePath("/blog-feed.xml");
     return response(1, "发布成功");
   } catch (error) {
-    console.error("external-news-webhook-failed", error instanceof Error ? error.message : "unknown");
+    console.error("external-blog-webhook-failed", error instanceof Error ? error.message : "unknown");
     return response(0, "数据录入失败，请重试", 503);
   }
 }
