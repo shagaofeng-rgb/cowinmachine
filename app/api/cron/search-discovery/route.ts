@@ -1,5 +1,5 @@
 import { createSign } from "node:crypto";
-import { isSchedulerRequest } from "@/lib/content-automation/auth";
+import { isAdminRequest, isSchedulerRequest } from "@/lib/content-automation/auth";
 import { getGoogleSearchConsoleConfig, type GoogleServiceAccount } from "@/lib/content-automation/google-search-console-config";
 import { recordSearchDiscovery, type SearchDiscoveryRecord } from "@/lib/content-automation/search-discovery-log";
 import { getPublishedArticles } from "@/lib/content-automation/storage";
