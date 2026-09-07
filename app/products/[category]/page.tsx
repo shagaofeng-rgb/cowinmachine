@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { ProductPagination } from "@/components/product/ProductPagination";
+import { Pagination } from "@/components/Pagination";
 import { PageHero } from "@/components/PageHero";
 import { getPageCount, paginateItems, resolvePage } from "@/lib/pagination";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
@@ -56,7 +56,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     <section className="section"><div className="content-wrap"><div className="catalog-section-heading"><div><h2>{category.name} Catalog</h2><p>Review the published model references and available technical data. Confirm site conditions and final configuration with our team before ordering.</p></div><p className="catalog-page-status">Page {page} of {pageCount}</p></div><div className="catalog-grid">{visibleProducts.map((product) => {
       const profile = getProductDetailProfile(product);
       return <article className="card" key={product.id}>{product.heroImage ? <Image className="card-image" src={product.heroImage} alt={product.gallery[0]?.alt ?? `${product.name} product view`} width={720} height={540} sizes="(max-width: 560px) 92vw, (max-width: 800px) 45vw, (max-width: 1100px) 30vw, 22vw" /> : <div className="placeholder-image">Product image pending review.</div>}<h3>{product.name}</h3><p>{product.shortDescription}</p>{profile.publicationState === "full-technical-content" ? <ul className="spec-list">{product.keySpecifications.map((spec) => <li key={spec.label}>{spec.label}: {spec.value}</li>)}</ul> : <p className="configuration-note">Model-specific technical data is available after configuration review.</p>}<div className="cta-row"><Link className="button button-outline" href={`/products/${product.category}/${product.slug}`}>View Details</Link><Link className="button button-primary" href={`/request-a-quote?product=${product.slug}`}>{profile.publicationState === "full-technical-content" ? "Request a Quote" : "Request Review"}</Link></div></article>;
-    })}</div><ProductPagination basePath={basePath} currentPage={page} totalPages={pageCount} /></div></section>
+    })}</div><Pagination basePath={basePath} currentPage={page} totalPages={pageCount} ariaLabel={`${category.name} catalog pagination`} /></div></section>
     <section className="section section-alt"><div className="content-wrap"><h2>How to Choose</h2><p>Confirm your material, operating environment, power availability, output requirement and safety constraints with an engineer before selecting a model.</p><Link className="button button-primary" href="/contact">Contact an Engineer</Link></div></section>
   </>;
 }

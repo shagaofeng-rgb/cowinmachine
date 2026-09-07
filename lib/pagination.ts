@@ -1,4 +1,7 @@
 export const productsPerPage = 12;
+export const newsPerPage = 9;
+export const blogPerPage = 9;
+export const contentOperationsPerPage = 20;
 
 export type PageResolution = {
   page: number;

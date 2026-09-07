@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Pagination } from "@/components/Pagination";
 import type { ContentArticle } from "@/types/content-automation";
 
 type ContentIndexProps = {
   articles: ContentArticle[];
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
   sectionPath: "/news" | "/blog";
   kicker: string;
   title: string;
@@ -20,6 +24,9 @@ function formatDate(value?: string) {
 
 export function ContentIndex({
   articles,
+  totalItems,
+  currentPage,
+  totalPages,
   sectionPath,
   kicker,
   title,
@@ -27,7 +34,8 @@ export function ContentIndex({
   emptyTitle,
   emptyDescription,
 }: ContentIndexProps) {
-  const [featured, ...remaining] = articles;
+  const featured = currentPage === 1 ? articles[0] : undefined;
+  const remaining = currentPage === 1 ? articles.slice(1) : articles;
   const itemType = sectionPath === "/blog" ? "Equipment guide" : "Industry update";
   const articleHref = (slug: string) => sectionPath + "/" + slug;
 
@@ -42,7 +50,7 @@ export function ContentIndex({
               <p>{description}</p>
             </div>
             <p className="news-index-count">
-              {articles.length ? String(articles.length).padStart(2, "0") : "00"} <span>published items</span>
+              {totalItems ? String(totalItems).padStart(2, "0") : "00"} <span>published items</span>
             </p>
           </div>
         </div>
@@ -82,8 +90,11 @@ export function ContentIndex({
 
           {remaining.length > 0 ? (
             <div className="news-section-heading">
-              <p className="news-kicker">Latest archive</p>
-              <h2>More from COWIN MACHINE</h2>
+              <div>
+                <p className="news-kicker">{currentPage === 1 ? "Latest archive" : "Archive"}</p>
+                <h2>{currentPage === 1 ? "More from COWIN MACHINE" : `Page ${currentPage} of ${totalPages}`}</h2>
+              </div>
+              <p>{totalItems} published items · Up to 9 per page</p>
             </div>
           ) : null}
 
@@ -109,6 +120,7 @@ export function ContentIndex({
               </article>
             ))}
           </div>
+          <Pagination basePath={sectionPath} currentPage={currentPage} totalPages={totalPages} ariaLabel={`${title} pagination`} />
         </div>
       </section>
     </main>
