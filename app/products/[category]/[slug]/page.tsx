@@ -82,7 +82,7 @@ export default async function ProductPage({ params }: PageProps) {
   const path = productPath(product.category, product.slug);
   const related = profile.relatedProductSlugs
     .map((route) => { const [relatedCategory, relatedSlug] = route.split("/"); return getProduct(relatedCategory, relatedSlug); })
-    .filter((item): item is Product => Boolean(item) && isCanonicalProductRoute(item));
+    .filter((item): item is Product => item !== undefined && isCanonicalProductRoute(item));
   const safeRelated = related.length
     ? related
     : canonicalProducts.filter((item) => item.category === product.category && item.slug !== product.slug).slice(0, 3);
