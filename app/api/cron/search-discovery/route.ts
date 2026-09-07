@@ -91,8 +91,8 @@ async function persist(result: Omit<SearchDiscoveryRecord, "recordedAt">) {
 }
 
 async function execute(request: Request) {
-  if (!isSchedulerRequest(request)) {
-    return Response.json({ error: "Scheduler authorization is required." }, { status: 401 });
+  if (!isSchedulerRequest(request) && !isAdminRequest(request)) {
+    return Response.json({ error: "Scheduler or administrator authorization is required." }, { status: 401 });
   }
 
   const articles = await getPublishedArticles();
