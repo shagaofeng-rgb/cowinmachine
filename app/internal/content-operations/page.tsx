@@ -4,6 +4,7 @@ import { Pagination } from "@/components/Pagination";
 import { ContentOperationsControls } from "@/components/content-automation/ContentOperationsControls";
 import { contentAutomationConfig } from "@/lib/content-automation/config";
 import { getSearchConsoleStatus } from "@/lib/content-automation/search-console";
+import { getRecentBlogWebhookEvents } from "@/lib/content-automation/inbound-publication-log";
 import { contentStore, getArticleChannel } from "@/lib/content-automation/storage";
 import { contentOperationsPerPage, getPageCount, paginateItems, resolvePage } from "@/lib/pagination";
 
@@ -15,10 +16,11 @@ export default async function ContentOperationsPage({ searchParams }: PageProps)
   const config = contentAutomationConfig();
   if (!config.adminEnabled || !process.env.CONTENT_ADMIN_USER || !process.env.CONTENT_ADMIN_PASSWORD) notFound();
 
-  const [state, searchConsole, filters] = await Promise.all([
+  const [state, searchConsole, filters, webhookEvents] = await Promise.all([
     contentStore().read(),
     Promise.resolve(getSearchConsoleStatus()),
     searchParams,
+    getRecentBlogWebhookEvents(20),
   ]);
   const selected = filters.channel === "news" || filters.channel === "blog" ? filters.channel : "all";
   const filteredArticles = selected === "all" ? state.articles : state.articles.filter((article) => getArticleChannel(article) === selected);
@@ -29,6 +31,8 @@ export default async function ContentOperationsPage({ searchParams }: PageProps)
   const visiblePublished = paginateItems(published, resolution.page, contentOperationsPerPage);
   const newsCount = state.articles.filter((article) => getArticleChannel(article) === "news").length;
   const blogCount = state.articles.filter((article) => getArticleChannel(article) === "blog").length;
+  const webhookPublished = webhookEvents.filter((event) => event.status === "published").length;
+  const webhookRejected = webhookEvents.filter((event) => event.status === "rejected" || event.status === "failed").length;
   const failures = filteredArticles
     .flatMap((article) => article.qualityReport.checks.filter((check) => !check.passed).map((check) => article.title + ": " + check.name))
     .slice(0, contentOperationsPerPage);
@@ -47,9 +51,11 @@ export default async function ContentOperationsPage({ searchParams }: PageProps)
         <article className="card"><h2>Schedule</h2><p>{config.schedule} · {config.mode} mode · auto publish: {String(config.autoPublish)}</p></article>
         <article className="card"><h2>Discovery state</h2><p>Published News and Blog entries use separate public pages and RSS feeds, and both enter the dynamic sitemap.</p></article>
         <article className="card"><h2>Search Console</h2><p>{searchConsole.state}: {searchConsole.detail}</p></article>
+        <article className="card"><h2>Third-party Blog sync</h2><p>{webhookPublished} published · {webhookRejected} rejected or failed · {webhookEvents.length} recent requests.</p></article>
       </div>
       <ContentOperationsControls publishEnabled={config.mode === "publish" && config.adminPublishEnabled} />
       <section className="section content-operations-section"><h2>Recent failures and similarity reports</h2>{failures.length ? <ul>{failures.map((failure) => <li key={failure}>{failure}</li>)}</ul> : <p>No saved quality failures in this view.</p>}</section>
+      <section className="section content-operations-section"><h2>Third-party Blog webhook</h2><p>Validation requests do not create articles. Only requests marked “published” appear on the public Blog.</p>{webhookEvents.length ? <ul>{webhookEvents.map((event) => <li key={event.id}><strong>{event.status}</strong> · {new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(event.occurredAt))} · title {event.titleLength} characters · content {event.contentLength} characters · image: {event.imageStatus}{event.reason ? ` · ${event.reason}` : ""}</li>)}</ul> : <p>No third-party Blog requests have been recorded yet.</p>}</section>
       <section className="content-operations-section">
         <div className="catalog-section-heading"><div><h2>Publishing history</h2><p>Page {resolution.page} of {pageCount}. Each page shows up to {contentOperationsPerPage} published records.</p></div></div>
         {visiblePublished.length ? <ul>{visiblePublished.map((article) => <li key={article.id}><strong>{getArticleChannel(article) === "blog" ? "Blog" : "News"}:</strong> {article.title} - {article.discoveryStatus}</li>)}</ul> : <p>No published articles in this view.</p>}
