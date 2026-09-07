@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { permanentRedirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ProductPagination } from "@/components/product/ProductPagination";
 import { PageHero } from "@/components/PageHero";
-import { getCurrentPage, getPageCount, paginateItems } from "@/lib/pagination";
+import { getPageCount, paginateItems, resolvePage } from "@/lib/pagination";
+import { isCanonicalProductRoute } from "@/lib/product-canonical";
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
 import { getCategory, productCategories, products } from "@/lib/products";
 import { pageMetadata } from "@/lib/seo";
@@ -23,11 +24,13 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   const { category: slug } = await params;
   const category = getCategory(slug);
   if (!category) return {};
-  const itemCount = products.filter((product) => product.category === category.slug).length;
-  const page = getCurrentPage((await searchParams).page, getPageCount(itemCount));
+  const itemCount = products.filter((product) => product.category === category.slug && isCanonicalProductRoute(product)).length;
+  const resolution = resolvePage((await searchParams).page, getPageCount(itemCount));
+  const page = resolution.valid ? resolution.page : 1;
   const path = page === 1 ? `/products/${category.slug}` : `/products/${category.slug}?page=${page}`;
   const suffix = page === 1 ? "" : ` - Page ${page}`;
-  return pageMetadata(`${category.name}${suffix}`, category.summary, path);
+  const metadata = pageMetadata(`${category.name}${suffix}`, category.summary, path);
+  return resolution.valid ? metadata : { ...metadata, robots: { index: false, follow: false } };
 }
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
@@ -35,11 +38,17 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const category = getCategory(slug);
   if (!category) permanentRedirect("/products");
 
-  const entries = products.filter((product) => product.category === category.slug);
+  const entries = products.filter((product) => product.category === category.slug && isCanonicalProductRoute(product));
   const pageCount = getPageCount(entries.length);
-  const page = getCurrentPage((await searchParams).page, pageCount);
-  const visibleProducts = paginateItems(entries, page);
+  const resolution = resolvePage((await searchParams).page, pageCount);
   const basePath = `/products/${category.slug}`;
+  if (!resolution.valid) notFound();
+  if (resolution.shouldRedirect) {
+    permanentRedirect(resolution.page === 1 ? basePath : `${basePath}?page=${resolution.page}`);
+  }
+
+  const page = resolution.page;
+  const visibleProducts = paginateItems(entries, page);
 
   return <>
     <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: category.name }]} />

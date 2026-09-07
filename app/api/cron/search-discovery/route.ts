@@ -1,6 +1,7 @@
 import { createSign } from "node:crypto";
-import { isSchedulerRequest } from "@/lib/content-automation/auth";
+import { isAdminRequest, isSchedulerRequest } from "@/lib/content-automation/auth";
 import { getGoogleSearchConsoleConfig, type GoogleServiceAccount } from "@/lib/content-automation/google-search-console-config";
+import { recordSearchDiscovery, type SearchDiscoveryRecord } from "@/lib/content-automation/search-discovery-log";
 import { getPublishedArticles } from "@/lib/content-automation/storage";
 import { siteConfig } from "@/lib/site";
 
@@ -42,50 +43,125 @@ async function getGoogleAccessToken(serviceAccount: GoogleServiceAccount) {
   return payload.access_token;
 }
 
-async function submitSitemap(property: string, sitemapUrl: string, serviceAccount: GoogleServiceAccount) {
-  const accessToken = await getGoogleAccessToken(serviceAccount);
-  const response = await fetch(
-    `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(property)}/sitemaps/${encodeURIComponent(sitemapUrl)}`,
-    { method: "PUT", headers: { Authorization: `Bearer ${accessToken}` } },
-  );
+type GoogleSitemapStatus = {
+  path?: string;
+  lastSubmitted?: string;
+  lastDownloaded?: string;
+  isPending?: boolean;
+  warnings?: string;
+  errors?: string;
+};
 
-  if (!response.ok) throw new Error(`Search Console sitemap submission returned ${response.status}`);
-  return sitemapUrl;
+async function submitAndReadSitemap(property: string, sitemapUrl: string, serviceAccount: GoogleServiceAccount) {
+  const accessToken = await getGoogleAccessToken(serviceAccount);
+  const endpoint = `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(property)}/sitemaps/${encodeURIComponent(sitemapUrl)}`;
+  const headers = { Authorization: `Bearer ${accessToken}` };
+
+  const submitResponse = await fetch(endpoint, { method: "PUT", headers });
+  if (!submitResponse.ok) {
+    throw new Error(`Search Console sitemap submission returned ${submitResponse.status}`);
+  }
+
+  const readbackResponse = await fetch(endpoint, { method: "GET", headers });
+  const readback = readbackResponse.ok
+    ? await readbackResponse.json() as GoogleSitemapStatus
+    : null;
+
+  return {
+    submitHttpStatus: submitResponse.status,
+    readbackHttpStatus: readbackResponse.status,
+    lastSubmitted: readback?.lastSubmitted,
+    lastDownloaded: readback?.lastDownloaded,
+    pending: readback?.isPending,
+    warnings: Number(readback?.warnings ?? 0),
+    errors: Number(readback?.errors ?? 0),
+  };
+}
+
+async function persist(result: Omit<SearchDiscoveryRecord, "recordedAt">) {
+  try {
+    const persisted = await recordSearchDiscovery(result);
+    if (!persisted) console.warn("search.discovery.persistence", { status: "database-not-configured" });
+  } catch (error) {
+    console.error("search.discovery.persistence", {
+      status: "failed",
+      error: error instanceof Error ? error.message : "Unknown persistence error.",
+    });
+  }
 }
 
 async function execute(request: Request) {
-  if (!isSchedulerRequest(request)) return Response.json({ error: "Scheduler authorization is required." }, { status: 401 });
+  if (!isSchedulerRequest(request) && !isAdminRequest(request)) {
+    return Response.json({ error: "Scheduler or administrator authorization is required." }, { status: 401 });
+  }
 
   const articles = await getPublishedArticles();
   const config = getGoogleSearchConsoleConfig();
   const sitemapUrl = config.sitemapUrl ?? `${siteConfig.siteUrl}/sitemap.xml`;
 
   if (!config.property || !config.serviceAccount) {
+    const result = {
+      status: "search-console-not-configured" as const,
+      sitemapUrl,
+      detail: "Search Console property or service-account credentials are missing.",
+    };
+    await persist(result);
+    console.error("search.discovery.result", result);
     return Response.json({
-      status: "search-console-not-configured",
-      sitemap: "/sitemap.xml",
-      rss: "/feed.xml",
+      status: result.status,
+      sitemap: sitemapUrl,
+      rss: `${siteConfig.siteUrl}/feed.xml`,
       publishedNewsCount: articles.length,
-      note: "Add a Search Console property and service-account credentials to enable sitemap submission.",
-    });
+      note: "Configure the exact Search Console property and service-account credentials before submission can run.",
+    }, { status: 424 });
   }
 
   try {
-    const sitemap = await submitSitemap(config.property, sitemapUrl, config.serviceAccount);
+    const verification = await submitAndReadSitemap(config.property, sitemapUrl, config.serviceAccount);
+    const result = {
+      status: "sitemap-submitted" as const,
+      property: config.property,
+      sitemapUrl,
+      ...verification,
+      detail: verification.readbackHttpStatus >= 200 && verification.readbackHttpStatus < 300
+        ? "Google accepted the sitemap submission and the sitemap resource was read back."
+        : "Google accepted the submission, but the sitemap resource could not yet be read back.",
+    };
+    await persist(result);
+    console.log("search.discovery.result", result);
+
     return Response.json({
-      status: "sitemap-submitted",
-      sitemap,
-      rss: "/feed.xml",
+      status: result.status,
+      property: result.property,
+      sitemap: result.sitemapUrl,
+      rss: `${siteConfig.siteUrl}/feed.xml`,
       publishedNewsCount: articles.length,
+      verification: {
+        submitHttpStatus: result.submitHttpStatus,
+        readbackHttpStatus: result.readbackHttpStatus,
+        lastSubmitted: result.lastSubmitted ?? null,
+        lastDownloaded: result.lastDownloaded ?? null,
+        pending: result.pending ?? null,
+        warnings: result.warnings,
+        errors: result.errors,
+      },
       note: "The sitemap was submitted for discovery. Indexing and crawl timing remain Google-controlled.",
     });
   } catch (error) {
+    const result = {
+      status: "sitemap-submission-failed" as const,
+      property: config.property,
+      sitemapUrl,
+      detail: error instanceof Error ? error.message : "Unknown Search Console submission error.",
+    };
+    await persist(result);
+    console.error("search.discovery.result", result);
     return Response.json({
-      status: "sitemap-submission-failed",
-      sitemap: "/sitemap.xml",
-      rss: "/feed.xml",
+      status: result.status,
+      sitemap: sitemapUrl,
+      rss: `${siteConfig.siteUrl}/feed.xml`,
       publishedNewsCount: articles.length,
-      error: error instanceof Error ? error.message : "Unknown Search Console submission error.",
+      error: result.detail,
     }, { status: 502 });
   }
 }

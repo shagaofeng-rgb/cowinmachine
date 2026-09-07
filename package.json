@@ -18,7 +18,7 @@
     "content:validate": "node scripts/validate-content-automation.mjs",
     "test:news": "tsx --test tests/content-automation/news-publishing-policy.test.ts",
     "test:site": "tsx --test tests/site/*.test.ts",
-    "prebuild": "pnpm run check:public-boundary && pnpm run check:content-similarity && pnpm run check:site-visuals"
+    "prebuild": "pnpm run lint && pnpm run typecheck && pnpm run check:public-boundary && pnpm run check:content-similarity && pnpm run check:site-visuals"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
