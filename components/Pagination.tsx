@@ -16,11 +16,10 @@ function pageHref(basePath: string, page: number, query?: Record<string, string>
 }
 
 function getPageItems(currentPage: number, totalPages: number) {
-  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, index) => index + 1);
-  const pages = new Set([1, totalPages, currentPage - 1, currentPage, currentPage + 1]);
-  if (currentPage <= 3) [2, 3, 4, 5].forEach((page) => pages.add(page));
-  if (currentPage >= totalPages - 2) [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1].forEach((page) => pages.add(page));
-  return [...pages].filter((page) => page >= 1 && page <= totalPages).sort((a, b) => a - b);
+  if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1);
+  if (currentPage <= 2) return [1, 2, 3, totalPages];
+  if (currentPage >= totalPages - 1) return [1, totalPages - 2, totalPages - 1, totalPages];
+  return [1, currentPage - 1, currentPage, totalPages];
 }
 
 export function Pagination({ basePath, currentPage, totalPages, query, ariaLabel = "Pagination" }: PaginationProps) {
