@@ -38,6 +38,8 @@ export type AnalyticsEventPayload = {
   utm?: Record<string, string>;
 };
 
+export type AdminMetric = { label: string; value: number; detail: string; };
+
 export type LeadStatus =
   | "new"
   | "qualified"
