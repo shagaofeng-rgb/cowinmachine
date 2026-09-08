@@ -11,6 +11,20 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: "/icon.svg",
+        destination: "/icon.jpg",
+        permanent: true,
+      },
+      {
+        source: "/products/compressed-air-equipment/air-compressor-demo-001",
+        destination: "/products/compressed-air-equipment",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

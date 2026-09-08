@@ -3,9 +3,11 @@ import { isAdminRequest, isSchedulerRequest } from "@/lib/content-automation/aut
 import { getGoogleSearchConsoleConfig, type GoogleServiceAccount } from "@/lib/content-automation/google-search-console-config";
 import { recordSearchDiscovery, type SearchDiscoveryRecord } from "@/lib/content-automation/search-discovery-log";
 import { getPublishedArticles } from "@/lib/content-automation/storage";
+import { productCategories } from "@/lib/products";
 import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 function base64Url(value: string) {
   return Buffer.from(value).toString("base64url");
@@ -78,6 +80,77 @@ async function submitAndReadSitemap(property: string, sitemapUrl: string, servic
   };
 }
 
+type UrlInspectionSummary = NonNullable<SearchDiscoveryRecord["inspections"]>[number];
+
+function priorityInspectionUrls() {
+  return [
+    siteConfig.siteUrl,
+    `${siteConfig.siteUrl}/products`,
+    ...productCategories.map((category) => `${siteConfig.siteUrl}/products/${category.slug}`),
+    `${siteConfig.siteUrl}/news`,
+    `${siteConfig.siteUrl}/blog`,
+  ];
+}
+
+async function inspectUrl(property: string, inspectionUrl: string, accessToken: string): Promise<UrlInspectionSummary> {
+  try {
+    const response = await fetch("https://searchconsole.googleapis.com/v1/urlInspection/index:inspect", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ inspectionUrl, siteUrl: property }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!response.ok) return { url: inspectionUrl, error: `URL Inspection returned ${response.status}` };
+
+    const payload = await response.json() as {
+      inspectionResult?: {
+        indexStatusResult?: {
+          verdict?: string;
+          coverageState?: string;
+          indexingState?: string;
+          pageFetchState?: string;
+          robotsTxtState?: string;
+          lastCrawlTime?: string;
+          googleCanonical?: string;
+          userCanonical?: string;
+        };
+      };
+    };
+    const status = payload.inspectionResult?.indexStatusResult;
+    return {
+      url: inspectionUrl,
+      verdict: status?.verdict,
+      coverageState: status?.coverageState,
+      indexingState: status?.indexingState,
+      pageFetchState: status?.pageFetchState,
+      robotsTxtState: status?.robotsTxtState,
+      lastCrawlTime: status?.lastCrawlTime,
+      googleCanonical: status?.googleCanonical,
+      userCanonical: status?.userCanonical,
+    };
+  } catch (error) {
+    return { url: inspectionUrl, error: error instanceof Error ? error.message : "URL Inspection failed." };
+  }
+}
+
+async function inspectPriorityUrls(property: string, serviceAccount: GoogleServiceAccount) {
+  const urls = priorityInspectionUrls();
+  try {
+    const accessToken = await getGoogleAccessToken(serviceAccount);
+    const results: UrlInspectionSummary[] = [];
+    for (let index = 0; index < urls.length; index += 3) {
+      results.push(...await Promise.all(urls.slice(index, index + 3).map((url) => inspectUrl(property, url, accessToken))));
+    }
+    return results;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "URL Inspection authentication failed.";
+    return urls.map((url) => ({ url, error: message }));
+  }
+}
+
 async function persist(result: Omit<SearchDiscoveryRecord, "recordedAt">) {
   try {
     const persisted = await recordSearchDiscovery(result);
@@ -118,11 +191,13 @@ async function execute(request: Request) {
 
   try {
     const verification = await submitAndReadSitemap(config.property, sitemapUrl, config.serviceAccount);
+    const inspections = await inspectPriorityUrls(config.property, config.serviceAccount);
     const result = {
       status: "sitemap-submitted" as const,
       property: config.property,
       sitemapUrl,
       ...verification,
+      inspections,
       detail: verification.readbackHttpStatus >= 200 && verification.readbackHttpStatus < 300
         ? "Google accepted the sitemap submission and the sitemap resource was read back."
         : "Google accepted the submission, but the sitemap resource could not yet be read back.",
@@ -144,6 +219,7 @@ async function execute(request: Request) {
         pending: result.pending ?? null,
         warnings: result.warnings,
         errors: result.errors,
+        inspections: result.inspections,
       },
       note: "The sitemap was submitted for discovery. Indexing and crawl timing remain Google-controlled.",
     });

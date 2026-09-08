@@ -39,10 +39,13 @@ export async function getSearchConsoleStatus(): Promise<SearchConsoleStatus> {
       const readback = latest.readbackHttpStatus && latest.readbackHttpStatus >= 200 && latest.readbackHttpStatus < 300
         ? "Google sitemap resource read-back succeeded"
         : "Google read-back is pending";
+      const inspections = latest.inspections?.length
+        ? ` ${latest.inspections.length} priority URLs were inspected.`
+        : "";
       return {
         configured: true,
         state: "sitemap-submitted",
-        detail: `${timestamp}: submission HTTP ${latest.submitHttpStatus ?? "unknown"}; ${readback}. This confirms discovery submission, not indexing.`,
+        detail: `${timestamp}: submission HTTP ${latest.submitHttpStatus ?? "unknown"}; ${readback}.${inspections} This confirms discovery submission, not indexing.`,
       };
     }
 

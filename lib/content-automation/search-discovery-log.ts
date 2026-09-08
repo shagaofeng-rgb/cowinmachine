@@ -17,6 +17,18 @@ export type SearchDiscoveryRecord = {
   pending?: boolean;
   warnings?: number;
   errors?: number;
+  inspections?: Array<{
+    url: string;
+    verdict?: string;
+    coverageState?: string;
+    indexingState?: string;
+    pageFetchState?: string;
+    robotsTxtState?: string;
+    lastCrawlTime?: string;
+    googleCanonical?: string;
+    userCanonical?: string;
+    error?: string;
+  }>;
   detail?: string;
   recordedAt: string;
 };
