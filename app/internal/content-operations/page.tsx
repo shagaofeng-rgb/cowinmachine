@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Pagination } from "@/components/Pagination";
 import { ContentOperationsControls } from "@/components/content-automation/ContentOperationsControls";
+import { AdminDateFilters } from "@/components/admin/AdminShell";
+import { readAdminDateRange } from "@/lib/admin-operations/date-range";
 import { contentAutomationConfig } from "@/lib/content-automation/config";
 import { getSearchConsoleStatus } from "@/lib/content-automation/search-console";
 import { getRecentBlogWebhookEvents } from "@/lib/content-automation/inbound-publication-log";
@@ -10,7 +12,7 @@ import { contentOperationsPerPage, getPageCount, paginateItems, resolvePage } fr
 
 export const dynamic = "force-dynamic";
 
-type PageProps = { searchParams: Promise<{ channel?: string; page?: string }> };
+type PageProps = { searchParams: Promise<{ channel?: string; page?: string; preset?: string; start?: string; end?: string }> };
 
 export default async function ContentOperationsPage({ searchParams }: PageProps) {
   const config = contentAutomationConfig();
@@ -22,8 +24,10 @@ export default async function ContentOperationsPage({ searchParams }: PageProps)
     searchParams,
     getRecentBlogWebhookEvents(20),
   ]);
+  const range = readAdminDateRange(filters);
   const selected = filters.channel === "news" || filters.channel === "blog" ? filters.channel : "all";
-  const filteredArticles = selected === "all" ? state.articles : state.articles.filter((article) => getArticleChannel(article) === selected);
+  const channelArticles = selected === "all" ? state.articles : state.articles.filter((article) => getArticleChannel(article) === selected);
+  const filteredArticles = channelArticles.filter((article) => { const stamp = new Date(article.publishedAt ?? article.createdAt).getTime(); return stamp >= new Date(range.start).getTime() && stamp < new Date(range.end).getTime(); });
   const published = filteredArticles.filter((article) => article.status === "published");
   const pageCount = getPageCount(published.length, contentOperationsPerPage);
   const resolution = resolvePage(filters.page, pageCount);
@@ -41,6 +45,7 @@ export default async function ContentOperationsPage({ searchParams }: PageProps)
     <section className="section"><div className="content-wrap">
       <p className="eyebrow">Private management</p><h1>Content Operations</h1>
       <p>News automation and third-party Blog publishing use separate public channels while sharing protected operational monitoring.</p>
+      <AdminDateFilters range={range} pathname="/internal/content-operations" preserve={{ channel: selected === "all" ? undefined : selected }} />
       <nav className="cta-row" aria-label="Content channel filter">
         <Link className={selected === "all" ? "button button-primary" : "button button-outline"} href="/internal/content-operations">All ({state.articles.length})</Link>
         <Link className={selected === "news" ? "button button-primary" : "button button-outline"} href="/internal/content-operations?channel=news">News ({newsCount})</Link>
