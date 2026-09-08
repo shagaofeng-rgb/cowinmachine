@@ -9,6 +9,8 @@ type ContentIndexProps = {
   currentPage: number;
   totalPages: number;
   sectionPath: "/news" | "/blog";
+  industryFilters?: Array<{ label: string; count: number }>;
+  activeIndustry?: string;
   kicker: string;
   title: string;
   description: string;
@@ -28,6 +30,8 @@ export function ContentIndex({
   currentPage,
   totalPages,
   sectionPath,
+  industryFilters,
+  activeIndustry,
   kicker,
   title,
   description,
@@ -88,6 +92,17 @@ export function ContentIndex({
             </div>
           )}
 
+          {industryFilters?.length ? (
+            <nav className="news-topic-nav" aria-label="Filter news by industry">
+              <Link className={!activeIndustry ? "news-topic-active" : ""} href={sectionPath}>All updates <span>{industryFilters.reduce((total, filter) => total + filter.count, 0)}</span></Link>
+              {industryFilters.map((filter) => (
+                <Link key={filter.label} className={filter.label === activeIndustry ? "news-topic-active" : ""} href={`${sectionPath}?industry=${encodeURIComponent(filter.label)}`}>
+                  {filter.label} <span>{filter.count}</span>
+                </Link>
+              ))}
+            </nav>
+          ) : null}
+
           {remaining.length > 0 ? (
             <div className="news-section-heading">
               <div>
@@ -120,7 +135,7 @@ export function ContentIndex({
               </article>
             ))}
           </div>
-          <Pagination basePath={sectionPath} currentPage={currentPage} totalPages={totalPages} ariaLabel={`${title} pagination`} />
+          <Pagination basePath={sectionPath} currentPage={currentPage} totalPages={totalPages} query={activeIndustry ? { industry: activeIndustry } : undefined} ariaLabel={`${title} pagination`} />
         </div>
       </section>
     </main>

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Pagination } from "@/components/Pagination";
-import { PageHero } from "@/components/PageHero";
+import { ProductCatalogCard } from "@/components/product/ProductCatalogCard";
 import { getPageCount, paginateItems, resolvePage } from "@/lib/pagination";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
 import { productCategories, products } from "@/lib/products";
@@ -34,17 +34,42 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   const page = resolution.page;
   const visibleProducts = paginateItems(canonicalProducts, page);
+  const heroProduct = canonicalProducts.find((product) => product.category === "compressed-air-equipment" && product.heroImage) ?? canonicalProducts.find((product) => product.heroImage);
 
-  return <>
-    <PageHero
-      eyebrow="Products"
-      title="Industrial Equipment Catalog"
-      description="Explore six equipment categories for compressed air, power generation, drilling, lighting and material separation projects. Submit your application requirements for a tailored recommendation."
-    />
-    <section className="section"><div className="content-wrap"><div className="category-grid">{productCategories.map((category) => {
-      const displayProduct = canonicalProducts.find((product) => product.category === category.slug && product.heroImage);
-      return <article className="card category-card" key={category.slug}>{displayProduct?.heroImage ? <Image className="card-image" src={displayProduct.heroImage} alt={`${category.name} equipment product view`} width={720} height={540} sizes="(max-width: 800px) 92vw, (max-width: 1100px) 45vw, 30vw" /> : <div className="placeholder-image">Approved category image pending.</div>}<h2>{category.name}</h2><p>{category.summary}</p><Link className="button button-outline" href={`/products/${category.slug}`}>Explore Category</Link></article>;
-    })}</div></div></section>
-    <section className="section section-alt"><div className="content-wrap"><div className="catalog-section-heading"><div><h2>Equipment Catalog</h2><p>Page {page} of {pageCount}. Each page shows up to 12 canonical equipment entries.</p></div></div><div className="catalog-grid">{visibleProducts.map((product) => <article className="card" key={product.id}>{product.heroImage ? <Image className="card-image" src={product.heroImage} alt={product.gallery[0]?.alt ?? `${product.name} product view`} width={720} height={540} sizes="(max-width: 560px) 92vw, (max-width: 800px) 45vw, (max-width: 1100px) 30vw, 22vw" /> : <div className="placeholder-image">Approved product image pending.</div>}<h3>{product.name}</h3><p>{product.shortDescription}</p><Link className="button button-outline" href={`/products/${product.category}/${product.slug}`}>View Equipment</Link></article>)}</div><Pagination basePath="/products" currentPage={page} totalPages={pageCount} ariaLabel="Product catalog pagination" /></div></section>
-  </>;
+  return <main className="product-catalog-page">
+    <section className="product-catalog-hero">
+      {heroProduct?.heroImage && <Image className="product-catalog-hero-image" src={heroProduct.heroImage} alt="Industrial equipment from the COWIN MACHINE catalog" fill priority sizes="100vw" />}
+      <div className="content-wrap product-catalog-hero-content">
+        <p className="eyebrow">COWIN MACHINE / EQUIPMENT CATALOG</p>
+        <h1>Industrial equipment for demanding project conditions.</h1>
+        <p>Compare published equipment records across compressed air, power, drilling, lighting and material separation. Our team confirms the final configuration against your site conditions.</p>
+        <div className="product-catalog-hero-actions">
+          <Link className="button button-primary" href="#catalog">Browse equipment</Link>
+          <Link className="button button-outline product-catalog-hero-secondary" href="/request-a-quote">Discuss a project</Link>
+        </div>
+      </div>
+    </section>
+
+    <section className="product-directory-section">
+      <div className="content-wrap">
+        <div className="product-directory-heading"><p className="eyebrow">Browse by equipment family</p><p>{canonicalProducts.length} published equipment records</p></div>
+        <nav className="product-directory" aria-label="Product categories">
+          <Link href="/products" aria-current="page"><span>All equipment</span><strong>{canonicalProducts.length}</strong></Link>
+          {productCategories.map((category) => {
+            const count = canonicalProducts.filter((product) => product.category === category.slug).length;
+            return <Link key={category.slug} href={`/products/${category.slug}`}><span>{category.name}</span><strong>{count}</strong></Link>;
+          })}
+        </nav>
+      </div>
+    </section>
+
+    <section className="section product-catalog-section" id="catalog"><div className="content-wrap">
+      <div className="product-catalog-heading">
+        <div><p className="eyebrow">Published records</p><h2>Equipment catalog</h2><p>Page {page} of {pageCount}. Each record contains the published model reference and the next step for technical review.</p></div>
+        <p className="product-catalog-page-status">Showing {visibleProducts.length} of {canonicalProducts.length}</p>
+      </div>
+      <div className="product-catalog-grid">{visibleProducts.map((product) => <ProductCatalogCard key={product.id} product={product} showCategory />)}</div>
+      <Pagination basePath="/products" currentPage={page} totalPages={pageCount} ariaLabel="Product catalog pagination" />
+    </div></section>
+  </main>;
 }

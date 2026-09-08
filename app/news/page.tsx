@@ -7,36 +7,63 @@ import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-type NewsPageProps = { searchParams: Promise<{ page?: string }> };
+type NewsPageProps = { searchParams: Promise<{ page?: string; industry?: string }> };
+
+function getIndustryFilters(articles: Awaited<ReturnType<typeof getPublishedNewsArticles>>) {
+  const counts = new Map<string, number>();
+  for (const article of articles) {
+    const label = article.industry.trim();
+    if (label) counts.set(label, (counts.get(label) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort(([firstLabel, firstCount], [secondLabel, secondCount]) => secondCount - firstCount || firstLabel.localeCompare(secondLabel))
+    .map(([label, count]) => ({ label, count }));
+}
 
 export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
+  const query = await searchParams;
   const articles = await getPublishedNewsArticles();
-  const resolution = resolvePage((await searchParams).page, getPageCount(articles.length, newsPerPage));
+  const activeIndustry = query.industry?.trim();
+  const filteredArticles = activeIndustry ? articles.filter((article) => article.industry === activeIndustry) : articles;
+  const resolution = resolvePage(query.page, getPageCount(filteredArticles.length, newsPerPage));
   const page = resolution.valid ? resolution.page : 1;
   const suffix = page === 1 ? "" : ` - Page ${page}`;
-  const path = page === 1 ? "/news" : `/news?page=${page}`;
+  const params = new URLSearchParams();
+  if (activeIndustry) params.set("industry", activeIndustry);
+  if (page > 1) params.set("page", String(page));
+  const path = params.size ? `/news?${params}` : "/news";
   const metadata = pageMetadata(
-    `News${suffix}`,
+    `${activeIndustry ? `${activeIndustry} News` : "News"}${suffix}`,
     "Source-reviewed industrial equipment and application news from COWIN MACHINE.",
     path,
   );
-  return resolution.valid ? metadata : { ...metadata, robots: { index: false, follow: false } };
+  return resolution.valid && !activeIndustry ? metadata : { ...metadata, robots: { index: false, follow: false } };
 }
 
 export default async function NewsPage({ searchParams }: NewsPageProps) {
+  const query = await searchParams;
   const articles = await getPublishedNewsArticles();
-  const pageCount = getPageCount(articles.length, newsPerPage);
-  const resolution = resolvePage((await searchParams).page, pageCount);
+  const activeIndustry = query.industry?.trim();
+  const filteredArticles = activeIndustry ? articles.filter((article) => article.industry === activeIndustry) : articles;
+  const pageCount = getPageCount(filteredArticles.length, newsPerPage);
+  const resolution = resolvePage(query.page, pageCount);
   if (!resolution.valid) notFound();
-  if (resolution.shouldRedirect) permanentRedirect(resolution.page === 1 ? "/news" : `/news?page=${resolution.page}`);
+  if (resolution.shouldRedirect) {
+    const params = new URLSearchParams();
+    if (activeIndustry) params.set("industry", activeIndustry);
+    if (resolution.page > 1) params.set("page", String(resolution.page));
+    permanentRedirect(params.size ? `/news?${params}` : "/news");
+  }
 
   return (
     <ContentIndex
-      articles={paginateItems(articles, resolution.page, newsPerPage)}
-      totalItems={articles.length}
+      articles={paginateItems(filteredArticles, resolution.page, newsPerPage)}
+      totalItems={filteredArticles.length}
       currentPage={resolution.page}
       totalPages={pageCount}
       sectionPath="/news"
+      industryFilters={getIndustryFilters(articles)}
+      activeIndustry={activeIndustry}
       kicker="COWIN MACHINE / INDUSTRY NEWS"
       title="News & Industry Developments"
       description="Source-reviewed industry developments connected to equipment applications and buyer decisions."

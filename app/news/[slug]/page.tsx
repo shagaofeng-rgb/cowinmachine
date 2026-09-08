@@ -4,6 +4,7 @@ import { ContentArticlePage } from "@/components/content-automation/ContentArtic
 import {
   getArticleChannel,
   getPublishedArticles,
+  getPublishedNewsArticles,
 } from "@/lib/content-automation/storage";
 
 export const dynamic = "force-dynamic";
@@ -38,5 +39,9 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
   const article = await getArticle((await params).slug);
   if (!article) notFound();
   if (getArticleChannel(article) === "blog") redirect("/blog/" + article.slug);
-  return <ContentArticlePage article={article} sectionName="News" sectionPath="/news" />;
+  const newsArticles = await getPublishedNewsArticles();
+  const currentIndex = newsArticles.findIndex((item) => item.id === article.id);
+  const relatedArticles = [newsArticles[currentIndex - 1], newsArticles[currentIndex + 1]]
+    .filter((item): item is NonNullable<typeof item> => Boolean(item) && item.id !== article.id);
+  return <ContentArticlePage article={article} relatedArticles={relatedArticles} sectionName="News" sectionPath="/news" />;
 }
