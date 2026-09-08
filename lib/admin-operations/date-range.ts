@@ -62,5 +62,5 @@ export function readAdminDateRange(values: { preset?: string; start?: string; en
 
 export function dateRangeSearchParams(range: AdminDateRange) {
   const end = new Date(new Date(range.end).getTime() - 86_400_000);
-  return { preset: range.preset, start: range.start.slice(0, 10), end: dayText(end) };
+  return { preset: range.preset, start: dayText(new Date(range.start)), end: dayText(end) };
 }
