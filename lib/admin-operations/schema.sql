@@ -1,3 +1,15 @@
+CREATE TABLE IF NOT EXISTS b2b_customers (
+  id text PRIMARY KEY,
+  first_seen_at timestamptz NOT NULL DEFAULT now(),
+  last_seen_at timestamptz NOT NULL DEFAULT now(),
+  name text NOT NULL,
+  company text NOT NULL,
+  country text NOT NULL,
+  email_normalized text,
+  whatsapp_normalized text,
+  source_channel text
+);
+
 CREATE TABLE IF NOT EXISTS analytics_visitors (
   visitor_id text PRIMARY KEY,
   first_seen_at timestamptz NOT NULL DEFAULT now(),
@@ -7,7 +19,8 @@ CREATE TABLE IF NOT EXISTS analytics_visitors (
   preferred_language text,
   first_channel text,
   device_type text,
-  ip_hash text
+  ip_hash text,
+  customer_id text REFERENCES b2b_customers(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS analytics_sessions (
@@ -58,7 +71,8 @@ CREATE TABLE IF NOT EXISTS b2b_leads (
   visitor_id text REFERENCES analytics_visitors(visitor_id) ON DELETE SET NULL,
   session_id text REFERENCES analytics_sessions(session_id) ON DELETE SET NULL,
   source_channel text,
-  landing_path text
+  landing_path text,
+  customer_id text REFERENCES b2b_customers(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS b2b_lead_activities (
@@ -111,3 +125,8 @@ CREATE INDEX IF NOT EXISTS analytics_sessions_visitor_idx ON analytics_sessions 
 CREATE INDEX IF NOT EXISTS b2b_leads_created_at_idx ON b2b_leads (created_at DESC);
 CREATE INDEX IF NOT EXISTS b2b_leads_status_idx ON b2b_leads (status, created_at DESC);
 CREATE INDEX IF NOT EXISTS seo_search_snapshots_observed_at_idx ON seo_search_snapshots (observed_at DESC);
+
+CREATE UNIQUE INDEX IF NOT EXISTS b2b_customers_email_unique ON b2b_customers (email_normalized) WHERE email_normalized IS NOT NULL;
+CREATE INDEX IF NOT EXISTS b2b_customers_last_seen_idx ON b2b_customers (last_seen_at DESC);
+CREATE INDEX IF NOT EXISTS analytics_visitors_customer_idx ON analytics_visitors (customer_id, last_seen_at DESC);
+CREATE INDEX IF NOT EXISTS b2b_leads_customer_idx ON b2b_leads (customer_id, created_at DESC);
