@@ -329,7 +329,7 @@ export async function listAnalyticsEvents(range: AdminDateRange, page = 1, pageS
   if (filters.device) add("v.device_type = $?", text(filters.device, 24));
   if (filters.language) add("v.preferred_language ILIKE $?", `%${text(filters.language, 24)}%`);
   if (filters.event) add("e.event_name = $?", text(filters.event, 80));
-  if (filters.search) add("(e.page_path ILIKE $? OR e.product_slug ILIKE $? OR e.page_title ILIKE $?)", `%${text(filters.search, 120)}%`);
+  if (filters.search) { params.push(`%${text(filters.search, 120)}%`); const position = params.length; clauses.push(`(e.page_path ILIKE ${position} OR e.product_slug ILIKE ${position} OR e.page_title ILIKE ${position})`); }
   const where = clauses.join(" AND ");
   const count = await sql.query(`SELECT COUNT(*)::int AS total FROM analytics_events e JOIN analytics_sessions s ON s.session_id=e.session_id JOIN analytics_visitors v ON v.visitor_id=e.visitor_id WHERE ${where}`, params);
   const rows = await sql.query(`SELECT e.event_id,e.occurred_at,e.event_name,e.page_path,e.page_title,e.product_category,e.product_slug,e.visitor_id,s.channel,v.country_code,v.preferred_language,v.device_type,s.browser_name FROM analytics_events e JOIN analytics_sessions s ON s.session_id=e.session_id JOIN analytics_visitors v ON v.visitor_id=e.visitor_id WHERE ${where} ORDER BY e.occurred_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`, [...params, safeSize, (safePage - 1) * safeSize]);
