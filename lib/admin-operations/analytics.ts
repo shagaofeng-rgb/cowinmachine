@@ -313,3 +313,26 @@ export async function getCustomerJourney(customerId: string, range: AdminDateRan
   const customer = customerRows[0] as Record<string, unknown> | undefined; if (!customer) return null;
   return { customer: { id: String(customer.id), name: String(customer.name), company: String(customer.company), email: String(customer.email_normalized), whatsapp: customer.whatsapp_normalized ? String(customer.whatsapp_normalized) : null, country: String(customer.country), firstSeenAt: asIso(customer.first_seen_at), lastSeenAt: asIso(customer.last_seen_at), sourceChannel: customer.source_channel ? String(customer.source_channel) : null }, visitors: visitorRows.map((row) => ({ id: String(row.visitor_id), firstSeenAt: asIso(row.first_seen_at), lastSeenAt: asIso(row.last_seen_at), country: row.country_code ? String(row.country_code) : null, language: row.preferred_language ? String(row.preferred_language) : null, device: row.device_type ? String(row.device_type) : null, sourceChannel: row.first_channel ? String(row.first_channel) : null })), events: events.map((row) => ({ id: String(row.event_id), occurredAt: asIso(row.occurred_at), eventName: String(row.event_name), pagePath: String(row.page_path), pageTitle: row.page_title ? String(row.page_title) : null, productCategory: row.product_category ? String(row.product_category) : null, productSlug: row.product_slug ? String(row.product_slug) : null, sessionId: String(row.session_id) })) as JourneyEvent[], leads: leads.map((row) => ({ id: String(row.id), createdAt: asIso(row.created_at), status: String(row.status), category: String(row.category), productModel: row.product_model ? String(row.product_model) : null, application: row.application ? String(row.application) : null, quantity: row.quantity ? String(row.quantity) : null })) };
 }
+
+
+export type AnalyticsEventRecord = {
+  id: string; occurredAt: string; eventName: string; pagePath: string; pageTitle: string | null; product: string | null;
+  visitorId: string; channel: string; country: string | null; language: string | null; device: string | null; browser: string | null;
+};
+
+export async function listAnalyticsEvents(range: AdminDateRange, page = 1, pageSize = 25, filters: { source?: string; country?: string; device?: string; language?: string; event?: string; search?: string } = {}): Promise<PaginatedResult<AnalyticsEventRecord>> {
+  const sql = adminSql(); const safePage = Math.max(1, Math.floor(page)); const safeSize = safePageSize(pageSize);
+  const params: unknown[] = [range.start, range.end]; const clauses = ["e.occurred_at >= $1", "e.occurred_at < $2"];
+  const add = (condition: string, value: string) => { params.push(value); clauses.push(condition.replace("?", String(params.length))); };
+  if (filters.source) add("s.channel = $?", text(filters.source, 80));
+  if (filters.country) add("v.country_code = $?", text(filters.country, 8).toUpperCase());
+  if (filters.device) add("v.device_type = $?", text(filters.device, 24));
+  if (filters.language) add("v.preferred_language ILIKE $?", `%${text(filters.language, 24)}%`);
+  if (filters.event) add("e.event_name = $?", text(filters.event, 80));
+  if (filters.search) add("(e.page_path ILIKE $? OR e.product_slug ILIKE $? OR e.page_title ILIKE $?)", `%${text(filters.search, 120)}%`);
+  const where = clauses.join(" AND ");
+  const count = await sql.query(`SELECT COUNT(*)::int AS total FROM analytics_events e JOIN analytics_sessions s ON s.session_id=e.session_id JOIN analytics_visitors v ON v.visitor_id=e.visitor_id WHERE ${where}`, params);
+  const rows = await sql.query(`SELECT e.event_id,e.occurred_at,e.event_name,e.page_path,e.page_title,e.product_category,e.product_slug,e.visitor_id,s.channel,v.country_code,v.preferred_language,v.device_type,s.browser_name FROM analytics_events e JOIN analytics_sessions s ON s.session_id=e.session_id JOIN analytics_visitors v ON v.visitor_id=e.visitor_id WHERE ${where} ORDER BY e.occurred_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`, [...params, safeSize, (safePage - 1) * safeSize]);
+  const total = Number((count[0] as Record<string, unknown> | undefined)?.total ?? 0);
+  return { rows: rows.map((row) => ({ id: String(row.event_id), occurredAt: asIso(row.occurred_at), eventName: String(row.event_name), pagePath: String(row.page_path), pageTitle: row.page_title ? String(row.page_title) : null, product: row.product_slug ? String(row.product_slug) : row.product_category ? String(row.product_category) : null, visitorId: String(row.visitor_id), channel: String(row.channel), country: row.country_code ? String(row.country_code) : null, language: row.preferred_language ? String(row.preferred_language) : null, device: row.device_type ? String(row.device_type) : null, browser: row.browser_name ? String(row.browser_name) : null })), total, page: safePage, pageSize: safeSize, pageCount: Math.max(1, Math.ceil(total / safeSize)) };
+}
