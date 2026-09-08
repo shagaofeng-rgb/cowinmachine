@@ -1,4 +1,4 @@
-export type AdminDatePreset = "today" | "yesterday" | "last-7-days" | "last-30-days" | "this-month" | "last-month" | "custom";
+export type AdminDatePreset = "today" | "this-week" | "this-month" | "custom";
 
 export type AdminDateRange = {
   preset: AdminDatePreset;
@@ -38,11 +38,7 @@ export type AnalyticsEventPayload = {
   utm?: Record<string, string>;
 };
 
-export type AdminMetric = {
-  label: string;
-  value: number;
-  detail: string;
-};
+export type AdminMetric = { label: string; value: number; detail: string; };
 
 export type LeadStatus =
   | "new"
@@ -69,6 +65,8 @@ export type AdminLead = {
   quantity: string | null;
   sourceChannel: string | null;
   landingPath: string | null;
+  customerId: string | null;
+  visitorId: string | null;
 };
 
 export type PaginatedResult<T> = {
@@ -79,12 +77,55 @@ export type PaginatedResult<T> = {
   pageCount: number;
 };
 
+export type VisitorRecord = {
+  visitorId: string;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  country: string | null;
+  region: string | null;
+  language: string | null;
+  device: DeviceType;
+  firstChannel: string | null;
+  customerId: string | null;
+  customerName: string | null;
+  customerCompany: string | null;
+  sessionCount: number;
+  pageViews: number;
+};
+
+export type CustomerRecord = {
+  id: string;
+  name: string;
+  company: string;
+  email: string;
+  whatsapp: string | null;
+  country: string;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  sourceChannel: string | null;
+  visitorCount: number;
+  leadCount: number;
+  pageViews: number;
+};
+
+export type JourneyEvent = {
+  id: string;
+  occurredAt: string;
+  eventName: string;
+  pagePath: string;
+  pageTitle: string | null;
+  productCategory: string | null;
+  productSlug: string | null;
+  sessionId: string;
+};
+
 export const adminSections = [
   { href: "/internal/admin", label: "总览" },
+  { href: "/internal/admin/visitors", label: "访客与访问轨迹" },
   { href: "/internal/admin/analytics", label: "流量分析" },
   { href: "/internal/admin/leads", label: "询盘与 RFQ" },
   { href: "/internal/admin/products", label: "产品洞察" },
-  { href: "/internal/admin/news", label: "新闻运营" },
+  { href: "/internal/admin/news", label: "News / Blog" },
   { href: "/internal/admin/seo", label: "SEO 中心" },
   { href: "/internal/admin/markets", label: "市场与语言" },
   { href: "/internal/admin/data-health", label: "数据健康度" },
