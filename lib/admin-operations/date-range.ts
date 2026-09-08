@@ -16,11 +16,11 @@ function dayParts(date: Date) {
 
 function dayText(date: Date) {
   const { year, month, day } = dayParts(date);
-  return \`${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}\`;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
 function fromDayText(value: string) {
-  return new Date(\`${value}T00:00:00+08:00\`);
+  return new Date(`${value}T00:00:00+08:00`);
 }
 
 function addDays(value: string, days: number) {
@@ -52,11 +52,11 @@ export function readAdminDateRange(values: { preset?: string; start?: string; en
     const start = fromDayText(values.start);
     const end = fromDayText(values.end);
     const maximumEnd = fromDayText(addDays(values.start, 366));
-    if (start <= end && end <= maximumEnd) return rangeFor(values.start, values.end, "custom", \`${values.start} 至 ${values.end}\`);
+    if (start <= end && end <= maximumEnd) return rangeFor(values.start, values.end, "custom", `${values.start} 至 ${values.end}`);
   }
 
   if (preset === "this-week") return rangeFor(startOfWeek(today), today, "this-week", "本周");
-  if (preset === "this-month") return rangeFor(\`${today.slice(0, 7)}-01\`, today, "this-month", "本月");
+  if (preset === "this-month") return rangeFor(`${today.slice(0, 7)}-01`, today, "this-month", "本月");
   return rangeFor(today, today, "today", "今日");
 }
 
