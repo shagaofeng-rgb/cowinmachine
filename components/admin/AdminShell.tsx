@@ -66,7 +66,7 @@ export function AdminDateFilters({ range, pathname, preserve = {} }: { range: Ad
 function withParams(pathname: string, values: Record<string, string | number | undefined>) {
   const params = new URLSearchParams();
   Object.entries(values).forEach(([key, value]) => { if (value !== undefined && value !== "") params.set(key, String(value)); });
-  return \`${pathname}?${params.toString()}\`;
+  return `${pathname}?${params.toString()}`;
 }
 
 export function AdminPagination({ pathname, range, page, pageCount, pageSize, total, preserve = {} }: {
@@ -77,7 +77,7 @@ export function AdminPagination({ pathname, range, page, pageCount, pageSize, to
   const end = total ? Math.min(page * pageSize, total) : 0;
   const shown = Array.from(new Set([1, 2, page - 1, page, page + 1, pageCount - 1, pageCount])).filter((item) => item >= 1 && item <= pageCount).sort((a, b) => a - b);
   return <nav className="admin-pagination" aria-label="数据分页">
-    <span>{total ? \`${start}–${end} / ${total} 条\` : "0 条记录"}</span>
+    <span>{total ? `${start}–${end} / ${total} 条` : "0 条记录"}</span>
     <div><Link className={page <= 1 ? "admin-page-disabled" : ""} aria-disabled={page <= 1} href={withParams(pathname, { ...base, page: page - 1 })}>上一页</Link>
       {shown.map((item, index) => <span key={item}>{index > 0 && item - shown[index - 1] > 1 ? <i className="admin-page-gap">…</i> : null}<Link aria-current={item === page ? "page" : undefined} className={item === page ? "admin-page-current" : ""} href={withParams(pathname, { ...base, page: item })}>{item}</Link></span>)}
       <Link className={page >= pageCount ? "admin-page-disabled" : ""} aria-disabled={page >= pageCount} href={withParams(pathname, { ...base, page: page + 1 })}>下一页</Link>
