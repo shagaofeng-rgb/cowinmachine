@@ -2,7 +2,7 @@ import "server-only";
 
 import { createHash, randomUUID } from "node:crypto";
 import { adminSql } from "@/lib/admin-operations/database";
-import type { AdminDateRange, AdminLead, AnalyticsEventPayload, DeviceType, LeadStatus, PaginatedResult } from "@/types/admin-operations";
+import type { AdminDateRange, AdminLead, AnalyticsEventPayload, CustomerRecord, DeviceType, JourneyEvent, LeadStatus, PaginatedResult, VisitorRecord } from "@/types/admin-operations";
 
 const allowedEvents = new Set(["page_view", "product_view", "category_view", "news_view", "quote_click", "whatsapp_click", "email_click", "inquiry_started", "inquiry_submitted", "filter_used"]);
 const safeIdentifier = /^[A-Za-z0-9-]{12,100}$/;
@@ -108,6 +108,32 @@ function asIso(value: unknown) {
   return value ? new Date(String(value)).toISOString() : new Date().toISOString();
 }
 
+function safePageSize(value: number) {
+  return [10, 25, 50, 100].includes(value) ? value : 25;
+}
+
+function normalEmail(value: string) { return value.trim().toLowerCase(); }
+function normalPhone(value: string | undefined) {
+  const result = (value ?? "").replace(/[^0-9+]/g, "");
+  return result.length >= 6 ? result : null;
+}
+
+async function upsertCustomer(input: { name: string; company: string; country: string; email: string; whatsapp?: string; visitorId?: string; sourceChannel?: string }) {
+  const sql = adminSql();
+  const id = randomUUID();
+  const rows = await sql.query(
+    `INSERT INTO b2b_customers (id, first_seen_at, last_seen_at, name, company, country, email_normalized, whatsapp_normalized, source_channel)
+     VALUES ($1, now(), now(), $2, $3, $4, $5, $6, $7)
+     ON CONFLICT (email_normalized) WHERE email_normalized IS NOT NULL
+     DO UPDATE SET last_seen_at = now(), name = EXCLUDED.name, company = EXCLUDED.company, country = EXCLUDED.country, whatsapp_normalized = COALESCE(EXCLUDED.whatsapp_normalized, b2b_customers.whatsapp_normalized), source_channel = COALESCE(b2b_customers.source_channel, EXCLUDED.source_channel)
+     RETURNING id`,
+    [id, input.name, input.company, input.country, normalEmail(input.email), normalPhone(input.whatsapp), input.sourceChannel ?? null],
+  );
+  const customerId = String(rows[0]?.id ?? id);
+  if (safeIdentifier.test(input.visitorId ?? "")) await sql.query("UPDATE analytics_visitors SET customer_id = $2 WHERE visitor_id = $1", [input.visitorId, customerId]);
+  return customerId;
+}
+
 export async function recordAnalyticsEvent(payload: AnalyticsEventPayload, request: Request) {
   if (!safeIdentifier.test(payload.eventId) || !safeIdentifier.test(payload.visitorId) || !safeIdentifier.test(payload.sessionId)) throw new Error("Invalid analytics identifier.");
   if (!allowedEvents.has(payload.eventName)) throw new Error("Unsupported analytics event.");
@@ -204,22 +230,86 @@ export async function createLead(input: {
     SELECT $19,id,'created','Created from website inquiry form' FROM inserted_lead`,
     [id,input.name,input.company,input.country,input.email,input.whatsapp || null,input.category,input.productModel || null,input.productUrl || null,input.application || null,input.material || null,input.quantity || null,input.message,input.projectRequirements || null,safeIdentifier.test(input.visitorId ?? "") ? input.visitorId : null,safeIdentifier.test(input.sessionId ?? "") ? input.sessionId : null,input.sourceChannel || null,input.landingPath ? safePath(input.landingPath) : null,randomUUID()],
   );
+  const customerId = await upsertCustomer(input);
+  await sql.query("UPDATE b2b_leads SET customer_id = $2 WHERE id = $1", [id, customerId]);
   return id;
 }
 
 export async function listLeads(range: AdminDateRange, page = 1, pageSize = 25, status?: string): Promise<PaginatedResult<AdminLead>> {
   const sql = adminSql();
   const safePage = Math.max(1, Math.floor(page));
-  const safeSize = [25, 50, 100].includes(pageSize) ? pageSize : 25;
+  const safeSize = safePageSize(pageSize);
   const filters = status && ["new","qualified","technical-review","quotation-sent","negotiation","won","lost","nurture"].includes(status) ? [range.start, range.end, status] : [range.start, range.end];
   const predicate = status && filters.length === 3 ? " AND status = $3" : "";
   const [countRows, rows] = await Promise.all([
     sql.query(`SELECT COUNT(*)::int AS total FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate}`, filters),
-    sql.query(`SELECT id,created_at,status,name,company,country,email,whatsapp,category,product_model,application,quantity,source_channel,landing_path FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate} ORDER BY created_at DESC LIMIT $${filters.length + 1} OFFSET $${filters.length + 2}`, [...filters, safeSize, (safePage - 1) * safeSize]),
+    sql.query(`SELECT id,created_at,status,name,company,country,email,whatsapp,category,product_model,application,quantity,source_channel,landing_path,customer_id,visitor_id FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate} ORDER BY created_at DESC LIMIT $${filters.length + 1} OFFSET $${filters.length + 2}`, [...filters, safeSize, (safePage - 1) * safeSize]),
   ]);
   const total = Number((countRows[0] as Record<string, unknown> | undefined)?.total ?? 0);
   return {
-    rows: rows.map((row) => ({ id: String(row.id), createdAt: asIso(row.created_at), status: String(row.status) as LeadStatus, name: String(row.name), company: String(row.company), country: String(row.country), email: String(row.email), whatsapp: row.whatsapp ? String(row.whatsapp) : null, category: String(row.category), productModel: row.product_model ? String(row.product_model) : null, application: row.application ? String(row.application) : null, quantity: row.quantity ? String(row.quantity) : null, sourceChannel: row.source_channel ? String(row.source_channel) : null, landingPath: row.landing_path ? String(row.landing_path) : null })),
+    rows: rows.map((row) => ({ id: String(row.id), createdAt: asIso(row.created_at), status: String(row.status) as LeadStatus, name: String(row.name), company: String(row.company), country: String(row.country), email: String(row.email), whatsapp: row.whatsapp ? String(row.whatsapp) : null, category: String(row.category), productModel: row.product_model ? String(row.product_model) : null, application: row.application ? String(row.application) : null, quantity: row.quantity ? String(row.quantity) : null, sourceChannel: row.source_channel ? String(row.source_channel) : null, landingPath: row.landing_path ? String(row.landing_path) : null, customerId: row.customer_id ? String(row.customer_id) : null, visitorId: row.visitor_id ? String(row.visitor_id) : null })),
     total, page: safePage, pageSize: safeSize, pageCount: Math.max(1, Math.ceil(total / safeSize)),
   };
+}
+
+
+export type VisitorFilters = { search?: string; country?: string; channel?: string; device?: string };
+
+function visitorPredicate(range: AdminDateRange, filters: VisitorFilters) {
+  const params: unknown[] = [range.start, range.end];
+  const clauses = ["EXISTS (SELECT 1 FROM analytics_sessions rs WHERE rs.visitor_id = v.visitor_id AND rs.started_at >= $1 AND rs.started_at < $2)"];
+  if (filters.country) { params.push(text(filters.country, 8).toUpperCase()); clauses.push(`v.country_code = $${params.length}`); }
+  if (filters.channel) { params.push(text(filters.channel, 80)); clauses.push(`EXISTS (SELECT 1 FROM analytics_sessions cs WHERE cs.visitor_id = v.visitor_id AND cs.channel = $${params.length} AND cs.started_at >= $1 AND cs.started_at < $2)`); }
+  if (filters.device) { params.push(text(filters.device, 24)); clauses.push(`v.device_type = $${params.length}`); }
+  if (filters.search) { params.push(`%${text(filters.search, 120)}%`); clauses.push(`(v.visitor_id ILIKE $${params.length} OR c.email_normalized ILIKE $${params.length} OR c.company ILIKE $${params.length})`); }
+  return { params, where: clauses.join(" AND ") };
+}
+
+export async function listVisitors(range: AdminDateRange, page = 1, pageSize = 25, filters: VisitorFilters = {}): Promise<PaginatedResult<VisitorRecord>> {
+  const sql = adminSql(); const safePage = Math.max(1, Math.floor(page)); const safeSize = safePageSize(pageSize); const predicate = visitorPredicate(range, filters);
+  const [countRows, rows] = await Promise.all([
+    sql.query(`SELECT COUNT(*)::int AS total FROM analytics_visitors v LEFT JOIN b2b_customers c ON c.id = v.customer_id WHERE ${predicate.where}`, predicate.params),
+    sql.query(`SELECT v.visitor_id,v.first_seen_at,v.last_seen_at,v.country_code,v.region_code,v.preferred_language,v.device_type,v.first_channel,v.customer_id,c.name AS customer_name,c.company AS customer_company,
+      (SELECT COUNT(*)::int FROM analytics_sessions s WHERE s.visitor_id=v.visitor_id AND s.started_at >= $1 AND s.started_at < $2) AS session_count,
+      (SELECT COUNT(*)::int FROM analytics_events e WHERE e.visitor_id=v.visitor_id AND e.occurred_at >= $1 AND e.occurred_at < $2 AND e.event_name='page_view') AS page_views
+      FROM analytics_visitors v LEFT JOIN b2b_customers c ON c.id = v.customer_id WHERE ${predicate.where} ORDER BY v.last_seen_at DESC LIMIT $${predicate.params.length + 1} OFFSET $${predicate.params.length + 2}`, [...predicate.params, safeSize, (safePage - 1) * safeSize]),
+  ]);
+  const total = Number((countRows[0] as Record<string, unknown> | undefined)?.total ?? 0);
+  return { rows: rows.map((row) => ({ visitorId: String(row.visitor_id), firstSeenAt: asIso(row.first_seen_at), lastSeenAt: asIso(row.last_seen_at), country: row.country_code ? String(row.country_code) : null, region: row.region_code ? String(row.region_code) : null, language: row.preferred_language ? String(row.preferred_language) : null, device: String(row.device_type ?? "unknown") as DeviceType, firstChannel: row.first_channel ? String(row.first_channel) : null, customerId: row.customer_id ? String(row.customer_id) : null, customerName: row.customer_name ? String(row.customer_name) : null, customerCompany: row.customer_company ? String(row.customer_company) : null, sessionCount: Number(row.session_count ?? 0), pageViews: Number(row.page_views ?? 0) })), total, page: safePage, pageSize: safeSize, pageCount: Math.max(1, Math.ceil(total / safeSize)) };
+}
+
+export async function listCustomers(range: AdminDateRange, page = 1, pageSize = 25, search = ""): Promise<PaginatedResult<CustomerRecord>> {
+  const sql = adminSql(); const safePage = Math.max(1, Math.floor(page)); const safeSize = safePageSize(pageSize); const term = text(search, 120); const params = term ? [range.start, range.end, `%${term}%`] : [range.start, range.end]; const predicate = term ? "AND (c.email_normalized ILIKE $3 OR c.company ILIKE $3 OR c.name ILIKE $3)" : "";
+  const [countRows, rows] = await Promise.all([
+    sql.query(`SELECT COUNT(*)::int AS total FROM b2b_customers c WHERE c.last_seen_at >= $1 AND c.last_seen_at < $2 ${predicate}`, params),
+    sql.query(`SELECT c.id,c.name,c.company,c.email_normalized,c.whatsapp_normalized,c.country,c.first_seen_at,c.last_seen_at,c.source_channel,(SELECT COUNT(*)::int FROM analytics_visitors v WHERE v.customer_id=c.id) AS visitor_count,(SELECT COUNT(*)::int FROM b2b_leads l WHERE l.customer_id=c.id) AS lead_count,(SELECT COUNT(*)::int FROM analytics_events e JOIN analytics_visitors v ON v.visitor_id=e.visitor_id WHERE v.customer_id=c.id AND e.event_name='page_view' AND e.occurred_at >= $1 AND e.occurred_at < $2) AS page_views FROM b2b_customers c WHERE c.last_seen_at >= $1 AND c.last_seen_at < $2 ${predicate} ORDER BY c.last_seen_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`, [...params, safeSize, (safePage - 1) * safeSize]),
+  ]);
+  const total = Number((countRows[0] as Record<string, unknown> | undefined)?.total ?? 0);
+  return { rows: rows.map((row) => ({ id: String(row.id), name: String(row.name), company: String(row.company), email: String(row.email_normalized), whatsapp: row.whatsapp_normalized ? String(row.whatsapp_normalized) : null, country: String(row.country), firstSeenAt: asIso(row.first_seen_at), lastSeenAt: asIso(row.last_seen_at), sourceChannel: row.source_channel ? String(row.source_channel) : null, visitorCount: Number(row.visitor_count ?? 0), leadCount: Number(row.lead_count ?? 0), pageViews: Number(row.page_views ?? 0) })), total, page: safePage, pageSize: safeSize, pageCount: Math.max(1, Math.ceil(total / safeSize)) };
+}
+
+export async function getVisitorJourney(visitorId: string, range: AdminDateRange) {
+  if (!safeIdentifier.test(visitorId)) return null;
+  const sql = adminSql();
+  const [visitorRows, sessionRows, eventRows, leadRows] = await Promise.all([
+    sql.query("SELECT v.*, c.name AS customer_name, c.company AS customer_company, c.id AS customer_id FROM analytics_visitors v LEFT JOIN b2b_customers c ON c.id=v.customer_id WHERE v.visitor_id=$1 LIMIT 1", [visitorId]),
+    sql.query("SELECT session_id,started_at,last_seen_at,channel,referrer_host,landing_path,device_type,browser_name,os_name FROM analytics_sessions WHERE visitor_id=$1 AND started_at >= $2 AND started_at < $3 ORDER BY started_at DESC", [visitorId, range.start, range.end]),
+    sql.query("SELECT event_id,occurred_at,event_name,page_path,page_title,product_category,product_slug,session_id FROM analytics_events WHERE visitor_id=$1 AND occurred_at >= $2 AND occurred_at < $3 ORDER BY occurred_at DESC LIMIT 500", [visitorId, range.start, range.end]),
+    sql.query("SELECT id,created_at,status,company,category,product_model FROM b2b_leads WHERE visitor_id=$1 ORDER BY created_at DESC LIMIT 100", [visitorId]),
+  ]);
+  const visitor = visitorRows[0] as Record<string, unknown> | undefined; if (!visitor) return null;
+  return { visitor: { id: String(visitor.visitor_id), firstSeenAt: asIso(visitor.first_seen_at), lastSeenAt: asIso(visitor.last_seen_at), country: visitor.country_code ? String(visitor.country_code) : null, region: visitor.region_code ? String(visitor.region_code) : null, language: visitor.preferred_language ? String(visitor.preferred_language) : null, device: String(visitor.device_type ?? "unknown"), channel: visitor.first_channel ? String(visitor.first_channel) : null, customerId: visitor.customer_id ? String(visitor.customer_id) : null, customerName: visitor.customer_name ? String(visitor.customer_name) : null, customerCompany: visitor.customer_company ? String(visitor.customer_company) : null }, sessions: sessionRows.map((row) => ({ id: String(row.session_id), startedAt: asIso(row.started_at), lastSeenAt: asIso(row.last_seen_at), channel: String(row.channel), referrer: row.referrer_host ? String(row.referrer_host) : null, landingPath: row.landing_path ? String(row.landing_path) : null, device: row.device_type ? String(row.device_type) : null, browser: row.browser_name ? String(row.browser_name) : null, os: row.os_name ? String(row.os_name) : null })), events: eventRows.map((row) => ({ id: String(row.event_id), occurredAt: asIso(row.occurred_at), eventName: String(row.event_name), pagePath: String(row.page_path), pageTitle: row.page_title ? String(row.page_title) : null, productCategory: row.product_category ? String(row.product_category) : null, productSlug: row.product_slug ? String(row.product_slug) : null, sessionId: String(row.session_id) })) as JourneyEvent[], leads: leadRows.map((row) => ({ id: String(row.id), createdAt: asIso(row.created_at), status: String(row.status), company: String(row.company), category: String(row.category), productModel: row.product_model ? String(row.product_model) : null })) };
+}
+
+export async function getCustomerJourney(customerId: string, range: AdminDateRange) {
+  if (!safeIdentifier.test(customerId)) return null;
+  const sql = adminSql();
+  const [customerRows, visitorRows, events, leads] = await Promise.all([
+    sql.query("SELECT * FROM b2b_customers WHERE id=$1 LIMIT 1", [customerId]),
+    sql.query("SELECT visitor_id,first_seen_at,last_seen_at,country_code,preferred_language,device_type,first_channel FROM analytics_visitors WHERE customer_id=$1 ORDER BY last_seen_at DESC", [customerId]),
+    sql.query("SELECT e.event_id,e.occurred_at,e.event_name,e.page_path,e.page_title,e.product_category,e.product_slug,e.session_id FROM analytics_events e JOIN analytics_visitors v ON v.visitor_id=e.visitor_id WHERE v.customer_id=$1 AND e.occurred_at >= $2 AND e.occurred_at < $3 ORDER BY e.occurred_at DESC LIMIT 1000", [customerId, range.start, range.end]),
+    sql.query("SELECT id,created_at,status,category,product_model,application,quantity FROM b2b_leads WHERE customer_id=$1 ORDER BY created_at DESC LIMIT 100", [customerId]),
+  ]);
+  const customer = customerRows[0] as Record<string, unknown> | undefined; if (!customer) return null;
+  return { customer: { id: String(customer.id), name: String(customer.name), company: String(customer.company), email: String(customer.email_normalized), whatsapp: customer.whatsapp_normalized ? String(customer.whatsapp_normalized) : null, country: String(customer.country), firstSeenAt: asIso(customer.first_seen_at), lastSeenAt: asIso(customer.last_seen_at), sourceChannel: customer.source_channel ? String(customer.source_channel) : null }, visitors: visitorRows.map((row) => ({ id: String(row.visitor_id), firstSeenAt: asIso(row.first_seen_at), lastSeenAt: asIso(row.last_seen_at), country: row.country_code ? String(row.country_code) : null, language: row.preferred_language ? String(row.preferred_language) : null, device: row.device_type ? String(row.device_type) : null, sourceChannel: row.first_channel ? String(row.first_channel) : null })), events: events.map((row) => ({ id: String(row.event_id), occurredAt: asIso(row.occurred_at), eventName: String(row.event_name), pagePath: String(row.page_path), pageTitle: row.page_title ? String(row.page_title) : null, productCategory: row.product_category ? String(row.product_category) : null, productSlug: row.product_slug ? String(row.product_slug) : null, sessionId: String(row.session_id) })) as JourneyEvent[], leads: leads.map((row) => ({ id: String(row.id), createdAt: asIso(row.created_at), status: String(row.status), category: String(row.category), productModel: row.product_model ? String(row.product_model) : null, application: row.application ? String(row.application) : null, quantity: row.quantity ? String(row.quantity) : null })) };
 }
