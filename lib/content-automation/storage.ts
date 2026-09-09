@@ -2,6 +2,7 @@ import "server-only";
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { getContentArticleChannel, isThirdPartyBlogFamily } from "@/lib/content-automation/channel";
 import { newsSql } from "@/lib/content-automation/database";
 import type { ContentArticle, ContentAutomationState, ContentChannel, ContentImage, ContentQualityReport, ContentSource } from "@/types/content-automation";
 
@@ -14,10 +15,7 @@ const array = <T>(value: unknown): T[] => Array.isArray(value) ? value as T[] : 
 const date = (value: unknown) => value ? new Date(String(value)).toISOString() : undefined;
 
 export function getArticleChannel(article: Pick<ContentArticle, "channel" | "productFamily">): ContentChannel {
-  if (article.channel) return article.channel;
-  // The legacy external webhook labelled Blog submissions as external-news.
-  // Treat those records as Blog without rewriting or deleting production data.
-  return article.productFamily === "external-news" || article.productFamily === "external-blog" ? "blog" : "news";
+  return getContentArticleChannel(article);
 }
 
 function toArticle(row: Record<string, unknown>): ContentArticle {
@@ -25,7 +23,7 @@ function toArticle(row: Record<string, unknown>): ContentArticle {
   const productFamily = String(row.product_category);
   return {
     id: String(row.id), slug: String(row.slug), title: String(row.title), summary: String(row.summary), body: String(row.content),
-    channel: productFamily === "external-news" || productFamily === "external-blog" ? "blog" : "news",
+    channel: isThirdPartyBlogFamily(productFamily) ? "blog" : "news",
     productFamily, productUrl: String(row.product_id), industry: String(row.industry),
     scenario: String(row.application_scenario), similarityKey: String(row.topic_key), sources: array<ContentSource>(row.citations),
     internalLinks: array<string>(row.internal_links), image: array<ContentImage>(row.images)[0],

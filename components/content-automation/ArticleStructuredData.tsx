@@ -1,4 +1,5 @@
 import { siteConfig } from "@/lib/site";
+import { getContentArticleChannel } from "@/lib/content-automation/channel";
 import type { ContentArticle } from "@/types/content-automation";
 
 const inlineJson = (value: unknown) => JSON.stringify(value).replace(/</g, "\\u003c");
@@ -13,13 +14,8 @@ function extractFaqs(body: string) {
   });
 }
 
-function articleChannel(article: ContentArticle) {
-  if (article.channel) return article.channel;
-  return article.productFamily === "external-news" || article.productFamily === "external-blog" ? "blog" : "news";
-}
-
 export function ArticleStructuredData({ article }: { article: ContentArticle }) {
-  const channel = articleChannel(article);
+  const channel = getContentArticleChannel(article);
   const sectionName = channel === "blog" ? "Blog" : "News";
   const url = siteConfig.siteUrl + "/" + channel + "/" + article.slug;
   const faq = extractFaqs(article.body);
