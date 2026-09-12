@@ -8,11 +8,12 @@ import {
   type BlogWebhookEventStatus,
   type BlogWebhookImageStatus,
 } from "@/lib/content-automation/inbound-publication-log";
+import { normalizeExternalBlogWebhookInput } from "@/lib/content-automation/external-blog-webhook-input";
 import { contentStore } from "@/lib/content-automation/storage";
 import type { ContentArticle, ContentImage } from "@/types/content-automation";
 
 type WebhookInput = {
-  sign: string;
+  secretCandidates: string[];
   classId: string;
   title: string;
   content: string;
@@ -30,9 +31,7 @@ function sameSecret(received: string, expected: string) {
   return first.length === second.length && timingSafeEqual(first, second);
 }
 
-function clean(value: unknown, maximum: number) {
-  return typeof value === "string" ? value.trim().replace(/\s+/g, " ").slice(0, maximum) : "";
-}
+const clean = (value: unknown, maximum: number) => typeof value === "string" ? value.trim().replace(/\s+/g, " ").slice(0, maximum) : "";
 
 function htmlToMarkdown(value: string) {
   const lineBreaks = value
@@ -78,26 +77,11 @@ async function readInput(request: Request): Promise<WebhookInput> {
   const type = request.headers.get("content-type") ?? "";
   if (type.includes("application/json")) {
     const payload = await request.json().catch(() => ({})) as Record<string, unknown>;
-    return {
-      sign: clean(payload.sign, 512),
-      classId: clean(payload.class_id, 80),
-      title: clean(payload.title, 240),
-      content: typeof payload.content === "string" ? payload.content : "",
-      authorId: clean(payload.author_id, 120),
-      imageUrl: clean(payload.image_url, 2_000),
-    };
+    return normalizeExternalBlogWebhookInput(payload, request.headers);
   }
 
   const form = await request.formData().catch(() => null);
-  const read = (name: string, maximum: number) => clean(form?.get(name), maximum);
-  return {
-    sign: read("sign", 512),
-    classId: read("class_id", 80),
-    title: read("title", 240),
-    content: typeof form?.get("content") === "string" ? String(form.get("content")) : "",
-    authorId: read("author_id", 120),
-    imageUrl: read("image_url", 2_000),
-  };
+  return normalizeExternalBlogWebhookInput(Object.fromEntries(form?.entries() ?? []), request.headers);
 }
 
 function sourceEndpoint(request: Request) {
@@ -160,9 +144,9 @@ export async function publishExternalBlog(request: Request) {
     return response(0, "文章内容过长", 413);
   }
 
-  if (!input.sign || !sameSecret(input.sign, expectedSecret)) {
+  if (!input.secretCandidates.some((candidate) => sameSecret(candidate, expectedSecret))) {
     await recordSafely({ endpoint, status: "rejected", classId: input.classId, titleLength: input.title.length, contentLength: input.content.length, imageStatus: "none", reason: "invalid-secret", requestId });
-    console.warn("external-blog-webhook-auth-failed", { requestId, configuredLength: rawExpectedSecret?.length ?? 0, normalizedLength: expectedSecret.length, receivedLength: input.sign.length });
+    console.warn("external-blog-webhook-auth-failed", { requestId, configuredLength: rawExpectedSecret?.length ?? 0, normalizedLength: expectedSecret.length, receivedCandidates: input.secretCandidates.length });
     return response(0, "秘钥错误", 401);
   }
 
