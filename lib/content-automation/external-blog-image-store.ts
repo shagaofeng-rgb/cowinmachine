@@ -58,7 +58,9 @@ export async function storeExternalBlogImage(input: StoreExternalBlogImageInput)
   const source = validateExternalBlogImageUrl(input.imageUrl);
   if (!source) return { status: "invalid", reason: "image-url-not-allowed" };
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  const hasBlobToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  const hasVercelOidc = Boolean(process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN);
+  if (!hasBlobToken && !hasVercelOidc) {
     return { status: "storage-unavailable", reason: "blob-storage-not-configured" };
   }
 
