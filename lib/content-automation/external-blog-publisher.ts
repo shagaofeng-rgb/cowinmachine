@@ -8,6 +8,7 @@ import {
   type BlogWebhookEventStatus,
   type BlogWebhookImageStatus,
 } from "@/lib/content-automation/inbound-publication-log";
+import { storeExternalBlogImage } from "@/lib/content-automation/external-blog-image-store";
 import { normalizeExternalBlogWebhookInput } from "@/lib/content-automation/external-blog-webhook-input";
 import { contentStore } from "@/lib/content-automation/storage";
 import type { ContentArticle, ContentImage } from "@/types/content-automation";
@@ -71,6 +72,22 @@ function localImage(imageUrl: string, title: string): ContentImage | undefined {
   } catch {
     return undefined;
   }
+}
+
+function coverImageDetail(imageStatus: BlogWebhookImageStatus, hasImageUrl: boolean) {
+  if (!hasImageUrl) return "No cover image supplied.";
+  if (imageStatus === "local-authorized") return "Authorized COWIN MACHINE image path accepted.";
+  if (imageStatus === "stored-external") return "Third-party cover copied to COWIN MACHINE managed media storage.";
+  if (imageStatus === "storage-unavailable") return "Cover omitted because managed media storage is not configured.";
+  if (imageStatus === "invalid") return "Cover omitted because its source URL or media type was not allowed.";
+  return "Cover omitted because it could not be fetched or stored safely.";
+}
+
+async function revalidateArticle(article: ContentArticle) {
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${article.slug}`);
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/blog-feed.xml");
 }
 
 async function readInput(request: Request): Promise<WebhookInput> {
@@ -164,18 +181,48 @@ export async function publishExternalBlog(request: Request) {
     return response(0, "文章标题或内容不完整", 422);
   }
 
-  const localCover = localImage(input.imageUrl, title);
-  const imageStatus: BlogWebhookImageStatus = !input.imageUrl ? "none" : localCover ? "local-authorized" : "external-omitted";
-  const image = localCover;
   const digest = createHash("sha256").update(`${title}\n${body}`).digest("hex");
   const similarityKey = `external-blog:${digest}`;
   const store = contentStore();
 
   try {
     const state = await store.read();
-    if (state.articles.some((article) => article.similarityKey === similarityKey || article.similarityKey === `external-webhook:${digest}`)) {
-      await recordSafely({ endpoint, status: "duplicate", classId: input.classId, titleLength: title.length, contentLength: body.length, imageStatus, reason: "duplicate-content", requestId });
+    const existingArticle = state.articles.find((article) => article.similarityKey === similarityKey || article.similarityKey === `external-webhook:${digest}`);
+    const localCover = localImage(input.imageUrl, title);
+
+    if (existingArticle && (existingArticle.image || !input.imageUrl)) {
+      const imageStatus: BlogWebhookImageStatus = !input.imageUrl ? "none" : existingArticle.image ? "local-authorized" : "external-omitted";
+      await recordSafely({ endpoint, status: "duplicate", classId: input.classId, titleLength: title.length, contentLength: body.length, imageStatus, reason: "duplicate-content", articleId: existingArticle.id, requestId });
       return response(1, "发布成功（重复请求已忽略）");
+    }
+
+    const storedCover = !input.imageUrl || localCover ? undefined : await storeExternalBlogImage({ imageUrl: input.imageUrl, title, digest });
+    const imageStatus: BlogWebhookImageStatus = !input.imageUrl ? "none" : localCover ? "local-authorized" : storedCover?.status ?? "external-omitted";
+    const image = localCover ?? storedCover?.image;
+
+    if (existingArticle) {
+      if (!image) {
+        await recordSafely({ endpoint, status: "duplicate", classId: input.classId, titleLength: title.length, contentLength: body.length, imageStatus, reason: storedCover?.reason ?? "cover-not-added", articleId: existingArticle.id, requestId });
+        return response(1, "发布成功（文章已存在，封面未能补充）");
+      }
+
+      const now = new Date().toISOString();
+      const updatedArticle: ContentArticle = {
+        ...existingArticle,
+        image,
+        updatedAt: now,
+        qualityReport: {
+          ...existingArticle.qualityReport,
+          checks: [
+            ...existingArticle.qualityReport.checks.filter((check) => check.name !== "cover-image-rights"),
+            { name: "cover-image-rights", passed: true, detail: coverImageDetail(imageStatus, true) },
+          ],
+        },
+      };
+      await store.write({ ...state, articles: state.articles.map((article) => article.id === existingArticle.id ? updatedArticle : article) });
+      await recordSafely({ endpoint, status: "published", classId: input.classId, titleLength: title.length, contentLength: body.length, imageStatus, reason: "cover-backfilled", articleId: existingArticle.id, requestId });
+      await revalidateArticle(updatedArticle);
+      return response(1, "发布成功（已补充封面）");
     }
 
     const slugBase = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 72) || "equipment-guide";
@@ -205,7 +252,7 @@ export async function publishExternalBlog(request: Request) {
         checks: [
           { name: "webhook-authentication", passed: true, detail: "Shared secret accepted." },
           { name: "category-routing", passed: true, detail: `External class_id ${input.classId || "not supplied"} routed to Blog.` },
-          { name: "cover-image-rights", passed: true, detail: imageStatus === "external-omitted" ? "External cover omitted because its authorization was not verified." : input.imageUrl ? "Authorized local image path accepted." : "No cover image supplied." },
+          { name: "cover-image-rights", passed: true, detail: coverImageDetail(imageStatus, Boolean(input.imageUrl)) },
           { name: "source-author", passed: true, detail: input.authorId ? "Third-party author identifier received." : "No author identifier supplied." },
         ],
         titleSimilarity: 0,
@@ -220,13 +267,13 @@ export async function publishExternalBlog(request: Request) {
       runs: [...state.runs, { id: `external-blog-${article.id}`, startedAt: now, mode: "publish", dryRun: false, result: "published:blog" }],
     });
     await recordSafely({ endpoint, status: "published", classId: input.classId, titleLength: title.length, contentLength: body.length, imageStatus, articleId: article.id, requestId });
-    revalidatePath("/blog");
-    revalidatePath(`/blog/${article.slug}`);
-    revalidatePath("/sitemap.xml");
-    revalidatePath("/blog-feed.xml");
-    return response(1, imageStatus === "external-omitted" ? "发布成功（外部封面未使用）" : "发布成功");
+    await revalidateArticle(article);
+    if (imageStatus === "stored-external") return response(1, "发布成功（封面已托管）");
+    if (imageStatus === "storage-unavailable") return response(1, "发布成功（封面存储未配置）");
+    if (imageStatus === "external-omitted" || imageStatus === "invalid") return response(1, "发布成功（封面未使用）");
+    return response(1, "发布成功");
   } catch (error) {
-    await recordSafely({ endpoint, status: "failed", classId: input.classId, titleLength: title.length, contentLength: body.length, imageStatus, reason: "database-write-failed", requestId });
+    await recordSafely({ endpoint, status: "failed", classId: input.classId, titleLength: title.length, contentLength: body.length, imageStatus: input.imageUrl ? "external-omitted" : "none", reason: "database-write-failed", requestId });
     console.error("external-blog-webhook-failed", { requestId, error: error instanceof Error ? error.message : "unknown" });
     return response(0, "数据录入失败，请重试", 503);
   }

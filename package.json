@@ -24,6 +24,7 @@
     "@hookform/resolvers": "latest",
     "@neondatabase/serverless": "^1.1.0",
     "@phosphor-icons/react": "^2.1.10",
+    "@vercel/blob": "^2.8.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

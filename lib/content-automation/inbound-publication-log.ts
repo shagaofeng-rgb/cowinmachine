@@ -13,6 +13,8 @@ export type BlogWebhookEventStatus =
 export type BlogWebhookImageStatus =
   | "none"
   | "local-authorized"
+  | "stored-external"
+  | "storage-unavailable"
   | "external-omitted"
   | "invalid";
 
