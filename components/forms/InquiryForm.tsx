@@ -1,8 +1,8 @@
 "use client";
 
-import { getAnalyticsRequestHeaders } from "@/components/analytics/AnalyticsTracker";
+import { getAnalyticsRequestHeaders, trackAnalyticsEvent } from "@/components/analytics/AnalyticsTracker";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -27,6 +27,7 @@ type FormData = z.infer<typeof schema>;
 
 export function InquiryForm({ productModel, productUrl, compact = false, defaults = {} }: { productModel?: string; productUrl?: string; compact?: boolean; defaults?: Partial<FormData> }) {
   const [serverMessage, setServerMessage] = useState<string>();
+  const hasTrackedStart = useRef(false);
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { category: "", productModel: productModel ?? "", productUrl: productUrl ?? "", website: "", ...defaults } });
   const onSubmit = async (data: FormData) => {
     setServerMessage(undefined);
@@ -34,12 +35,13 @@ export function InquiryForm({ productModel, productUrl, compact = false, default
       const response = await fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json", ...getAnalyticsRequestHeaders() }, body: JSON.stringify(data) });
       const result = await response.json() as { message?: string };
       if (!response.ok) throw new Error(result.message ?? "We could not submit your request. Please try again.");
+      trackAnalyticsEvent("inquiry_submitted", { category: data.category });
       setServerMessage(result.message ?? "Your request has been received. Our team will review the details and contact you using the information provided.");
       reset({ category: data.category, productModel: productModel ?? "", productUrl: productUrl ?? "", website: "" });
     } catch (error) { setServerMessage(error instanceof Error ? error.message : "We could not submit your request. Please try again."); }
   };
   const field = (id: keyof FormData, label: string, type = "text") => <label>{label}<input type={type} {...register(id)} aria-invalid={Boolean(errors[id])} />{errors[id] && <span className="field-error" role="alert">{errors[id]?.message}</span>}</label>;
-  return <form className={`inquiry-form ${compact ? "compact" : ""}`} onSubmit={handleSubmit(onSubmit)} noValidate>
+  return <form className={`inquiry-form ${compact ? "compact" : ""}`} onFocus={() => { if (!hasTrackedStart.current) { hasTrackedStart.current = true; trackAnalyticsEvent("inquiry_started"); } }} onSubmit={handleSubmit(onSubmit)} noValidate>
     <input className="honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" {...register("website")} />
     {field("name", "Full Name")}{field("company", "Company Name")}{field("country", "Country")}{field("email", "Business Email", "email")}
     <label>Product Category<select {...register("category")} aria-invalid={Boolean(errors.category)}><option value="">Select a category</option><option value="compressed-air-equipment">Compressed-Air Equipment</option><option value="generator-systems">Generator Systems</option><option value="drilling-equipment">Drilling Equipment</option><option value="drilling-consumables">Drilling Consumables</option><option value="mobile-lighting-systems">Mobile Lighting Systems</option><option value="magnetic-separators">Magnetic Separators</option></select>{errors.category && <span className="field-error" role="alert">{errors.category.message}</span>}</label>

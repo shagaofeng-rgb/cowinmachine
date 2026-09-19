@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { productNavigation } from "@/lib/navigation";
 
-export function ProductsMegaDrawer({ open, onClose, dialogRef }: { open: boolean; onClose: () => void; dialogRef: React.RefObject<HTMLElement | null> }) {
+export function ProductsMegaDrawer({ open, onClose, onPointerEnter, onPointerLeave, dialogRef }: { open: boolean; onClose: () => void; onPointerEnter: () => void; onPointerLeave: () => void; dialogRef: React.RefObject<HTMLElement | null> }) {
   if (!open) return null;
 
-  return <>
-    <button className="navigation-backdrop navigation-backdrop-below-header" aria-label="Close product navigation" onClick={onClose} />
-    <aside ref={dialogRef} id="products-mega-drawer" className="products-mega-drawer" role="dialog" aria-modal="true" aria-label="Product categories">
-      <div className="products-mega-panel">
+  return <aside ref={dialogRef} id="products-mega-drawer" className="products-mega-drawer" aria-label="Product categories" onFocusCapture={onPointerEnter} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) onPointerLeave(); }}>
+      <div className="products-mega-panel" onMouseEnter={onPointerEnter} onMouseLeave={onPointerLeave}>
         <section className="products-mega-intro" aria-label="Product center introduction">
           <p className="products-mega-kicker">Product Center</p>
           <h2>Explore Industrial Equipment</h2>
@@ -22,6 +20,5 @@ export function ProductsMegaDrawer({ open, onClose, dialogRef }: { open: boolean
         </section>
         <div className="products-mega-help">Need help choosing equipment for your application? <Link href="/request-a-quote" onClick={onClose}>Talk to an Engineer <span aria-hidden="true">→</span></Link></div>
       </div>
-    </aside>
-  </>;
+    </aside>;
 }

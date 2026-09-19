@@ -58,6 +58,11 @@ function send(eventName: AnalyticsEventName, pathname: string, metadata?: Record
   void fetch("/api/analytics/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), keepalive: true }).catch(() => undefined);
 }
 
+export function trackAnalyticsEvent(eventName: AnalyticsEventName, metadata?: Record<string, string | number | boolean>) {
+  if (typeof window === "undefined") return;
+  send(eventName, window.location.pathname, metadata);
+}
+
 export function getAnalyticsRequestHeaders(): Record<string, string> {
   if (typeof window === "undefined" || readCookie(consentKey) !== "granted") return {};
   const { visitorId, sessionId } = analyticsIds();

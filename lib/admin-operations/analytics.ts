@@ -192,7 +192,7 @@ export async function getDashboardData(range: AdminDateRange): Promise<Dashboard
         COUNT(DISTINCT session_id) FILTER (WHERE event_name = 'page_view')::int AS visits,
         COUNT(DISTINCT visitor_id)::int AS visitors,
         COUNT(*) FILTER (WHERE event_name = 'page_view')::int AS page_views,
-        COUNT(*) FILTER (WHERE event_name = 'inquiry_submitted')::int AS inquiries,
+        (SELECT COUNT(*)::int FROM b2b_leads WHERE created_at >= $1 AND created_at < $2) AS inquiries,
         COUNT(*) FILTER (WHERE event_name = 'quote_click')::int AS quote_clicks,
         COUNT(*) FILTER (WHERE event_name = 'whatsapp_click')::int AS whatsapp_clicks
        FROM analytics_events WHERE occurred_at >= $1 AND occurred_at < $2`,

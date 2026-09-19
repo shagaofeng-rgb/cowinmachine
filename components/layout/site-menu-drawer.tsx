@@ -12,7 +12,7 @@ export function SiteMenuDrawer({ open, onClose, dialogRef, closeButtonRef }: { o
       <Link className="button button-primary site-menu-primary-cta" href="/request-a-quote" onClick={onClose}>Get a Quote</Link>
       <div className="desktop-drawer-navigation"><nav aria-label="Site navigation"><ul>{siteMenuNavigation.map((item) => <li key={item.href}><Link href={item.href} onClick={onClose}>{item.label}</Link></li>)}</ul></nav></div>
       <MobileNavigation onNavigate={onClose} />
-      <div className="site-menu-drawer-contact"><a href={`mailto:${siteConfig.email}`}>Email: {siteConfig.email}</a><a href={whatsappHref}>WhatsApp: {siteConfig.phone}</a><p>Factory in Quzhou, China</p></div>
+      <div className="site-menu-drawer-contact"><a href={`mailto:${siteConfig.email}`}>Email: {siteConfig.email}</a><a href={whatsappHref}>WhatsApp: {siteConfig.phone}</a><a href={siteConfig.mapUrl} target="_blank" rel="noreferrer">Factory in Quzhou, China</a></div>
     </aside>
   </>;
 }
