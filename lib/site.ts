@@ -11,6 +11,8 @@ export const siteConfig = {
     region: "Zhejiang Province",
     country: "China",
   },
+  mapUrl: "https://maps.app.goo.gl/P1YyVHoCdGBd9ef37",
+  mapEmbedUrl: "https://www.google.com/maps?output=embed&q=28.965204%2C118.839750",
   defaultTitle: "COWIN MACHINE | Industrial Equipment Solutions",
   defaultDescription:
     "COWIN MACHINE provides industrial equipment solutions for mining, construction, remote power and material processing applications.",

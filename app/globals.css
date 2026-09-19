@@ -53,6 +53,16 @@ main { min-height: 62vh; }.page-hero { background: var(--navy); color: white; pa
 .contact-coordination-visual { margin: 1.5rem 0 0; border: 1px solid var(--line); background: var(--surface); }
 .contact-coordination-visual img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
 .contact-coordination-visual figcaption { padding: .75rem 1rem; color: var(--muted); font-size: .88rem; }
+.contact-location-layout { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); align-items: stretch; gap: clamp(1.5rem, 4vw, 4rem); }
+.contact-location-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.contact-location-copy h2 { margin-bottom: .9rem; }
+.contact-location-copy > p:not(.eyebrow) { max-width: 34rem; color: var(--muted); }
+.contact-location-copy address { margin: .85rem 0 1.5rem; color: var(--ink); font-style: normal; font-weight: 700; line-height: 1.65; }
+.contact-location-copy .button { display: inline-flex; align-items: center; gap: .5rem; }
+.contact-location-copy .button svg:last-child { margin-left: .15rem; }
+.contact-map-wrap { min-height: 360px; overflow: hidden; border: 1px solid var(--line); background: #dfe8f0; }
+.contact-map { display: block; width: 100%; height: 100%; min-height: 360px; border: 0; }
+@media (max-width: 800px) { .contact-location-layout { grid-template-columns: 1fr; }.contact-map-wrap, .contact-map { min-height: 300px; } }
 .product-detail-image { width: 100%; height: auto; max-height: 620px; object-fit: contain; border: 1px solid var(--line); background: var(--surface); }
 .catalog-reference { color: var(--muted); font-size: .86rem; font-weight: 700; }
 .specification-table-wrap { overflow-x: auto; border: 1px solid var(--line); }.specification-table-wrap table { width: 100%; border-collapse: collapse; min-width: 460px; }.specification-table-wrap th, .specification-table-wrap td { padding: .75rem 1rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }.specification-table-wrap th { width: 38%; color: var(--navy); background: var(--surface); }

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowSquareOut, MapPin } from "@phosphor-icons/react/ssr";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 import { PageHero } from "@/components/PageHero";
 import { siteConfig, whatsappHref } from "@/lib/site";
@@ -25,6 +26,33 @@ export default function ContactPage() {
           </figure>
         </div>
         <div><h2>Send an inquiry</h2><InquiryForm /></div>
+      </div>
+    </section>
+    <section className="section section-alt contact-location-section">
+      <div className="content-wrap contact-location-layout">
+        <div className="contact-location-copy">
+          <p className="eyebrow">Visit COWIN MACHINE</p>
+          <h2>Our office location</h2>
+          <p>Arrange your visit with our team in advance so we can prepare for the equipment discussion.</p>
+          <address>
+            {address.map((line) => <span key={line}>{line}<br /></span>)}
+          </address>
+          <a className="button button-outline" href={siteConfig.mapUrl} target="_blank" rel="noreferrer">
+            <MapPin aria-hidden="true" size={19} weight="bold" />
+            Open in Google Maps
+            <ArrowSquareOut aria-hidden="true" size={17} weight="bold" />
+          </a>
+        </div>
+        <div className="contact-map-wrap">
+          <iframe
+            className="contact-map"
+            title="COWIN MACHINE office location in Quzhou, China"
+            src={siteConfig.mapEmbedUrl}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+        </div>
       </div>
     </section>
   </>;

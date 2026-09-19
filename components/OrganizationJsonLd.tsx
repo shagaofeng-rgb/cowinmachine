@@ -9,6 +9,7 @@ export function OrganizationJsonLd() {
     logo: `${siteConfig.siteUrl}/images/cowin-machine-logo.jpg`,
     email: siteConfig.email,
     telephone: siteConfig.phone,
+    hasMap: siteConfig.mapUrl,
     address: {
       "@type": "PostalAddress",
       streetAddress: `${siteConfig.address.line1}, ${siteConfig.address.line2}`,
