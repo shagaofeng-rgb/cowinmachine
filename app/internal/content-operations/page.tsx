@@ -4,7 +4,6 @@ import { Pagination } from "@/components/Pagination";
 import { ContentOperationsControls } from "@/components/content-automation/ContentOperationsControls";
 import { AdminDateFilters } from "@/components/admin/AdminShell";
 import { readAdminDateRange } from "@/lib/admin-operations/date-range";
-import { contentAutomationConfig } from "@/lib/content-automation/config";
 import { getSearchConsoleStatus } from "@/lib/content-automation/search-console";
 import { getRecentBlogWebhookEvents } from "@/lib/content-automation/inbound-publication-log";
 import { contentStore, getArticleChannel } from "@/lib/content-automation/storage";
@@ -15,8 +14,7 @@ export const dynamic = "force-dynamic";
 type PageProps = { searchParams: Promise<{ channel?: string; page?: string; preset?: string; start?: string; end?: string }> };
 
 export default async function ContentOperationsPage({ searchParams }: PageProps) {
-  const config = contentAutomationConfig();
-  if (!config.adminEnabled || !process.env.CONTENT_ADMIN_USER || !process.env.CONTENT_ADMIN_PASSWORD) notFound();
+  if (process.env.CONTENT_ADMIN_ENABLED !== "true" || !process.env.CONTENT_ADMIN_USER || !process.env.CONTENT_ADMIN_PASSWORD) notFound();
 
   const [state, searchConsole, filters, webhookEvents] = await Promise.all([
     contentStore().read(),
@@ -44,7 +42,7 @@ export default async function ContentOperationsPage({ searchParams }: PageProps)
   return (
     <section className="section"><div className="content-wrap">
       <p className="eyebrow">Private management</p><h1>Content Operations</h1>
-      <p>News automation and third-party Blog publishing use separate public channels while sharing protected operational monitoring.</p>
+      <p>News automation is disabled. Third-party Blog publishing continues through its separate protected webhook channel.</p>
       <AdminDateFilters range={range} pathname="/internal/content-operations" preserve={{ channel: selected === "all" ? undefined : selected }} />
       <nav className="cta-row" aria-label="Content channel filter">
         <Link className={selected === "all" ? "button button-primary" : "button button-outline"} href="/internal/content-operations">All ({state.articles.length})</Link>
@@ -53,12 +51,12 @@ export default async function ContentOperationsPage({ searchParams }: PageProps)
       </nav>
       <div className="grid">
         <article className="card"><h2>Article queue</h2><p>{filteredArticles.length} records in this view. Published: {published.length}.</p></article>
-        <article className="card"><h2>Schedule</h2><p>{config.schedule} · {config.mode} mode · auto publish: {String(config.autoPublish)}</p></article>
+        <article className="card"><h2>News automation</h2><p>Disabled. Existing News records remain available, but no new News material is fetched, drafted or published automatically.</p></article>
         <article className="card"><h2>Discovery state</h2><p>Published News and Blog entries use separate public pages and RSS feeds, and both enter the dynamic sitemap.</p></article>
         <article className="card"><h2>Search Console</h2><p>{searchConsole.state}: {searchConsole.detail}</p></article>
         <article className="card"><h2>Third-party Blog sync</h2><p>{webhookPublished} published · {webhookRejected} rejected or failed · {webhookEvents.length} recent requests.</p></article>
       </div>
-      <ContentOperationsControls publishEnabled={config.mode === "publish" && config.adminPublishEnabled} />
+      <ContentOperationsControls />
       <section className="section content-operations-section"><h2>Recent failures and similarity reports</h2>{failures.length ? <ul>{failures.map((failure) => <li key={failure}>{failure}</li>)}</ul> : <p>No saved quality failures in this view.</p>}</section>
       <section className="section content-operations-section"><h2>Third-party Blog webhook</h2><p>Validation requests do not create articles. Only requests marked “published” appear on the public Blog.</p>{webhookEvents.length ? <ul>{webhookEvents.map((event) => <li key={event.id}><strong>{event.status}</strong> · {new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(event.occurredAt))} · title {event.titleLength} characters · content {event.contentLength} characters · image: {event.imageStatus}{event.reason ? ` · ${event.reason}` : ""}</li>)}</ul> : <p>No third-party Blog requests have been recorded yet.</p>}</section>
       <section className="content-operations-section">

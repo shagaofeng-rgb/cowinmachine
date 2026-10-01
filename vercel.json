@@ -2,8 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "crons": [
-    { "path": "/api/cron/news-discover", "schedule": "10 0 * * *" },
-    { "path": "/api/cron/news-publish", "schedule": "45 1 * * *" },
-    { "path": "/api/cron/search-discovery", "schedule": "30 2 */2 * *" }
+    { "path": "/api/cron/search-discovery", "schedule": "30 2 * * 1" }
   ]
 }

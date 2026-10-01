@@ -1,6 +1,5 @@
 import { isAdminRequest } from "@/lib/content-automation/auth";
 import { reconcileLegacyThirdPartyBlogArticles } from "@/lib/content-automation/blog-reconciliation";
-import { runContentAutomation } from "@/lib/content-automation/engine";
 import { revalidatePath } from "next/cache";
 
 export const runtime = "nodejs";
@@ -20,10 +19,5 @@ export async function POST(request: Request) {
       return Response.json({ error: error instanceof Error ? error.message : "Blog reconciliation failed." }, { status: 503 });
     }
   }
-  const dryRun = payload.action === "dry-run";
-  try {
-    return Response.json(await runContentAutomation({ dryRun, allowManualPublish: payload.action === "publish-next" }));
-  } catch (error) {
-    return Response.json({ error: error instanceof Error ? error.message : "Content operation failed." }, { status: 503 });
-  }
+  return Response.json({ error: "News content automation is disabled. Third-party Blog reconciliation remains available." }, { status: 410 });
 }
