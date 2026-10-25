@@ -101,7 +101,7 @@ export default function HomePage() {
 
     <section className="section section-alt home-news-callout">
       <div className="content-wrap home-news-callout-grid">
-        <div><p className="eyebrow">News &amp; Blog</p><h2>Industry context for equipment selection.</h2><p>Read original, source-reviewed material as it is cleared for publication. Product configuration remains subject to application review.</p></div>
+        <div><p className="eyebrow">News &amp; Blog</p><h2>Industry context for equipment selection.</h2><p>Explore published industry news and equipment guidance. Product configuration remains subject to application review.</p></div>
         <Link className="button button-outline" href="/news">Visit News &amp; Blog <span aria-hidden="true">→</span></Link>
       </div>
     </section>

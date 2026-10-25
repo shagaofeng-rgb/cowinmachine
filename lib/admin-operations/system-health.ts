@@ -37,6 +37,7 @@ export async function runDatabaseWriteHealthCheck() {
   } finally {
     if (leadId) await sql.query(`DELETE FROM b2b_leads WHERE id = $1`, [leadId]);
     await sql.query(`DELETE FROM b2b_leads WHERE email = $1 OR name = $2`, [email, marker]);
+    await sql.query(`DELETE FROM b2b_customers WHERE email_normalized = $1 AND NOT EXISTS (SELECT 1 FROM b2b_leads WHERE customer_id = b2b_customers.id)`, [email]);
   }
 
   const remaining = await sql.query(
@@ -45,6 +46,10 @@ export async function runDatabaseWriteHealthCheck() {
   );
   if (Number(remaining[0]?.remaining ?? 0) !== 0) {
     throw new Error("The marked health-check record was not cleaned up.");
+  }
+  const remainingCustomers = await sql.query(`SELECT COUNT(*)::int AS remaining FROM b2b_customers WHERE email_normalized = $1`, [email]);
+  if (Number(remainingCustomers[0]?.remaining ?? 0) !== 0) {
+    throw new Error("The marked health-check customer was not cleaned up.");
   }
   if (leadId) {
     const remainingActivities = await sql.query(

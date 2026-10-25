@@ -30,7 +30,7 @@ function addDays(value: string, days: number) {
 }
 
 function startOfWeek(value: string) {
-  const date = fromDayText(value);
+  const date = new Date(`${value}T12:00:00Z`);
   const weekday = (date.getUTCDay() + 6) % 7;
   return addDays(value, -weekday);
 }
@@ -48,11 +48,11 @@ export function readAdminDateRange(values: { preset?: string; start?: string; en
   const today = dayText(new Date());
   const preset = presetValues.has(values.preset as AdminDatePreset) ? values.preset as AdminDatePreset : "today";
 
-  if (preset === "custom" && values.start && values.end && /^\\d{4}-\\d{2}-\\d{2}$/.test(values.start) && /^\\d{4}-\\d{2}-\\d{2}$/.test(values.end)) {
+  if (preset === "custom" && values.start && values.end && /^\d{4}-\d{2}-\d{2}$/.test(values.start) && /^\d{4}-\d{2}-\d{2}$/.test(values.end)) {
     const start = fromDayText(values.start);
     const end = fromDayText(values.end);
     const maximumEnd = fromDayText(addDays(values.start, 366));
-    if (start <= end && end <= maximumEnd) return rangeFor(values.start, values.end, "custom", `${values.start} 至 ${values.end}`);
+    if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && dayText(start) === values.start && dayText(end) === values.end && start <= end && end <= maximumEnd) return rangeFor(values.start, values.end, "custom", `${values.start} 至 ${values.end}`);
   }
 
   if (preset === "this-week") return rangeFor(startOfWeek(today), today, "this-week", "本周");

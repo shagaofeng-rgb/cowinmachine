@@ -47,6 +47,10 @@ export async function recordBlogWebhookEvent(input: RecordEventInput) {
     ...input,
   };
 
+  // The existing production CHECK constraint predates managed cover storage.
+  const storedImageStatus = event.imageStatus === "stored-external" ? "local-authorized"
+    : event.imageStatus === "storage-unavailable" ? "external-omitted" : event.imageStatus;
+
   await newsSql().query(
     `INSERT INTO inbound_blog_webhook_events
       (id, occurred_at, endpoint, channel, status, class_id, title_length, content_length, image_status, reason, article_id, request_id)
@@ -60,7 +64,7 @@ export async function recordBlogWebhookEvent(input: RecordEventInput) {
       event.classId,
       event.titleLength,
       event.contentLength,
-      event.imageStatus,
+      storedImageStatus,
       event.reason,
       event.articleId,
       event.requestId,

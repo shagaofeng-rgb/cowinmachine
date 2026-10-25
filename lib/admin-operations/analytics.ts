@@ -54,7 +54,7 @@ function sourceChannel(referrer: string | undefined, utm?: Record<string, string
   const medium = text(utm?.utm_medium, 80).toLowerCase();
   if (medium) return medium.includes("email") ? "email" : medium.includes("paid") || medium.includes("cpc") ? "paid" : medium;
   const referrerHost = host(referrer);
-  if (!referrerHost) return "direct";
+  if (!referrerHost || referrerHost === "cowinmachine.com" || referrerHost === "www.cowinmachine.com") return "direct";
   if (/google|bing|yahoo|duckduckgo|baidu|yandex/.test(referrerHost)) return "organic-search";
   if (/linkedin|facebook|instagram|youtube|x\.com|twitter/.test(referrerHost)) return "social";
   if (/chatgpt|perplexity|gemini|copilot/.test(referrerHost)) return "ai-referral";
@@ -198,9 +198,9 @@ export async function getDashboardData(range: AdminDateRange): Promise<Dashboard
        FROM analytics_events WHERE occurred_at >= $1 AND occurred_at < $2`,
       rangeParams(range),
     ),
-    sql.query(`SELECT page_path, COUNT(*)::int AS views FROM analytics_events WHERE event_name IN ('page_view','product_view','news_view') AND occurred_at >= $1 AND occurred_at < $2 GROUP BY page_path ORDER BY views DESC, page_path ASC LIMIT 8`, rangeParams(range)),
+    sql.query(`SELECT page_path, COUNT(*)::int AS views FROM analytics_events WHERE event_name = 'page_view' AND occurred_at >= $1 AND occurred_at < $2 GROUP BY page_path ORDER BY views DESC, page_path ASC LIMIT 8`, rangeParams(range)),
     sql.query(`SELECT channel, COUNT(*)::int AS sessions FROM analytics_sessions WHERE started_at >= $1 AND started_at < $2 GROUP BY channel ORDER BY sessions DESC, channel ASC LIMIT 8`, rangeParams(range)),
-    sql.query(`SELECT COALESCE(country_code, 'Unknown') AS country, COUNT(*)::int AS visitors FROM analytics_visitors WHERE last_seen_at >= $1 AND last_seen_at < $2 GROUP BY country ORDER BY visitors DESC, country ASC LIMIT 8`, rangeParams(range)),
+    sql.query(`SELECT COALESCE(v.country_code, 'Unknown') AS country, COUNT(DISTINCT e.visitor_id)::int AS visitors FROM analytics_events e JOIN analytics_visitors v ON v.visitor_id = e.visitor_id WHERE e.occurred_at >= $1 AND e.occurred_at < $2 GROUP BY country ORDER BY visitors DESC, country ASC LIMIT 8`, rangeParams(range)),
     sql.query(`SELECT COALESCE(product_category, 'Unassigned') AS category, COALESCE(product_slug, '') AS slug, COUNT(*)::int AS views FROM analytics_events WHERE event_name = 'product_view' AND occurred_at >= $1 AND occurred_at < $2 GROUP BY category, slug ORDER BY views DESC, category ASC LIMIT 8`, rangeParams(range)),
   ]);
   const row = overview[0] as Record<string, unknown> | undefined;
