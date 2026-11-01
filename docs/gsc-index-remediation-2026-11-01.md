@@ -36,3 +36,12 @@ Search Console export of the 43 crawled-not-indexed URLs failed in the browser; 
 - Historical unknown product path `/products/380-coding-machine-widens-spray-paint-shell`: HTTP 404.
 - Historical section path `/products/compressed-air-equipment/air-kszj18-17-183/applications`: HTTP 308 to the canonical product root with `#applications`.
 - `www` host redirect: HTTP 301 to apex. The redirect target port is explicitly cleared in source for production.
+
+## Production release and Google readback
+
+- Code commit: `55d69e7` on `main`; GitHub push completed. Vercel deployment `dpl_62jhxXWE72XfpfdaaW18rx2wZsVd` reached READY and was assigned both `cowinmachine.com` and `www.cowinmachine.com`.
+- Production sitemap: 157 URLs; all 157 returned direct HTTP 200, no `noindex`, and a self-canonical under the root-slash equivalence rule. Compared with the 565 URLs observed before the release, 408 duplicate product section URLs were removed.
+- Production spot checks: `www/news` returned 301 to the apex; the historical packaging product returned 404; a product section returned 308 to its canonical product root and matching hash; `www/blog` resolved to apex `/blog` with HTTP 200.
+- Google Search Console API accepted a sitemap PUT (HTTP 204) and readback succeeded (HTTP 200) for `sc-domain:cowinmachine.com`. `lastSubmitted` was 2026-11-01T10:19:31.166Z; `lastDownloaded` remained 2026-10-31T12:32:18.651Z; `isPending` was true, with 0 warnings and 0 errors. Submission is confirmed; processing of the new sitemap is not yet confirmed.
+- URL Inspection API readback: `/products`, all seven product categories, `/news`, and `/blog` were reported indexed. The home page remained `Duplicate, Google chose different canonical than user` based on a 2026-10-09 crawl and still showed Google selecting `https://www.cowinmachine.com/`. This is pre-release crawl data and must be checked again after recrawl.
+- Historical validation states in the GSC UI (Started/Failed) cannot be treated as fixed by this deployment. Revisit the duplicate, crawled-not-indexed, discovered-not-indexed, redirect, and 404 reports after Google's next download/crawl. Intentional redirects, genuine 404s, and intentional noindex URLs should not be mass-redirected or submitted for indexing.
