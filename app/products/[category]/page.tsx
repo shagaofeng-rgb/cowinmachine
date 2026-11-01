@@ -35,7 +35,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { category: slug } = await params;
   const category = getCategory(slug);
-  if (!category) permanentRedirect("/products");
+  if (!category) notFound();
 
   const entries = products.filter((product) => product.category === category.slug && isCanonicalProductRoute(product));
   const pageCount = getPageCount(entries.length);

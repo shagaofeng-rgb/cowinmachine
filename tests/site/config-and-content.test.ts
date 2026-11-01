@@ -3,7 +3,8 @@ import test from "node:test";
 import detailContent from "../../data/product-detail/product-detail-content.json";
 import { getGoogleSearchConsoleConfig, isGoogleSearchConsoleConfigured } from "../../lib/content-automation/google-search-console-config";
 import { blogPerPage, getPageCount, newsPerPage, paginateItems, productsPerPage, resolvePage } from "../../lib/pagination";
-import { nestedProductSections, productPath, productSections } from "../../lib/product-sections";
+import { nestedProductSections, productPath, productSectionHash, productSections } from "../../lib/product-sections";
+import { pageMetadata } from "../../lib/seo";
 
 test("Search Console accepts split Vercel service-account variables", () => {
   const env = {
@@ -51,10 +52,17 @@ test("public collection page sizes are bounded and pagination is stable", () => 
   assert.equal(resolvePage("1", 3).shouldRedirect, true);
 });
 
-test("product details expose unique routed content sections", () => {
+test("product details expose unique tabs and stable legacy deep links", () => {
   assert.equal(productSections.length, 7);
   assert.equal(nestedProductSections.length, 6);
   assert.equal(new Set(productSections.map((section) => section.slug)).size, productSections.length);
   assert.equal(productPath({ category: "generator-systems", slug: "example" }), "/products/generator-systems/example");
   assert.equal(productPath({ category: "generator-systems", slug: "example" }, "specifications"), "/products/generator-systems/example/specifications");
+  assert.equal(productSectionHash("overview"), "");
+  assert.equal(productSectionHash("specifications"), "#specifications");
+});
+
+test("indexable pages declare absolute canonical URLs", () => {
+  assert.equal(pageMetadata("Home", "Description", "/").alternates?.canonical, "https://cowinmachine.com/");
+  assert.equal(pageMetadata("Products", "Description", "/products").alternates?.canonical, "https://cowinmachine.com/products");
 });

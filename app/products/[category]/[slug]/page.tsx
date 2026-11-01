@@ -49,12 +49,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { category, slug } = await params;
-  if (category === "category") permanentRedirect("/products");
+  if (category === "category") notFound();
 
   const canonicalRedirect = getProductCanonicalRedirect(category, slug);
   if (canonicalRedirect) permanentRedirect(canonicalRedirect);
 
   const product = getProduct(category, slug);
   if (!product || !getCategory(category)) notFound();
-  return <ProductDetailView product={product} section="overview" />;
+  return <ProductDetailView product={product} />;
 }

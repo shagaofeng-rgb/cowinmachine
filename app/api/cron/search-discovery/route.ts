@@ -84,7 +84,7 @@ type UrlInspectionSummary = NonNullable<SearchDiscoveryRecord["inspections"]>[nu
 
 function priorityInspectionUrls() {
   return [
-    siteConfig.siteUrl,
+    new URL("/", siteConfig.siteUrl).toString(),
     `${siteConfig.siteUrl}/products`,
     ...productCategories.map((category) => `${siteConfig.siteUrl}/products/${category.slug}`),
     `${siteConfig.siteUrl}/news`,

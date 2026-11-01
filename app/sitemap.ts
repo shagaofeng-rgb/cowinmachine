@@ -3,7 +3,7 @@ import { getPublishedBlogArticles, getPublishedNewsArticles } from "@/lib/conten
 import { blogPerPage, getPageCount, newsPerPage, productsPerPage } from "@/lib/pagination";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
-import { nestedProductSections, productPath } from "@/lib/product-sections";
+import { productPath } from "@/lib/product-sections";
 import { productCategories, products } from "@/lib/products";
 import { siteConfig } from "@/lib/site";
 
@@ -16,7 +16,7 @@ function paginatedPaths(basePath: string, itemCount: number, pageSize: number) {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
-    "",
+    "/",
     "/products",
     "/solutions",
     "/solutions/construction-sites",
@@ -48,9 +48,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...productCategories.map((category) => ({ url: `${siteConfig.siteUrl}/products/${category.slug}` })),
     ...[...catalogPagination, ...categoryPagination, ...newsPagination, ...blogPagination].map((path) => ({ url: siteConfig.siteUrl + path })),
     ...indexableProducts.map((product) => ({ url: `${siteConfig.siteUrl}${productPath(product)}` })),
-    ...indexableProducts.flatMap((product) => nestedProductSections.map((section) => ({
-      url: `${siteConfig.siteUrl}${productPath(product, section.slug)}`,
-    }))),
     ...newsArticles.map((article) => ({
       url: `${siteConfig.siteUrl}/news/${article.slug}`,
       lastModified: new Date(article.updatedAt),

@@ -19,7 +19,8 @@ export async function proxy(request: NextRequest) {
     const canonicalUrl = request.nextUrl.clone();
     canonicalUrl.protocol = "https:";
     canonicalUrl.host = canonicalHost;
-    return NextResponse.redirect(canonicalUrl, 308);
+    canonicalUrl.port = "";
+    return NextResponse.redirect(canonicalUrl, 301);
   }
 
   const isProtectedContentRoute =

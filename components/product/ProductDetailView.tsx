@@ -2,10 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/product/ProductJsonLd";
+import { ProductDetailTabs } from "@/components/product/ProductDetailTabs";
 import { TechnicalReviewCard } from "@/components/product/TechnicalReviewCard";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
-import { getProductSection, productPath, productSections, type ProductSectionSlug } from "@/lib/product-sections";
+import { productPath, productSections, type ProductSectionSlug } from "@/lib/product-sections";
 import { getCategory, getProduct, products } from "@/lib/products";
 import { siteConfig } from "@/lib/site";
 import type { Product } from "@/types/product";
@@ -59,20 +60,16 @@ function SectionContent({ product, section }: { product: Product; section: Produ
   </article>)}</div> : <p className="configuration-note">Related equipment will be confirmed during the application review.</p>;
 }
 
-export function ProductDetailView({ product, section }: { product: Product; section: ProductSectionSlug }) {
+export function ProductDetailView({ product }: { product: Product }) {
   const category = getCategory(product.category);
   if (!category) return null;
   const profile = getProductDetailProfile(product);
-  const activeSection = getProductSection(section);
-  const activeIndex = productSections.findIndex((item) => item.slug === section);
-  const previousSection = activeIndex > 0 ? productSections[activeIndex - 1] : null;
-  const nextSection = activeIndex < productSections.length - 1 ? productSections[activeIndex + 1] : null;
   const basePath = productPath(product);
   const crumbs = [
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
     { label: category.name, href: `/products/${category.slug}` },
-    ...(section === "overview" ? [{ label: product.name }] : [{ label: product.name, href: basePath }, { label: activeSection.label }]),
+    { label: product.name },
   ];
 
   return <>
@@ -91,23 +88,10 @@ export function ProductDetailView({ product, section }: { product: Product; sect
       {profile.publicationState === "configuration-review" && <div className="review-notice" role="status"><strong>Request Configuration Review.</strong> {profile.reviewReason} Configuration subject to application review.</div>}
     </div></section>
 
-    <div className="product-section-nav-shell"><div className="content-wrap">
-      <nav className="product-section-nav" aria-label={`${product.name} detail sections`}>
-        {productSections.map((item) => <Link key={item.slug} href={productPath(product, item.slug)} className={item.slug === section ? "product-section-link product-section-link-active" : "product-section-link"} aria-current={item.slug === section ? "page" : undefined}>{item.label}</Link>)}
-      </nav>
-    </div></div>
-
-    <section className="section product-detail-section"><div className="content-wrap quote-layout product-section-layout">
-      <article className="product-section-panel" aria-labelledby="product-section-heading">
-        <p className="eyebrow">Section {activeIndex + 1} of {productSections.length}</p>
-        <h2 id="product-section-heading">{activeSection.heading}</h2>
-        <SectionContent product={product} section={section} />
-        <nav className="product-section-stepper" aria-label="Product detail section navigation">
-          {previousSection ? <Link href={productPath(product, previousSection.slug)}><span>Previous</span><strong>{previousSection.label}</strong></Link> : <span />}
-          {nextSection ? <Link href={productPath(product, nextSection.slug)}><span>Next</span><strong>{nextSection.label}</strong></Link> : <Link href="/request-a-quote"><span>Next step</span><strong>Request a Quote</strong></Link>}
-        </nav>
-      </article>
-      <TechnicalReviewCard productName={product.name} productModel={profile.model} productUrl={basePath} />
-    </div></section>
+    <ProductDetailTabs
+      productName={product.name}
+      panels={productSections.map((item) => ({ slug: item.slug, content: <SectionContent product={product} section={item.slug} /> }))}
+      sidebar={<TechnicalReviewCard productName={product.name} productModel={profile.model} productUrl={basePath} />}
+    />
   </>;
 }

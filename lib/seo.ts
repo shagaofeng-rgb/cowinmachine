@@ -6,7 +6,7 @@ export function pageMetadata(title: string, description: string, path = "/"): Me
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: { canonical: url },
     robots: { index: true, follow: true },
     openGraph: {
       type: "website",

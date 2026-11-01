@@ -22,6 +22,10 @@ export function getProductSection(slug: ProductSectionSlug) {
   return productSections.find((section) => section.slug === slug) ?? productSections[0];
 }
 
+export function productSectionHash(section: ProductSectionSlug) {
+  return section === "overview" ? "" : `#${section}`;
+}
+
 export function productPath(product: Pick<Product, "category" | "slug">, section: ProductSectionSlug = "overview") {
   const basePath = `/products/${product.category}/${product.slug}`;
   return section === "overview" ? basePath : `${basePath}/${section}`;
