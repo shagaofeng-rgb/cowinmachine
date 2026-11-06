@@ -5,6 +5,7 @@ import { listLeads } from "@/lib/admin-operations/analytics";
 import { isAdminDatabaseConfigured } from "@/lib/admin-operations/database";
 import { dateRangeSearchParams, readAdminDateRange } from "@/lib/admin-operations/date-range";
 import { contentAutomationConfig } from "@/lib/content-automation/config";
+import { normalizeInquiryProductUrl } from "@/lib/inquiry-context";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ preset?: string; start?: string; end?: string; page?: string; pageSize?: string; status?: string }> };
@@ -25,7 +26,34 @@ export default async function LeadsPage({ searchParams }: Props) {
     <section className="admin-metric-grid"><AdminMetricCard label="询盘总数" value={leads.total} detail={range.label} /><AdminMetricCard label="当前页" value={leads.page} detail={`共 ${leads.pageCount} 页`} /><AdminMetricCard label="产品已填" value={leads.rows.filter((item) => Boolean(item.productModel)).length} detail="当前页记录" /><AdminMetricCard label="已归属客户" value={leads.rows.filter((item) => Boolean(item.customerId)).length} detail="当前页记录" /></section>
     <section className="admin-panel"><div className="admin-panel-heading"><div><p className="eyebrow">筛选</p><h2>询盘队列</h2></div></div>
       <form className="admin-inline-filter" action="/internal/admin/leads"><input type="hidden" name="preset" value={range.preset} /><input type="hidden" name="start" value={dateParams.start} /><input type="hidden" name="end" value={dateParams.end} /><label>状态<select name="status" defaultValue={values.status ?? ""}><option value="">全部状态</option>{Object.entries(labels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label>每页条数<select name="pageSize" defaultValue={String(pageSize)}><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label><button className="button button-outline" type="submit">应用筛选</button></form>
-      <div className="admin-table-wrap"><table><thead><tr><th>时间</th><th>公司 / 联系人</th><th>设备需求</th><th>国家</th><th>来源</th><th>状态</th><th>客户路径</th></tr></thead><tbody>{leads.rows.map((lead) => <tr key={lead.id}><td>{date(lead.createdAt)}</td><td><strong>{lead.company}</strong><span>{lead.name} · {lead.email}</span></td><td>{lead.productModel || lead.category}<span>{lead.application ?? "—"}</span></td><td>{lead.country}</td><td>{lead.sourceChannel ?? "直接访问 / 未知"}</td><td><span className="admin-status">{labels[lead.status] ?? lead.status}</span></td><td>{lead.customerId ? <Link href={`/internal/admin/customers/${lead.customerId}?${rangeQuery}`}>查看全部路径</Link> : lead.visitorId ? <Link href={`/internal/admin/visitors/${lead.visitorId}?${rangeQuery}`}>查看访客路径</Link> : "未关联"}</td></tr>)}{!leads.rows.length ? <tr><td colSpan={7} className="admin-empty-cell">当前筛选条件下没有询盘。</td></tr> : null}</tbody></table></div>
+      <div className="admin-table-wrap"><table>
+        <thead><tr><th>时间</th><th>公司 / 联系人</th><th>设备需求</th><th>国家</th><th>来源</th><th>状态</th><th>客户路径</th></tr></thead>
+        <tbody>{leads.rows.map((lead) => {
+          const productUrl = normalizeInquiryProductUrl(lead.productUrl ?? "");
+          return <tr key={lead.id}>
+            <td>{date(lead.createdAt)}</td>
+            <td><strong>{lead.company}</strong><span>{lead.name} · {lead.email}</span></td>
+            <td>
+              {lead.productModel && <strong>{lead.productModel}</strong>}
+              <span>分类：{lead.category}</span>
+              {lead.application && <span>{lead.application}</span>}
+            </td>
+            <td>{lead.country}</td>
+            <td>
+              {lead.sourceChannel ?? "直接访问 / 未知"}
+              <span style={{ overflowWrap: "anywhere" }}>产品来源：{productUrl
+                ? <a href={productUrl} target="_blank" rel="noreferrer">{productUrl}</a>
+                : "未记录"}</span>
+            </td>
+            <td><span className="admin-status">{labels[lead.status] ?? lead.status}</span></td>
+            <td>{lead.customerId
+              ? <Link href={`/internal/admin/customers/${lead.customerId}?${rangeQuery}`}>查看全部路径</Link>
+              : lead.visitorId
+                ? <Link href={`/internal/admin/visitors/${lead.visitorId}?${rangeQuery}`}>查看访客路径</Link>
+                : "未关联"}</td>
+          </tr>;
+        })}{!leads.rows.length && <tr><td colSpan={7} className="admin-empty-cell">当前筛选条件下没有询盘。</td></tr>}</tbody>
+      </table></div>
       <AdminPagination pathname="/internal/admin/leads" range={range} page={leads.page} pageCount={leads.pageCount} pageSize={leads.pageSize} total={leads.total} preserve={{ status: values.status }} />
     </section>
   </AdminShell>;

@@ -243,11 +243,29 @@ export async function listLeads(range: AdminDateRange, page = 1, pageSize = 25, 
   const predicate = status && filters.length === 3 ? " AND status = $3" : "";
   const [countRows, rows] = await Promise.all([
     sql.query(`SELECT COUNT(*)::int AS total FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate}`, filters),
-    sql.query(`SELECT id,created_at,status,name,company,country,email,whatsapp,category,product_model,application,quantity,source_channel,landing_path,customer_id,visitor_id FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate} ORDER BY created_at DESC LIMIT $${filters.length + 1} OFFSET $${filters.length + 2}`, [...filters, safeSize, (safePage - 1) * safeSize]),
+    sql.query(`SELECT id,created_at,status,name,company,country,email,whatsapp,category,product_model,product_url,application,quantity,source_channel,landing_path,customer_id,visitor_id FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate} ORDER BY created_at DESC LIMIT $${filters.length + 1} OFFSET $${filters.length + 2}`, [...filters, safeSize, (safePage - 1) * safeSize]),
   ]);
   const total = Number((countRows[0] as Record<string, unknown> | undefined)?.total ?? 0);
   return {
-    rows: rows.map((row) => ({ id: String(row.id), createdAt: asIso(row.created_at), status: String(row.status) as LeadStatus, name: String(row.name), company: String(row.company), country: String(row.country), email: String(row.email), whatsapp: row.whatsapp ? String(row.whatsapp) : null, category: String(row.category), productModel: row.product_model ? String(row.product_model) : null, application: row.application ? String(row.application) : null, quantity: row.quantity ? String(row.quantity) : null, sourceChannel: row.source_channel ? String(row.source_channel) : null, landingPath: row.landing_path ? String(row.landing_path) : null, customerId: row.customer_id ? String(row.customer_id) : null, visitorId: row.visitor_id ? String(row.visitor_id) : null })),
+    rows: rows.map((row) => ({
+      id: String(row.id),
+      createdAt: asIso(row.created_at),
+      status: String(row.status) as LeadStatus,
+      name: String(row.name),
+      company: String(row.company),
+      country: String(row.country),
+      email: String(row.email),
+      whatsapp: row.whatsapp ? String(row.whatsapp) : null,
+      category: String(row.category),
+      productModel: row.product_model ? String(row.product_model) : null,
+      productUrl: row.product_url ? String(row.product_url) : null,
+      application: row.application ? String(row.application) : null,
+      quantity: row.quantity ? String(row.quantity) : null,
+      sourceChannel: row.source_channel ? String(row.source_channel) : null,
+      landingPath: row.landing_path ? String(row.landing_path) : null,
+      customerId: row.customer_id ? String(row.customer_id) : null,
+      visitorId: row.visitor_id ? String(row.visitor_id) : null,
+    })),
     total, page: safePage, pageSize: safeSize, pageCount: Math.max(1, Math.ceil(total / safeSize)),
   };
 }

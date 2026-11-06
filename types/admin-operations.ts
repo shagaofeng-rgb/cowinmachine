@@ -61,6 +61,7 @@ export type AdminLead = {
   whatsapp: string | null;
   category: string;
   productModel: string | null;
+  productUrl: string | null;
   application: string | null;
   quantity: string | null;
   sourceChannel: string | null;
