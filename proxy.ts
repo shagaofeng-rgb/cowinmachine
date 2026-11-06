@@ -1,10 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { hasAdminAccess, isAdminEnabled } from "@/lib/admin-operations/auth";
 
 const canonicalHost = "cowinmachine.com";
-
-function adminEnabled() {
-  return process.env.CONTENT_ADMIN_ENABLED === "true" && Boolean(process.env.CONTENT_ADMIN_USER && process.env.CONTENT_ADMIN_PASSWORD);
-}
 
 export async function proxy(request: NextRequest) {
   const isRootWebhookPost = request.method === "POST" && request.nextUrl.pathname === "/";
@@ -29,14 +26,12 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/api/content-automation/manual");
 
   if (!isProtectedContentRoute) return NextResponse.next();
-  if (!adminEnabled()) return new NextResponse(null, { status: 404 });
-
-  const expected = "Basic " + btoa(process.env.CONTENT_ADMIN_USER + ":" + process.env.CONTENT_ADMIN_PASSWORD);
-  if (request.headers.get("authorization") === expected) return NextResponse.next();
+  if (!isAdminEnabled()) return new NextResponse(null, { status: 404 });
+  if (hasAdminAccess(request.headers.get("authorization"))) return NextResponse.next();
 
   return new NextResponse("Authentication required.", {
     status: 401,
-    headers: { "WWW-Authenticate": "Basic realm=content-operations" },
+    headers: { "WWW-Authenticate": 'Basic realm="content-operations", charset="UTF-8"', "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow" },
   });
 }
 

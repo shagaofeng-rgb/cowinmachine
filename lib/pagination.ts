@@ -13,9 +13,9 @@ export function getPageCount(itemCount: number, pageSize = productsPerPage) {
   return Math.max(1, Math.ceil(itemCount / pageSize));
 }
 
-export function resolvePage(value: string | undefined, pageCount: number): PageResolution {
+export function resolvePage(value: string | string[] | undefined, pageCount: number): PageResolution {
   if (value === undefined) return { page: 1, valid: true, shouldRedirect: false };
-  if (!/^\d+$/.test(value)) return { page: 1, valid: false, shouldRedirect: false };
+  if (typeof value !== "string" || !/^\d+$/.test(value)) return { page: 1, valid: false, shouldRedirect: false };
 
   const parsed = Number(value);
   if (!Number.isSafeInteger(parsed) || parsed < 1 || parsed > pageCount) {

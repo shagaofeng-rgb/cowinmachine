@@ -1,20 +1,16 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ContentArticlePage } from "@/components/content-automation/ContentArticlePage";
 import {
   getArticleChannel,
-  getPublishedArticles,
+  getPublishedArticle,
   getPublishedNewsArticles,
 } from "@/lib/content-automation/storage";
 
 export const dynamic = "force-dynamic";
 
-async function getArticle(slug: string) {
-  return (await getPublishedArticles()).find((article) => article.slug === slug);
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const article = await getArticle((await params).slug);
+  const article = await getPublishedArticle((await params).slug);
   if (!article) return { robots: { index: false, follow: false } };
   const isBlog = getArticleChannel(article) === "blog";
   const url = (isBlog ? "/blog/" : "/news/") + article.slug;
@@ -36,9 +32,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function NewsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const article = await getArticle((await params).slug);
+  const article = await getPublishedArticle((await params).slug);
   if (!article) notFound();
-  if (getArticleChannel(article) === "blog") redirect("/blog/" + article.slug);
+  if (getArticleChannel(article) === "blog") permanentRedirect("/blog/" + article.slug);
   const newsArticles = await getPublishedNewsArticles();
   const currentIndex = newsArticles.findIndex((item) => item.id === article.id);
   const relatedArticles = [newsArticles[currentIndex - 1], newsArticles[currentIndex + 1]]

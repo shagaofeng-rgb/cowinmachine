@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SiteLogo } from "@/components/layout/SiteLogo";
+import { AnalyticsSettingsButton } from "@/components/analytics/AnalyticsTracker";
 import { productCategories } from "@/lib/products";
 import { siteConfig, whatsappHref } from "@/lib/site";
 
@@ -10,8 +11,8 @@ export function Footer() {
       <div><p className="footer-heading">Company</p><Link href="/about">About</Link><Link href="/factory-quality">Quality Documentation</Link><Link href="/cases">Project Reviews</Link></div>
       <div><p className="footer-heading">Products</p>{productCategories.map((item) => <Link key={item.slug} href={`/products/${item.slug}`}>{item.name}</Link>)}</div>
       <div><p className="footer-heading">News &amp; Insights</p><Link href="/news">News</Link><Link href="/blog">Blog</Link><Link href="/contact">Contact</Link></div>
-      <div><p className="footer-heading">Contact</p><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a><a href={whatsappHref}>WhatsApp: {siteConfig.phone}</a><a href={siteConfig.mapUrl} target="_blank" rel="noreferrer" aria-label="Open COWIN MACHINE address in Google Maps">{siteConfig.address.line1}<br />{siteConfig.address.line2}<br />{siteConfig.address.city}, {siteConfig.address.region}, {siteConfig.address.country}</a></div>
+      <div><p className="footer-heading">Contact</p><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a><a href={whatsappHref}>WhatsApp: {siteConfig.phone}</a><a href={siteConfig.mapUrl} target="_blank" rel="noreferrer" title="Open in Google Maps">{siteConfig.address.line1}<br />{siteConfig.address.line2}<br />{siteConfig.address.city}, {siteConfig.address.region}, {siteConfig.address.country}</a></div>
     </div>
-    <div className="footer-bottom"><span>© {new Date().getFullYear()} {siteConfig.brandName}</span><span>Industrial equipment application review.</span></div>
+    <div className="footer-bottom"><span>© {new Date().getFullYear()} {siteConfig.brandName}</span><div className="footer-privacy"><Link href="/privacy">Privacy notice</Link><AnalyticsSettingsButton /></div></div>
   </footer>;
 }

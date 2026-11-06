@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
+const contentSecurityPolicy = "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; frame-src https://www.google.com; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.public.blob.vercel-storage.com; font-src 'self' data:; connect-src 'self'; manifest-src 'self'";
+
 const securityHeaders = [
-  { key: "Content-Security-Policy", value: "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; frame-src https://www.google.com; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.public.blob.vercel-storage.com; font-src 'self' data:; connect-src 'self'; manifest-src 'self'; upgrade-insecure-requests" },
+  { key: "Content-Security-Policy", value: contentSecurityPolicy + "; upgrade-insecure-requests" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" },
   { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
@@ -38,7 +40,16 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      { source: "/(.*)", has: [{ type: "host", value: "(?:localhost|127\\.0\\.0\\.1)" }],
+        headers: [{ key: "Content-Security-Policy", value: contentSecurityPolicy }] },
+      { source: "/internal/:path*", headers: [
+        { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        { key: "Cache-Control", value: "private, no-store" },
+      ] },
+      { source: "/request-a-quote", headers: [{ key: "Referrer-Policy", value: "no-referrer" }] },
+    ];
   },
 };
 

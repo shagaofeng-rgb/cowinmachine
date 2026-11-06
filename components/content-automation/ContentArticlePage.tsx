@@ -7,10 +7,11 @@ import { InteriorBreadcrumbs } from "@/components/interior/Interior";
 import { normalizeInquiryProductUrl } from "@/lib/inquiry-context";
 import { whatsappHref } from "@/lib/site";
 import type { ContentArticle } from "@/types/content-automation";
+import type { PublishedArticleCard } from "@/lib/content-automation/storage";
 
 type ContentArticlePageProps = {
   article: ContentArticle;
-  relatedArticles?: ContentArticle[];
+  relatedArticles?: PublishedArticleCard[];
   sectionName: "News" | "Blog";
   sectionPath: "/news" | "/blog";
 };

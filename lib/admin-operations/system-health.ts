@@ -7,23 +7,22 @@ import { adminSql } from "@/lib/admin-operations/database";
 export async function runDatabaseWriteHealthCheck() {
   const marker = `CODEX-AUDIT-${randomUUID()}`;
   const email = `${marker.toLowerCase()}@example.invalid`;
-  let leadId: string | null = null;
+  const leadId = randomUUID();
   const sql = adminSql();
 
   await ensureInquiryRateLimitTable();
 
   try {
-    leadId = await createLead({
+    const inquiry = await createLead({
+      submissionId: leadId,
       name: marker,
       company: marker,
       country: "System health check",
       email,
       category: "system-health-check",
       message: "Marked transactional health-check record. This record is deleted before the check completes.",
-      website: "",
-      sourceChannel: "system-health-check",
-      landingPath: "/api/cron/system-health",
     });
+    if (!inquiry || inquiry.replayed) throw new Error("The marked health check did not create a new inquiry.");
 
     const rows = await sql.query(
       `SELECT COUNT(*)::int AS activity_count
@@ -35,8 +34,7 @@ export async function runDatabaseWriteHealthCheck() {
       throw new Error("The inquiry activity record was not persisted.");
     }
   } finally {
-    if (leadId) await sql.query(`DELETE FROM b2b_leads WHERE id = $1`, [leadId]);
-    await sql.query(`DELETE FROM b2b_leads WHERE email = $1 OR name = $2`, [email, marker]);
+    await sql.query(`DELETE FROM b2b_leads WHERE id = $1 AND email = $2 AND name = $3`, [leadId, email, marker]);
     await sql.query(`DELETE FROM b2b_customers WHERE email_normalized = $1 AND NOT EXISTS (SELECT 1 FROM b2b_leads WHERE customer_id = b2b_customers.id)`, [email]);
   }
 
@@ -51,14 +49,12 @@ export async function runDatabaseWriteHealthCheck() {
   if (Number(remainingCustomers[0]?.remaining ?? 0) !== 0) {
     throw new Error("The marked health-check customer was not cleaned up.");
   }
-  if (leadId) {
-    const remainingActivities = await sql.query(
-      `SELECT COUNT(*)::int AS remaining FROM b2b_lead_activities WHERE lead_id = $1`,
-      [leadId],
-    );
-    if (Number(remainingActivities[0]?.remaining ?? 0) !== 0) {
-      throw new Error("The marked inquiry activity was not cleaned up.");
-    }
+  const remainingActivities = await sql.query(
+    `SELECT COUNT(*)::int AS remaining FROM b2b_lead_activities WHERE lead_id = $1`,
+    [leadId],
+  );
+  if (Number(remainingActivities[0]?.remaining ?? 0) !== 0) {
+    throw new Error("The marked inquiry activity was not cleaned up.");
   }
 
   return { databaseWrite: "passed", inquiryActivity: "passed", cleanup: "passed", rateLimitSchema: "ready" } as const;

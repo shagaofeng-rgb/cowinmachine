@@ -34,8 +34,8 @@ export default function HomePage() {
       <Image className="home-selection-hero-image" src="/images/generated/home-technical-selection-hero.png" alt="Unbranded drilling rig operating at a quarry worksite" fill priority sizes="100vw" />
       <div className="home-selection-hero-inner content-wrap">
         <div className="home-selection-hero-copy">
-          <p className="eyebrow">Technical selection desk</p>
-          <h1>Start with the conditions. Find the right equipment.</h1>
+          <p className="eyebrow">COWIN MACHINE</p>
+          <h1>Industrial equipment for your application</h1>
           <p>Tell COWIN MACHINE where and how the equipment will be used. We will use the information you provide to begin a focused configuration discussion.</p>
           <HomeTechnicalSelector />
         </div>
@@ -102,7 +102,7 @@ export default function HomePage() {
     <section className="section section-alt home-news-callout">
       <div className="content-wrap home-news-callout-grid">
         <div><p className="eyebrow">News &amp; Blog</p><h2>Industry context for equipment selection.</h2><p>Explore published industry news and equipment guidance. Product configuration remains subject to application review.</p></div>
-        <Link className="button button-outline" href="/news">Visit News &amp; Blog <span aria-hidden="true">→</span></Link>
+        <div className="home-final-cta-actions"><Link className="button button-outline" href="/news">Industry news</Link><Link className="button button-outline" href="/blog">Equipment guides</Link></div>
       </div>
     </section>
 

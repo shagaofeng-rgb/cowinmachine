@@ -6,7 +6,7 @@ import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/product/ProductJso
 import { ProductDetailTabs } from "@/components/product/ProductDetailTabs";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { TechnicalReviewCard } from "@/components/product/TechnicalReviewCard";
-import { publishedSpecifications, quickSpecifications } from "@/lib/catalog-presentation";
+import { publishedSpecifications, quickSpecifications, specificationEquivalent, trimRepeatedReviewNote } from "@/lib/catalog-presentation";
 import { productQuoteHref } from "@/lib/inquiry-context";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
@@ -42,10 +42,10 @@ function SectionContent({ product, profile, section, quoteHref }: {
   quoteHref: string;
 }) {
   if (section === "overview") return <>
-    <p className="cw-detail-lead">{profile.content.overview}</p>
+    <p className="cw-detail-lead">{trimRepeatedReviewNote(profile.content.overview)}</p>
     <div className="cw-panel-columns">
       <ListBlock title="Key benefits" items={profile.content.benefits} />
-      <section className="cw-detail-block"><h3>How it works</h3><p>{profile.content.workingPrinciple}</p></section>
+      <section className="cw-detail-block"><h3>How it works</h3><p>{trimRepeatedReviewNote(profile.content.workingPrinciple)}</p></section>
     </div>
   </>;
 
@@ -60,7 +60,10 @@ function SectionContent({ product, profile, section, quoteHref }: {
       {specifications.length ? (
         <div className="cw-spec-table" role="region" aria-label="Catalog specifications" tabIndex={0}>
           <table><thead><tr><th scope="col">Parameter</th><th scope="col">Catalog value</th></tr></thead>
-            <tbody>{specifications.map(({ label, value }) => <tr key={label}><th scope="row">{label}</th><td>{value}</td></tr>)}</tbody>
+            <tbody>{specifications.map(({ label, value }) => {
+              const equivalent = specificationEquivalent(label, value);
+              return <tr key={label}><th scope="row">{label}</th><td>{value}{equivalent && <small className="cw-spec-equivalent">{equivalent}</small>}</td></tr>;
+            })}</tbody>
           </table>
         </div>
       ) : <p className="cw-detail-lead">Verified model-specific values are not published for this record.</p>}

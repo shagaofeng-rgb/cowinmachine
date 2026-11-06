@@ -3,10 +3,10 @@ import { ArrowRight, BookOpenText, Newspaper } from "@phosphor-icons/react/ssr";
 import { EditorialDate, EditorialMedia } from "@/components/content-automation/EditorialMedia";
 import { InteriorIntro } from "@/components/interior/Interior";
 import { Pagination } from "@/components/Pagination";
-import type { ContentArticle } from "@/types/content-automation";
+import type { PublishedArticleCard } from "@/lib/content-automation/storage";
 
 type ContentIndexProps = {
-  articles: ContentArticle[];
+  articles: PublishedArticleCard[];
   totalItems: number;
   currentPage: number;
   totalPages: number;
@@ -20,7 +20,7 @@ type ContentIndexProps = {
   emptyDescription: string;
 };
 
-function ArticleMeta({ article }: { article: ContentArticle }) {
+function ArticleMeta({ article }: { article: PublishedArticleCard }) {
   return (
     <div className="cw-editorial-meta">
       {article.industry && <span>{article.industry}</span>}

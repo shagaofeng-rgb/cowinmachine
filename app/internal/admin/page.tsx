@@ -1,19 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AdminDateFilters, AdminMetricCard, AdminShell } from "@/components/admin/AdminShell";
+import { AdminDateFilters, AdminMetricCard, AdminPagination, AdminShell } from "@/components/admin/AdminShell";
 import { dateRangeSearchParams, readAdminDateRange } from "@/lib/admin-operations/date-range";
 import { getDashboardData, listLeads } from "@/lib/admin-operations/analytics";
 import { isAdminDatabaseConfigured } from "@/lib/admin-operations/database";
 import { contentAutomationConfig } from "@/lib/content-automation/config";
+import { leadStatusLabels } from "@/types/admin-operations";
 
 export const dynamic = "force-dynamic";
 
 type Props = { searchParams: Promise<{ preset?: string; start?: string; end?: string; page?: string; pageSize?: string; status?: string }> };
-
-const leadStatusLabels: Record<string, string> = {
-  new: "新询盘", qualified: "已初筛", "technical-review": "技术评审", "quotation-sent": "已报价",
-  negotiation: "商务洽谈", won: "已成交", lost: "已流失", nurture: "持续跟进",
-};
 
 function query(range: ReturnType<typeof readAdminDateRange>, values: Record<string, string | number | undefined>) {
   const params = new URLSearchParams(dateRangeSearchParams(range));
@@ -47,10 +43,10 @@ export default async function AdminOverviewPage({ searchParams }: Props) {
     <section className="admin-metric-grid" aria-label="关键运营指标">
       <AdminMetricCard label="独立访客" value={dashboard.visitors} detail="日期范围内的匿名访客" />
       <AdminMetricCard label="访问会话" value={dashboard.visits} detail="页面访问会话" />
-      <AdminMetricCard label="产品 / 内容浏览" value={dashboard.pageViews} detail="已记录的页面互动" />
-      <AdminMetricCard label="新增询盘" value={leads.total} detail="已保存的 RFQ 记录" />
+      <AdminMetricCard label="页面浏览" value={dashboard.pageViews} detail="已同意的访客" />
+      <AdminMetricCard label="新增询盘" value={dashboard.inquiries} detail="全部已入库记录" />
       <AdminMetricCard label="报价按钮点击" value={dashboard.quoteClicks} detail="采购意向信号" />
-      <AdminMetricCard label="WhatsApp 点击" value={dashboard.whatsappClicks} detail="采购意向信号" />
+      <AdminMetricCard label="开始填写" value={dashboard.inquiryStarts} detail="已同意统计的表单互动" />
     </section>
 
     <section className="admin-grid-two">
@@ -71,10 +67,10 @@ export default async function AdminOverviewPage({ searchParams }: Props) {
     <section className="admin-panel admin-leads-panel">
       <div className="admin-panel-heading"><div><p className="eyebrow">销售运营</p><h2>询盘与 RFQ 队列</h2></div><Link href="/internal/admin/leads">查看全部询盘</Link></div>
       <form className="admin-inline-filter"><input type="hidden" name="preset" value={range.preset} /><input type="hidden" name="start" value={dateParams.start} /><input type="hidden" name="end" value={dateParams.end} /><label>状态<select name="status" defaultValue={status ?? ""}><option value="">全部状态</option><option value="new">新询盘</option><option value="qualified">已初筛</option><option value="technical-review">技术评审</option><option value="quotation-sent">已报价</option><option value="negotiation">商务洽谈</option><option value="won">已成交</option><option value="lost">已流失</option><option value="nurture">持续跟进</option></select></label><label>每页条数<select name="pageSize" defaultValue={String(pageSize)}><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label><button className="button button-outline" type="submit">筛选</button></form>
-      <div className="admin-table-wrap"><table><thead><tr><th>收到时间</th><th>公司 / 联系人</th><th>市场</th><th>设备</th><th>应用</th><th>来源</th><th>状态</th></tr></thead><tbody>
-        {leads.rows.length ? leads.rows.map((lead) => <tr key={lead.id}><td>{new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" }).format(new Date(lead.createdAt))}</td><td><strong>{lead.company}</strong><span>{lead.name}</span></td><td>{lead.country}</td><td>{lead.productModel || lead.category}</td><td>{lead.application || "—"}</td><td>{lead.sourceChannel || "直接访问 / 未知"}</td><td><span className="admin-status">{leadStatusLabels[lead.status] ?? lead.status}</span></td></tr>) : <tr><td colSpan={7} className="admin-empty-cell">此日期范围和筛选条件下没有询盘。</td></tr>}
+      <div className="admin-table-wrap" tabIndex={0} role="region" aria-label="近期询盘"><table><thead><tr><th>收到时间</th><th>公司 / 联系人</th><th>市场</th><th>设备</th><th>应用</th><th>来源</th><th>状态</th></tr></thead><tbody>
+        {leads.rows.length ? leads.rows.map((lead) => <tr key={lead.id}><td>{new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeZone: "Asia/Shanghai" }).format(new Date(lead.createdAt))}</td><td><Link href={`/internal/admin/leads/${lead.id}?${query(range, {})}`}>{lead.company}</Link><span>{lead.name}</span></td><td>{lead.country}</td><td>{lead.productModel || lead.category}</td><td>{lead.application || "—"}</td><td>{lead.sourceChannel || "未记录"}</td><td><span className="admin-status">{leadStatusLabels[lead.status] ?? lead.status}</span></td></tr>) : <tr><td colSpan={7} className="admin-empty-cell">此日期范围和筛选条件下没有询盘。</td></tr>}
       </tbody></table></div>
-      <nav className="admin-pagination" aria-label="询盘分页"><span>{leads.total ? `${(leads.page - 1) * leads.pageSize + 1}–${Math.min(leads.page * leads.pageSize, leads.total)} / ${leads.total}` : "0 条记录"}</span><div><Link className={leads.page <= 1 ? "admin-page-disabled" : ""} aria-disabled={leads.page <= 1} href={`/internal/admin?${query(range, { page: leads.page - 1, pageSize, status })}`}>上一页</Link><span>第 {leads.page} / {leads.pageCount} 页</span><Link className={leads.page >= leads.pageCount ? "admin-page-disabled" : ""} aria-disabled={leads.page >= leads.pageCount} href={`/internal/admin?${query(range, { page: leads.page + 1, pageSize, status })}`}>下一页</Link></div></nav>
+      <AdminPagination pathname="/internal/admin" range={range} page={leads.page} pageCount={leads.pageCount} pageSize={leads.pageSize} total={leads.total} preserve={{ status }} />
     </section>
   </AdminShell>;
 }

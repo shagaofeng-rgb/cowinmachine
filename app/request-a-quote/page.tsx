@@ -2,8 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Check, ClipboardText, EnvelopeSimple, WhatsappLogo } from "@phosphor-icons/react/ssr";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 import { InteriorFigure, InteriorIntro } from "@/components/interior/Interior";
-import { normalizeInquiryProductUrl } from "@/lib/inquiry-context";
-import { getCategory } from "@/lib/products";
+import { resolveInquirySelection } from "@/lib/inquiry-context";
 import { pageMetadata } from "@/lib/seo";
 import { mailtoHref, whatsappHref } from "@/lib/site";
 
@@ -23,11 +22,8 @@ export default async function QuotePage({ searchParams }: QuotePageProps) {
   const value = (key: string, max = 600) => typeof query[key] === "string" ? query[key].trim().slice(0, max) : "";
   const requestType = value("request");
   const request = Object.hasOwn(requestTypes, requestType) ? requestTypes[requestType] : undefined;
-  const productUrl = normalizeInquiryProductUrl(value("productUrl"));
-  const productName = value("product", 180);
-  const productModel = value("productModel", 180);
+  const { product, productUrl, category, model: productModel } = resolveInquirySelection(value("productUrl"), value("category", 100));
   const productPath = productUrl ? new URL(productUrl).pathname : "";
-  const category = getCategory(value("category", 100)) ?? getCategory(productPath.split("/")[2]);
 
   return (
     <div className="cw-interior">
@@ -36,22 +32,21 @@ export default async function QuotePage({ searchParams }: QuotePageProps) {
       <section className="cw-section"><div className="cw-wrap cw-quote-layout">
         <section className="cw-form-panel" aria-labelledby="quote-heading">
           <h2 id="quote-heading">Your equipment inquiry</h2>
-          {(productName || productModel || productPath) && <div className="cw-quote-context">
+          {product && <div className="cw-quote-context">
             <ClipboardText size={22} aria-hidden="true" />
             <div>
               <p>Selected equipment</p>
-              {productPath ? <Link className="cw-link" href={productPath}>{productName || productModel || "View equipment"}</Link> : <strong>{productName || productModel}</strong>}
-              {productModel && productName && productModel !== productName && <p>Model: {productModel}</p>}
+              <Link className="cw-link" href={productPath}>{product.name}</Link>
+              {productModel && <p>Model: {productModel}</p>}
+              <Link className="cw-link" href="/products">Choose different equipment</Link>
             </div>
           </div>}
-          <InquiryForm productModel={productModel || productName} productUrl={productUrl} defaults={{
+          <InquiryForm productModel={productModel} productUrl={productUrl} fixedCategory={product && category ? category : undefined} defaults={{
             category: category?.slug ?? "",
             country: value("country", 100),
-            email: value("email", 180),
             application: value("application"),
             material: value("material", 300),
             quantity: value("quantity", 100),
-            whatsapp: value("whatsapp", 100),
             message: value("requirements", 6000) || request?.message || "",
           }} />
         </section>

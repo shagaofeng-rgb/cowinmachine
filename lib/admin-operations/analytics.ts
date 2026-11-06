@@ -2,6 +2,7 @@ import "server-only";
 
 import { createHash, randomUUID } from "node:crypto";
 import { adminSql } from "@/lib/admin-operations/database";
+import { leadStatusLabels } from "@/types/admin-operations";
 import type { AdminDateRange, AdminLead, AnalyticsEventPayload, CustomerRecord, DeviceType, JourneyEvent, LeadStatus, PaginatedResult, VisitorRecord } from "@/types/admin-operations";
 
 const allowedEvents = new Set(["page_view", "product_view", "category_view", "news_view", "quote_click", "whatsapp_click", "email_click", "inquiry_started", "inquiry_submitted", "filter_used"]);
@@ -43,9 +44,9 @@ function browserName(userAgent: string) {
 
 function operatingSystem(userAgent: string) {
   if (/windows/i.test(userAgent)) return "Windows";
-  if (/mac os|macintosh/i.test(userAgent)) return "macOS";
   if (/android/i.test(userAgent)) return "Android";
   if (/iphone|ipad|ipod/i.test(userAgent)) return "iOS";
+  if (/mac os|macintosh/i.test(userAgent)) return "macOS";
   if (/linux/i.test(userAgent)) return "Linux";
   return "Other";
 }
@@ -55,9 +56,9 @@ function sourceChannel(referrer: string | undefined, utm?: Record<string, string
   if (medium) return medium.includes("email") ? "email" : medium.includes("paid") || medium.includes("cpc") ? "paid" : medium;
   const referrerHost = host(referrer);
   if (!referrerHost || referrerHost === "cowinmachine.com" || referrerHost === "www.cowinmachine.com") return "direct";
+  if (/chatgpt|perplexity|gemini|copilot/.test(referrerHost)) return "ai-referral";
   if (/google|bing|yahoo|duckduckgo|baidu|yandex/.test(referrerHost)) return "organic-search";
   if (/linkedin|facebook|instagram|youtube|x\.com|twitter/.test(referrerHost)) return "social";
-  if (/chatgpt|perplexity|gemini|copilot/.test(referrerHost)) return "ai-referral";
   return "referral";
 }
 
@@ -78,7 +79,10 @@ export async function ensureInquiryRateLimitTable() {
       attempts integer NOT NULL DEFAULT 1,
       PRIMARY KEY (fingerprint, bucket_start)
     )`,
-  );
+  ).catch((error) => {
+    inquiryRateLimitTable = null;
+    throw error;
+  });
   await inquiryRateLimitTable;
 }
 
@@ -112,26 +116,14 @@ function safePageSize(value: number) {
   return [10, 25, 50, 100].includes(value) ? value : 25;
 }
 
+function safePageNumber(value: number) {
+  return Number.isSafeInteger(value) ? Math.min(10000, Math.max(1, value)) : 1;
+}
+
 function normalEmail(value: string) { return value.trim().toLowerCase(); }
 function normalPhone(value: string | undefined) {
   const result = (value ?? "").replace(/[^0-9+]/g, "");
   return result.length >= 6 ? result : null;
-}
-
-async function upsertCustomer(input: { name: string; company: string; country: string; email: string; whatsapp?: string; visitorId?: string; sourceChannel?: string }) {
-  const sql = adminSql();
-  const id = randomUUID();
-  const rows = await sql.query(
-    `INSERT INTO b2b_customers (id, first_seen_at, last_seen_at, name, company, country, email_normalized, whatsapp_normalized, source_channel)
-     VALUES ($1, now(), now(), $2, $3, $4, $5, $6, $7)
-     ON CONFLICT (email_normalized) WHERE email_normalized IS NOT NULL
-     DO UPDATE SET last_seen_at = now(), name = EXCLUDED.name, company = EXCLUDED.company, country = EXCLUDED.country, whatsapp_normalized = COALESCE(EXCLUDED.whatsapp_normalized, b2b_customers.whatsapp_normalized), source_channel = COALESCE(b2b_customers.source_channel, EXCLUDED.source_channel)
-     RETURNING id`,
-    [id, input.name, input.company, input.country, normalEmail(input.email), normalPhone(input.whatsapp), input.sourceChannel ?? null],
-  );
-  const customerId = String(rows[0]?.id ?? id);
-  if (safeIdentifier.test(input.visitorId ?? "")) await sql.query("UPDATE analytics_visitors SET customer_id = $2 WHERE visitor_id = $1", [input.visitorId, customerId]);
-  return customerId;
 }
 
 export async function recordAnalyticsEvent(payload: AnalyticsEventPayload, request: Request) {
@@ -149,24 +141,26 @@ export async function recordAnalyticsEvent(payload: AnalyticsEventPayload, reque
   const path = safePath(payload.pagePath);
   const metadata = Object.fromEntries(Object.entries(payload.metadata ?? {}).filter(([key, value]) => /^[a-zA-Z0-9_-]{1,50}$/.test(key) && ["string", "number", "boolean"].includes(typeof value)).slice(0, 20));
 
-  await sql.query(
+  await sql.transaction((tx) => [
+    tx.query(
     `INSERT INTO analytics_visitors (visitor_id, first_seen_at, last_seen_at, country_code, region_code, preferred_language, first_channel, device_type, ip_hash)
      VALUES ($1, now(), now(), $2, $3, $4, $5, $6, $7)
      ON CONFLICT (visitor_id) DO UPDATE SET last_seen_at = now(), country_code = COALESCE(EXCLUDED.country_code, analytics_visitors.country_code), region_code = COALESCE(EXCLUDED.region_code, analytics_visitors.region_code), preferred_language = COALESCE(NULLIF(EXCLUDED.preferred_language, ''), analytics_visitors.preferred_language), device_type = EXCLUDED.device_type, ip_hash = COALESCE(EXCLUDED.ip_hash, analytics_visitors.ip_hash)`,
     [payload.visitorId, country, region, language || null, channel, device, ipHash(request)],
-  );
-  await sql.query(
+    ),
+    tx.query(
     `INSERT INTO analytics_sessions (session_id, visitor_id, started_at, last_seen_at, channel, referrer_host, landing_path, utm, device_type, browser_name, os_name)
      VALUES ($1, $2, now(), now(), $3, $4, $5, $6::jsonb, $7, $8, $9)
      ON CONFLICT (session_id) DO UPDATE SET last_seen_at = now()`,
     [payload.sessionId, payload.visitorId, channel, referrer, path, JSON.stringify(payload.utm ?? {}), device, browserName(userAgent), operatingSystem(userAgent)],
-  );
-  await sql.query(
+    ),
+    tx.query(
     `INSERT INTO analytics_events (event_id, visitor_id, session_id, event_name, page_path, page_title, product_category, product_slug, metadata)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb)
      ON CONFLICT (event_id) DO NOTHING`,
     [payload.eventId, payload.visitorId, payload.sessionId, payload.eventName, path, text(payload.pageTitle, 180) || null, text(payload.productCategory, 100) || null, text(payload.productSlug, 180) || null, JSON.stringify(metadata)],
-  );
+    ),
+  ]);
 }
 
 export type DashboardData = {
@@ -176,6 +170,7 @@ export type DashboardData = {
   inquiries: number;
   quoteClicks: number;
   whatsappClicks: number;
+  inquiryStarts: number;
   topPages: Array<{ pagePath: string; views: number }>;
   sources: Array<{ channel: string; sessions: number }>;
   countries: Array<{ country: string; visitors: number }>;
@@ -186,26 +181,27 @@ const rangeParams = (range: AdminDateRange) => [range.start, range.end];
 
 export async function getDashboardData(range: AdminDateRange): Promise<DashboardData> {
   const sql = adminSql();
-  const [overview, topPages, sources, countries, products] = await Promise.all([
-    sql.query(
+  const [overview, topPages, sources, countries, products] = await sql.transaction((tx) => [
+    tx.query(
       `SELECT
         COUNT(DISTINCT session_id) FILTER (WHERE event_name = 'page_view')::int AS visits,
-        COUNT(DISTINCT visitor_id)::int AS visitors,
+        COUNT(DISTINCT visitor_id) FILTER (WHERE event_name = 'page_view')::int AS visitors,
         COUNT(*) FILTER (WHERE event_name = 'page_view')::int AS page_views,
         (SELECT COUNT(*)::int FROM b2b_leads WHERE created_at >= $1 AND created_at < $2) AS inquiries,
         COUNT(*) FILTER (WHERE event_name = 'quote_click')::int AS quote_clicks,
-        COUNT(*) FILTER (WHERE event_name = 'whatsapp_click')::int AS whatsapp_clicks
+        COUNT(*) FILTER (WHERE event_name = 'whatsapp_click')::int AS whatsapp_clicks,
+        COUNT(*) FILTER (WHERE event_name = 'inquiry_started')::int AS inquiry_starts
        FROM analytics_events WHERE occurred_at >= $1 AND occurred_at < $2`,
       rangeParams(range),
     ),
-    sql.query(`SELECT page_path, COUNT(*)::int AS views FROM analytics_events WHERE event_name = 'page_view' AND occurred_at >= $1 AND occurred_at < $2 GROUP BY page_path ORDER BY views DESC, page_path ASC LIMIT 8`, rangeParams(range)),
-    sql.query(`SELECT channel, COUNT(*)::int AS sessions FROM analytics_sessions WHERE started_at >= $1 AND started_at < $2 GROUP BY channel ORDER BY sessions DESC, channel ASC LIMIT 8`, rangeParams(range)),
-    sql.query(`SELECT COALESCE(v.country_code, 'Unknown') AS country, COUNT(DISTINCT e.visitor_id)::int AS visitors FROM analytics_events e JOIN analytics_visitors v ON v.visitor_id = e.visitor_id WHERE e.occurred_at >= $1 AND e.occurred_at < $2 GROUP BY country ORDER BY visitors DESC, country ASC LIMIT 8`, rangeParams(range)),
-    sql.query(`SELECT COALESCE(product_category, 'Unassigned') AS category, COALESCE(product_slug, '') AS slug, COUNT(*)::int AS views FROM analytics_events WHERE event_name = 'product_view' AND occurred_at >= $1 AND occurred_at < $2 GROUP BY category, slug ORDER BY views DESC, category ASC LIMIT 8`, rangeParams(range)),
-  ]);
+    tx.query(`SELECT page_path, COUNT(*)::int AS views FROM analytics_events WHERE event_name = 'page_view' AND occurred_at >= $1 AND occurred_at < $2 GROUP BY page_path ORDER BY views DESC, page_path ASC LIMIT 8`, rangeParams(range)),
+    tx.query(`SELECT s.channel, COUNT(DISTINCT e.session_id)::int AS sessions FROM analytics_events e JOIN analytics_sessions s ON s.session_id = e.session_id WHERE e.event_name = 'page_view' AND e.occurred_at >= $1 AND e.occurred_at < $2 GROUP BY s.channel ORDER BY sessions DESC, s.channel ASC LIMIT 8`, rangeParams(range)),
+    tx.query(`SELECT COALESCE(v.country_code, 'Unknown') AS country, COUNT(DISTINCT e.visitor_id)::int AS visitors FROM analytics_events e JOIN analytics_visitors v ON v.visitor_id = e.visitor_id WHERE e.event_name = 'page_view' AND e.occurred_at >= $1 AND e.occurred_at < $2 GROUP BY country ORDER BY visitors DESC, country ASC LIMIT 8`, rangeParams(range)),
+    tx.query(`SELECT COALESCE(product_category, 'Unassigned') AS category, COALESCE(product_slug, '') AS slug, COUNT(*)::int AS views FROM analytics_events WHERE event_name = 'product_view' AND occurred_at >= $1 AND occurred_at < $2 GROUP BY category, slug ORDER BY views DESC, category ASC LIMIT 8`, rangeParams(range)),
+  ], { readOnly: true, isolationLevel: "RepeatableRead" });
   const row = overview[0] as Record<string, unknown> | undefined;
   return {
-    visits: Number(row?.visits ?? 0), visitors: Number(row?.visitors ?? 0), pageViews: Number(row?.page_views ?? 0), inquiries: Number(row?.inquiries ?? 0), quoteClicks: Number(row?.quote_clicks ?? 0), whatsappClicks: Number(row?.whatsapp_clicks ?? 0),
+    visits: Number(row?.visits ?? 0), visitors: Number(row?.visitors ?? 0), pageViews: Number(row?.page_views ?? 0), inquiries: Number(row?.inquiries ?? 0), quoteClicks: Number(row?.quote_clicks ?? 0), whatsappClicks: Number(row?.whatsapp_clicks ?? 0), inquiryStarts: Number(row?.inquiry_starts ?? 0),
     topPages: topPages.map((item) => ({ pagePath: String(item.page_path), views: Number(item.views) })),
     sources: sources.map((item) => ({ channel: String(item.channel), sessions: Number(item.sessions) })),
     countries: countries.map((item) => ({ country: String(item.country), visitors: Number(item.visitors) })),
@@ -214,40 +210,83 @@ export async function getDashboardData(range: AdminDateRange): Promise<Dashboard
 }
 
 export async function createLead(input: {
-  name: string; company: string; country: string; email: string; category: string; message: string; website: string;
+  name: string; company: string; country: string; email: string; category: string; message: string; submissionId?: string;
   productModel?: string; productUrl?: string; application?: string; material?: string; quantity?: string; whatsapp?: string; projectRequirements?: string;
-  visitorId?: string; sessionId?: string; landingPath?: string; sourceChannel?: string;
+  visitorId?: string; sessionId?: string;
 }) {
-  const id = randomUUID();
+  const id = input.submissionId?.toLowerCase() ?? randomUUID();
   const sql = adminSql();
-  await sql.query(
-    `WITH inserted_lead AS (
-      INSERT INTO b2b_leads (id,name,company,country,email,whatsapp,category,product_model,product_url,application,material,quantity,message,project_requirements,visitor_id,session_id,source_channel,landing_path)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
-      RETURNING id
-    )
-    INSERT INTO b2b_lead_activities (id,lead_id,activity_type,note)
-    SELECT $19,id,'created','Created from website inquiry form' FROM inserted_lead`,
-    [id,input.name,input.company,input.country,input.email,input.whatsapp || null,input.category,input.productModel || null,input.productUrl || null,input.application || null,input.material || null,input.quantity || null,input.message,input.projectRequirements || null,safeIdentifier.test(input.visitorId ?? "") ? input.visitorId : null,safeIdentifier.test(input.sessionId ?? "") ? input.sessionId : null,input.sourceChannel || null,input.landingPath ? safePath(input.landingPath) : null,randomUUID()],
-  );
-  const customerId = await upsertCustomer(input);
-  await sql.query("UPDATE b2b_leads SET customer_id = $2 WHERE id = $1", [id, customerId]);
-  return id;
+  // Serialize retries for this submission only. The second statement sees any committed first attempt.
+  const [, rows] = await sql.transaction((tx) => [
+    tx.query("SELECT pg_advisory_xact_lock(hashtextextended('inquiry:' || $1::text, 0))", [id]),
+    tx.query(
+      `WITH visit AS (
+        SELECT v.visitor_id, s.session_id, s.channel, s.landing_path
+        FROM analytics_visitors v LEFT JOIN analytics_sessions s
+          ON s.visitor_id = v.visitor_id AND s.session_id = $16
+        WHERE v.visitor_id = $15
+      ), customer AS (
+        INSERT INTO b2b_customers (id, name, company, country, email_normalized, whatsapp_normalized, source_channel)
+        SELECT $17, $2, $3, $4, $5, $18, (SELECT channel FROM visit)
+        WHERE NOT EXISTS (SELECT 1 FROM b2b_leads WHERE id = $1)
+        ON CONFLICT (email_normalized) WHERE email_normalized IS NOT NULL
+        DO UPDATE SET last_seen_at = now(), name = EXCLUDED.name, company = EXCLUDED.company,
+          country = EXCLUDED.country, whatsapp_normalized = COALESCE(EXCLUDED.whatsapp_normalized, b2b_customers.whatsapp_normalized),
+          source_channel = COALESCE(b2b_customers.source_channel, EXCLUDED.source_channel)
+        RETURNING id
+      ), inserted AS (
+        INSERT INTO b2b_leads (id,name,company,country,email,whatsapp,category,product_model,product_url,application,material,quantity,message,project_requirements,visitor_id,session_id,source_channel,landing_path,customer_id)
+        SELECT $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,
+          (SELECT visitor_id FROM visit), (SELECT session_id FROM visit), (SELECT channel FROM visit), (SELECT landing_path FROM visit), customer.id
+        FROM customer RETURNING id, customer_id, visitor_id
+      ), activity AS (
+        INSERT INTO b2b_lead_activities (id,lead_id,activity_type,note)
+        SELECT $19,id,'created','Created from website inquiry form' FROM inserted
+      ), linked_visitor AS (
+        UPDATE analytics_visitors v SET customer_id = inserted.customer_id
+        FROM inserted WHERE v.visitor_id = inserted.visitor_id
+      )
+      SELECT id, false AS replayed FROM inserted
+      UNION ALL
+      SELECT id, true AS replayed FROM b2b_leads
+      WHERE id = $1 AND name = $2 AND company = $3 AND country = $4 AND lower(email) = $5 AND category = $7
+        AND whatsapp IS NOT DISTINCT FROM $6 AND product_model IS NOT DISTINCT FROM $8
+        AND product_url IS NOT DISTINCT FROM $9 AND application IS NOT DISTINCT FROM $10
+        AND material IS NOT DISTINCT FROM $11 AND quantity IS NOT DISTINCT FROM $12
+        AND message = $13 AND project_requirements IS NOT DISTINCT FROM $14`,
+      [id,input.name,input.company,input.country,normalEmail(input.email),input.whatsapp || null,input.category,input.productModel || null,input.productUrl || null,input.application || null,input.material || null,input.quantity || null,input.message,input.projectRequirements || null,safeIdentifier.test(input.visitorId ?? "") ? input.visitorId : null,safeIdentifier.test(input.sessionId ?? "") ? input.sessionId : null,randomUUID(),normalPhone(input.whatsapp),randomUUID()],
+    ),
+  ]);
+  return rows.length ? { replayed: rows[0].replayed === true } : null;
 }
 
-export async function listLeads(range: AdminDateRange, page = 1, pageSize = 25, status?: string): Promise<PaginatedResult<AdminLead>> {
+const leadColumns = "id,created_at,status,name,company,country,email,whatsapp,category,product_model,product_url,application,quantity,source_channel,landing_path,customer_id,visitor_id";
+
+export async function listLeads(range: AdminDateRange, page = 1, pageSize = 25, status?: string, options: { country?: string; source?: string } = {}): Promise<PaginatedResult<AdminLead>> {
   const sql = adminSql();
-  const safePage = Math.max(1, Math.floor(page));
+  const safePage = safePageNumber(page);
   const safeSize = safePageSize(pageSize);
-  const filters = status && ["new","qualified","technical-review","quotation-sent","negotiation","won","lost","nurture"].includes(status) ? [range.start, range.end, status] : [range.start, range.end];
-  const predicate = status && filters.length === 3 ? " AND status = $3" : "";
-  const [countRows, rows] = await Promise.all([
-    sql.query(`SELECT COUNT(*)::int AS total FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate}`, filters),
-    sql.query(`SELECT id,created_at,status,name,company,country,email,whatsapp,category,product_model,product_url,application,quantity,source_channel,landing_path,customer_id,visitor_id FROM b2b_leads WHERE created_at >= $1 AND created_at < $2${predicate} ORDER BY created_at DESC LIMIT $${filters.length + 1} OFFSET $${filters.length + 2}`, [...filters, safeSize, (safePage - 1) * safeSize]),
-  ]);
+  const filters = [range.start, range.end];
+  const conditions = ["created_at >= $1", "created_at < $2"];
+  if (status && Object.hasOwn(leadStatusLabels, status)) { filters.push(status); conditions.push(`status = $${filters.length}`); }
+  if (text(options.country, 100)) { filters.push(`%${text(options.country, 100)}%`); conditions.push(`country ILIKE $${filters.length}`); }
+  if (options.source === "unknown") conditions.push("source_channel IS NULL");
+  else if (text(options.source, 80)) { filters.push(text(options.source, 80)); conditions.push(`source_channel = $${filters.length}`); }
+  const where = conditions.join(" AND ");
+  const listQuery = `SELECT ${leadColumns} FROM b2b_leads WHERE ${where} ORDER BY created_at DESC, id LIMIT $${filters.length + 1} OFFSET $${filters.length + 2}`;
+  const [countRows, rows] = await sql.transaction((tx) => [
+    tx.query(`SELECT COUNT(*)::int AS total FROM b2b_leads WHERE ${where}`, filters),
+    tx.query(listQuery, [...filters, safeSize, (safePage - 1) * safeSize]),
+  ], { readOnly: true, isolationLevel: "RepeatableRead" });
   const total = Number((countRows[0] as Record<string, unknown> | undefined)?.total ?? 0);
+  const pageCount = Math.max(1, Math.ceil(total / safeSize));
+  const displayedPage = Math.min(pageCount, safePage);
+  const visible = displayedPage < safePage && total ? await sql.query(listQuery, [...filters, safeSize, (displayedPage - 1) * safeSize]) : rows;
+  return { rows: visible.map(toLead), total, page: displayedPage, pageSize: safeSize, pageCount };
+}
+
+function toLead(row: Record<string, unknown>): AdminLead {
   return {
-    rows: rows.map((row) => ({
       id: String(row.id),
       createdAt: asIso(row.created_at),
       status: String(row.status) as LeadStatus,
@@ -265,11 +304,36 @@ export async function listLeads(range: AdminDateRange, page = 1, pageSize = 25, 
       landingPath: row.landing_path ? String(row.landing_path) : null,
       customerId: row.customer_id ? String(row.customer_id) : null,
       visitorId: row.visitor_id ? String(row.visitor_id) : null,
-    })),
-    total, page: safePage, pageSize: safeSize, pageCount: Math.max(1, Math.ceil(total / safeSize)),
   };
 }
 
+export async function getLeadDetails(id: string) {
+  if (!safeIdentifier.test(id)) return null;
+  const [leads, activities] = await adminSql().transaction((tx) => [
+    tx.query(`SELECT ${leadColumns}, message, material, project_requirements FROM b2b_leads WHERE id = $1`, [id]),
+    tx.query("SELECT id, activity_type, note, actor, created_at FROM b2b_lead_activities WHERE lead_id = $1 ORDER BY created_at DESC LIMIT 50", [id]),
+  ], { readOnly: true });
+  const row = leads[0];
+  if (!row) return null;
+  return {
+    ...toLead(row), message: String(row.message), material: text(row.material, 300), requirements: text(row.project_requirements, 3000),
+    activities: activities.map((item) => ({ id: String(item.id), type: String(item.activity_type), note: String(item.note ?? ""), actor: String(item.actor), date: asIso(item.created_at) })),
+  };
+}
+
+export async function saveLeadFollowUp(id: string, status: LeadStatus, note: string) {
+  const rows = await adminSql().query(
+    `WITH changed AS (
+       UPDATE b2b_leads SET status = $2, updated_at = now()
+       WHERE id = $1 AND (status IS DISTINCT FROM $2 OR $3 <> '')
+       RETURNING id
+     )
+     INSERT INTO b2b_lead_activities (id, lead_id, activity_type, note, actor)
+     SELECT $4, id, 'follow-up', $5, 'admin' FROM changed RETURNING id`,
+    [id, status, note, randomUUID(), [leadStatusLabels[status], note].filter(Boolean).join(": ")],
+  );
+  return rows.length > 0;
+}
 
 export type VisitorFilters = { search?: string; country?: string; channel?: string; device?: string };
 
@@ -284,7 +348,7 @@ function visitorPredicate(range: AdminDateRange, filters: VisitorFilters) {
 }
 
 export async function listVisitors(range: AdminDateRange, page = 1, pageSize = 25, filters: VisitorFilters = {}): Promise<PaginatedResult<VisitorRecord>> {
-  const sql = adminSql(); const safePage = Math.max(1, Math.floor(page)); const safeSize = safePageSize(pageSize); const predicate = visitorPredicate(range, filters);
+  const sql = adminSql(); const safePage = safePageNumber(page); const safeSize = safePageSize(pageSize); const predicate = visitorPredicate(range, filters);
   const [countRows, rows] = await Promise.all([
     sql.query(`SELECT COUNT(*)::int AS total FROM analytics_visitors v LEFT JOIN b2b_customers c ON c.id = v.customer_id WHERE ${predicate.where}`, predicate.params),
     sql.query(`SELECT v.visitor_id,v.first_seen_at,v.last_seen_at,v.country_code,v.region_code,v.preferred_language,v.device_type,v.first_channel,v.customer_id,c.name AS customer_name,c.company AS customer_company,
@@ -297,7 +361,7 @@ export async function listVisitors(range: AdminDateRange, page = 1, pageSize = 2
 }
 
 export async function listCustomers(range: AdminDateRange, page = 1, pageSize = 25, search = ""): Promise<PaginatedResult<CustomerRecord>> {
-  const sql = adminSql(); const safePage = Math.max(1, Math.floor(page)); const safeSize = safePageSize(pageSize); const term = text(search, 120); const params = term ? [range.start, range.end, `%${term}%`] : [range.start, range.end]; const predicate = term ? "AND (c.email_normalized ILIKE $3 OR c.company ILIKE $3 OR c.name ILIKE $3)" : "";
+  const sql = adminSql(); const safePage = safePageNumber(page); const safeSize = safePageSize(pageSize); const term = text(search, 120); const params = term ? [range.start, range.end, `%${term}%`] : [range.start, range.end]; const predicate = term ? "AND (c.email_normalized ILIKE $3 OR c.company ILIKE $3 OR c.name ILIKE $3)" : "";
   const [countRows, rows] = await Promise.all([
     sql.query(`SELECT COUNT(*)::int AS total FROM b2b_customers c WHERE c.last_seen_at >= $1 AND c.last_seen_at < $2 ${predicate}`, params),
     sql.query(`SELECT c.id,c.name,c.company,c.email_normalized,c.whatsapp_normalized,c.country,c.first_seen_at,c.last_seen_at,c.source_channel,(SELECT COUNT(*)::int FROM analytics_visitors v WHERE v.customer_id=c.id) AS visitor_count,(SELECT COUNT(*)::int FROM b2b_leads l WHERE l.customer_id=c.id) AS lead_count,(SELECT COUNT(*)::int FROM analytics_events e JOIN analytics_visitors v ON v.visitor_id=e.visitor_id WHERE v.customer_id=c.id AND e.event_name='page_view' AND e.occurred_at >= $1 AND e.occurred_at < $2) AS page_views FROM b2b_customers c WHERE c.last_seen_at >= $1 AND c.last_seen_at < $2 ${predicate} ORDER BY c.last_seen_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`, [...params, safeSize, (safePage - 1) * safeSize]),
@@ -339,7 +403,7 @@ export type AnalyticsEventRecord = {
 };
 
 export async function listAnalyticsEvents(range: AdminDateRange, page = 1, pageSize = 25, filters: { source?: string; country?: string; device?: string; language?: string; event?: string; search?: string } = {}): Promise<PaginatedResult<AnalyticsEventRecord>> {
-  const sql = adminSql(); const safePage = Math.max(1, Math.floor(page)); const safeSize = safePageSize(pageSize);
+  const sql = adminSql(); const safePage = safePageNumber(page); const safeSize = safePageSize(pageSize);
   const params: unknown[] = [range.start, range.end]; const clauses = ["e.occurred_at >= $1", "e.occurred_at < $2"];
   const add = (condition: string, value: string) => { params.push(value); clauses.push(condition.replace("?", String(params.length))); };
   if (filters.source) add("s.channel = $?", text(filters.source, 80));

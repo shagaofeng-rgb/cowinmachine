@@ -1,51 +1,137 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminDateFilters, AdminMetricCard, AdminShell } from "@/components/admin/AdminShell";
-import { getDashboardData, listLeads } from "@/lib/admin-operations/analytics";
+import { isAdminEnabled } from "@/lib/admin-operations/auth";
 import { isAdminDatabaseConfigured } from "@/lib/admin-operations/database";
 import { readAdminDateRange } from "@/lib/admin-operations/date-range";
-import { contentAutomationConfig } from "@/lib/content-automation/config";
+import { getEditorialTraffic, getEquipmentInsights, getMarketInsights, getOperationsHealth } from "@/lib/admin-operations/insights";
+import { getLatestSearchDiscovery } from "@/lib/content-automation/search-discovery-log";
+import { getArticleChannel, getPublishedArticles } from "@/lib/content-automation/storage";
+import { getCategory, getProduct } from "@/lib/products";
+import type { AdminDateRange } from "@/types/admin-operations";
 
 export const dynamic = "force-dynamic";
 
 const sections = {
-  analytics: { title: "流量分析", description: "基于访客同意的获客来源、设备、语言、页面和采购意向信号。", cards: ["访问会话", "独立访客", "页面浏览", "报价点击"] },
-  leads: { title: "询盘与 RFQ", description: "网站询盘、筛选状态、产品上下文和来源归因。", cards: ["新增询盘", "总记录数", "报价点击", "WhatsApp 点击"] },
-  products: { title: "产品洞察", description: "采购方实际查看的设备类目和产品参考信息。", cards: ["产品浏览", "热门类目", "热门产品", "询盘产品信息"] },
-  news: { title: "新闻运营", description: "已发布新闻、来源轮换以及内容对产品浏览的贡献。", cards: ["已发布文章", "新闻浏览", "来源轮换", "内容转 RFQ"] },
-  seo: { title: "SEO 中心", description: "Search Console 快照、站点地图状态、规范链接健康度和抓取跟进。", cards: ["站点地图健康度", "搜索快照", "索引问题", "技术检查"] },
-  markets: { title: "市场与语言", description: "国家、地区、浏览器语言、设备和流量渠道分组。", cards: ["国家 / 地区", "语言", "桌面 / 移动端", "回访会话"] },
-  "data-health": { title: "数据健康度", description: "同意状态、数据库连接、事件校验、保留策略和审计准备情况。", cards: ["数据库", "同意模型", "事件结构", "数据保留"] },
+  products: { title: "产品洞察", description: "按设备分类和型号查看浏览量与关联询盘。" },
+  news: { title: "News / Blog", description: "查看发布数量、浏览量和文章页询价点击。" },
+  seo: { title: "SEO 中心", description: "最近一次 Google 提交、下载回执与 URL 检查结果。" },
+  markets: { title: "市场与语言", description: "统计期内已同意且产生浏览的独立访客；每组最多显示前 10 项。" },
+  "data-health": { title: "数据健康度", description: "查看数据库连接、最新入库时间和缺失关联。" },
 } as const;
 
-type Props = { params: Promise<{ section: string }>; searchParams: Promise<{ preset?: string; start?: string; end?: string }> };
+const time = new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Shanghai" });
+const showTime = (value?: Date | string | null) => value ? time.format(new Date(value)) : "暂无记录";
 
-export default async function AdminSectionPage({ params, searchParams }: Props) {
-  const { section } = await params;
-  const values = await searchParams;
-  const sectionInfo = sections[section as keyof typeof sections];
-  const config = contentAutomationConfig();
-  if (!sectionInfo || !config.adminEnabled || !process.env.CONTENT_ADMIN_USER || !process.env.CONTENT_ADMIN_PASSWORD) notFound();
-  const range = readAdminDateRange(values);
-  const databaseReady = isAdminDatabaseConfigured();
-  const [dashboard, leads] = databaseReady ? await Promise.all([getDashboardData(range), listLeads(range)]) : [null, null];
+function Ranked({ title, rows }: { title: string; rows: Array<{ name: string; value: number; href?: string }> }) {
+  return <section className="admin-panel">
+    <div className="admin-panel-heading"><h2>{title}</h2></div>
+    {rows.length ? <ul className="admin-ranked-list">{rows.map(({ name, value, href }) => <li key={href ?? name}>
+      <span>{href ? <Link href={href}>{name}</Link> : name}</span><strong>{value}</strong>
+    </li>)}</ul> : <p className="admin-muted">此日期范围内暂无记录。</p>}
+  </section>;
+}
 
-  const cardValues: Record<string, number | string> = {
-    "访问会话": dashboard?.visits ?? "—", "独立访客": dashboard?.visitors ?? "—", "页面浏览": dashboard?.pageViews ?? "—", "报价点击": dashboard?.quoteClicks ?? "—",
-    "新增询盘": leads?.total ?? "—", "总记录数": leads?.total ?? "—", "WhatsApp 点击": dashboard?.whatsappClicks ?? "—",
-    "产品浏览": dashboard?.products.reduce((total, item) => total + item.views, 0) ?? "—", "热门类目": dashboard?.products[0]?.category ?? "—", "热门产品": dashboard?.products[0]?.slug ?? "—", "询盘产品信息": leads?.rows.filter((lead) => Boolean(lead.productModel)).length ?? "—",
-    "已发布文章": "由新闻自动化管理", "新闻浏览": dashboard?.topPages.filter((item) => item.pagePath.startsWith("/news")).reduce((total, item) => total + item.views, 0) ?? "—", "来源轮换": "内容运营中可查看", "内容转 RFQ": "数据积累后显示",
-    "站点地图健康度": "查看 sitemap / robots", "搜索快照": "连接 Search Console", "索引问题": "在 Search Console 查看", "技术检查": "规范链接和 404 检查",
-    "国家 / 地区": dashboard?.countries.length ?? "—", "语言": "同意后记录", "桌面 / 移动端": "同意后记录", "回访会话": "回访会话后可用",
-    "数据库": databaseReady ? "已连接" : "需要连接", "同意模型": "第一方访客同意", "事件结构": "已校验", "数据保留": "仅 IP 哈希",
-  };
-
-  return <AdminShell active={`/internal/admin/${section}`} range={range}>
-    <header className="admin-topbar"><div><p className="eyebrow">B2B 运营</p><h1>{sectionInfo.title}</h1><p>{sectionInfo.description}</p></div><Link className="button button-outline" href="/internal/admin">返回总览</Link></header>
-    <AdminDateFilters range={range} pathname={`/internal/admin/${section}`} />
-    <section className="admin-metric-grid">{sectionInfo.cards.map((label) => <AdminMetricCard key={label} label={label} value={cardValues[label]} detail={range.label} />)}</section>
-    <section className="admin-panel"><p className="eyebrow">实施状态</p><h2>{databaseReady ? "访客同意后，数据采集处于启用状态。" : "模块已就绪，等待数据库连接。"}</h2>
-      <p className="admin-muted">{section === "seo" ? "只有在配置获授权的 Google 连接后，才会显示 Search Console 数据。后台会记录来源、日期范围、国家、设备、查询词和落地页指标，但不会声称保证收录。" : section === "data-health" ? "报告中不会显示原始 IP 地址。配置哈希密钥后，仅会使用不可逆哈希处理安全信号；国家和设备分析仅使用最小必要字段。" : "大量数据通过已建立索引的日期范围和服务端分页读取。默认每页 25 条，并可选择 25、50 或 100 条。"}</p>
+async function ProductsReport({ range }: { range: AdminDateRange }) {
+  const data = await getEquipmentInsights(range);
+  return <>
+    <section className="admin-metric-grid" aria-label="产品指标">
+      <AdminMetricCard label="产品详情浏览" value={data.views} detail={range.label} />
+      <AdminMetricCard label="被浏览型号数" value={data.models} detail={range.label} />
+      <AdminMetricCard label="有型号的询盘" value={data.inquiries} detail="已保存记录" />
     </section>
+    <div className="admin-grid-two">
+      <Ranked title="分类浏览" rows={data.families.map((item) => ({ ...item, name: getCategory(item.name)?.name ?? item.name }))} />
+      <Ranked title="型号浏览" rows={data.equipment.map((item) => {
+        const product = getProduct(item.category, item.slug);
+        return { name: product?.name ?? item.slug, value: item.value, href: product ? `/products/${item.category}/${item.slug}` : undefined };
+      })} />
+    </div>
+  </>;
+}
+
+async function EditorialReport({ range }: { range: AdminDateRange }) {
+  const [articles, traffic] = await Promise.all([getPublishedArticles(), getEditorialTraffic(range)]);
+  const inRange = articles.filter((article) => {
+    const published = Date.parse(article.publishedAt ?? "");
+    return published >= Date.parse(range.start) && published < Date.parse(range.end);
+  });
+  const newsCount = inRange.filter((article) => getArticleChannel(article) === "news").length;
+  return <>
+    <section className="admin-metric-grid" aria-label="内容指标">
+      <AdminMetricCard label="News 已发布" value={newsCount} detail={range.label} />
+      <AdminMetricCard label="Blog 已发布" value={inRange.length - newsCount} detail={range.label} />
+      <AdminMetricCard label="News 浏览" value={traffic.news} detail="已同意访客" />
+      <AdminMetricCard label="Blog 浏览" value={traffic.blog} detail="已同意访客" />
+      <AdminMetricCard label="文章页询价点击" value={traffic.quoteClicks} detail="不是入库询盘数" />
+    </section>
+    <section className="admin-panel"><div className="admin-panel-heading"><h2>发布状态</h2><Link href="/internal/content-operations">查看推送日志</Link></div>
+      <p>News 自动采编已关闭；第三方 Blog 独立发布。</p>
+    </section>
+  </>;
+}
+
+async function SeoReport() {
+  const last = await getLatestSearchDiscovery();
+  const inspection = last?.inspections ?? [];
+  const metrics = [
+    ["计划提交", "每周一 10:30（北京时间）"],
+    ["最近执行", showTime(last?.recordedAt)],
+    ["提交响应", last?.submitHttpStatus ?? "暂无回执"],
+    ["读回响应", last?.readbackHttpStatus ?? "暂无回执"],
+    ["Google 下载（执行时记录）", showTime(last?.lastDownloaded)],
+    ["处理状态（执行时记录）", last?.pending === true ? "待处理" : last?.pending === false ? "无待处理" : "未取得"],
+    ["警告 / 错误", last?.warnings !== undefined && last.errors !== undefined ? `${last.warnings} / ${last.errors}` : "未取得"],
+  ] as const;
+  return <>
+    <section className="admin-panel"><div className="admin-panel-heading"><h2>Sitemap 提交与下载</h2><a href="https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Acowinmachine.com" target="_blank" rel="noreferrer">Google 报告</a></div>
+      <dl className="admin-lead-info">{metrics.map(([name, value]) => <div key={name}><dt>{name}</dt><dd>{value}</dd></div>)}</dl>
+      <p className="admin-muted">提交成功不等于已收录。<Link href="/sitemap.xml">站点地图</Link> · <Link href="/robots.txt">抓取规则</Link></p>
+    </section>
+    <section className="admin-panel"><div className="admin-panel-heading"><h2>最近的 URL 检查</h2></div>
+      {inspection.length ? <ul className="admin-journey-list">{inspection.map((item) => <li key={item.url}><strong>{item.url}</strong><span>{item.coverageState ?? item.verdict ?? "未取得 Google 状态"}</span><span>{showTime(item.lastCrawlTime)}</span></li>)}</ul> : <p className="admin-muted">暂无 URL 检查记录。</p>}
+    </section>
+  </>;
+}
+
+async function HealthReport() {
+  const health = await getOperationsHealth();
+  return <>
+    <section className="admin-metric-grid" aria-label="数据完整性">
+      <AdminMetricCard label="数据库读取" value="成功" detail="当前请求" />
+      <AdminMetricCard label="未关联客户的询盘" value={health.unlinked} detail="全量检查" />
+      <AdminMetricCard label="缺失创建记录的询盘" value={health.missingActivity} detail="全量检查" />
+    </section>
+    <section className="admin-panel"><div className="admin-panel-heading"><h2>同步与隐私</h2></div>
+      <dl className="admin-lead-info">
+        <div><dt>最新访客事件</dt><dd>{showTime(health.lastEvent)}</dd></div>
+        <div><dt>最新询盘</dt><dd>{showTime(health.lastInquiry)}</dd></div>
+        <div><dt>询盘防刷哈希</dt><dd>{process.env.ANALYTICS_IP_HASH_SECRET ? "已配置" : "未配置"}</dd></div>
+      </dl>
+      <p className="admin-muted">询盘独立入库；只有同意统计的访问才记录行为事件。后台不展示原始 IP。</p>
+    </section>
+  </>;
+}
+
+export default async function AdminSectionPage({ params, searchParams }: {
+  params: Promise<{ section: string }>;
+  searchParams: Promise<{ preset?: string; start?: string; end?: string }>;
+}) {
+  const [{ section }, values] = await Promise.all([params, searchParams]);
+  if (!isAdminEnabled() || !Object.hasOwn(sections, section)) notFound();
+  const info = sections[section as keyof typeof sections];
+  const range = readAdminDateRange(values);
+  const pathname = `/internal/admin/${section}`;
+  const usesRange = section === "products" || section === "news" || section === "markets";
+  const ready = isAdminDatabaseConfigured();
+  return <AdminShell active={pathname} range={range}>
+    <header className="admin-topbar"><div><h1>{info.title}</h1><p>{info.description}</p></div></header>
+    {usesRange && <AdminDateFilters range={range} pathname={pathname} />}
+    {!ready ? <section className="admin-empty"><h2>未连接数据库</h2><p>此页面不会将缺失的数据标为零。</p></section>
+      : section === "products" ? <ProductsReport range={range} />
+      : section === "news" ? <EditorialReport range={range} />
+      : section === "seo" ? <SeoReport />
+      : section === "markets" ? <div className="admin-grid-two admin-market-reports">{(await getMarketInsights(range)).map((report) => <Ranked key={report.title} {...report} />)}</div>
+      : <HealthReport />}
   </AdminShell>;
 }

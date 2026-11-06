@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPublishedBlogArticles, getPublishedNewsArticles } from "@/lib/content-automation/storage";
+import { getArticleChannel, getPublishedArticles } from "@/lib/content-automation/storage";
 import { blogPerPage, getPageCount, newsPerPage, productsPerPage } from "@/lib/pagination";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
@@ -27,10 +27,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/news",
     "/blog",
   ];
-  const [newsArticles, blogArticles] = await Promise.all([
-    getPublishedNewsArticles(),
-    getPublishedBlogArticles(),
-  ]);
+  const articles = await getPublishedArticles();
+  const newsArticles = articles.filter((article) => getArticleChannel(article) === "news");
+  const blogArticles = articles.filter((article) => getArticleChannel(article) === "blog");
   const canonicalProducts = products.filter(isCanonicalProductRoute);
   const indexableProducts = canonicalProducts.filter(
     (product) => getProductDetailProfile(product).publicationState === "full-technical-content",

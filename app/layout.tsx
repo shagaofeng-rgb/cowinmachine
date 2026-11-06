@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/layout/SiteShell";
 import { OrganizationJsonLd } from "@/components/OrganizationJsonLd";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
+import "./site-quality.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),

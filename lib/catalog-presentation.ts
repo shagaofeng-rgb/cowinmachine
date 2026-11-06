@@ -71,6 +71,23 @@ export function quickSpecifications(family: ProductCategorySlug, profile: Produc
   }).slice(0, limit);
 }
 
+export function specificationEquivalent(label: string, value: string) {
+  const simple = /^(\d+(?:\.\d+)?)\s*(MPa|bar|m(?:\u00b3|3)\/min|mm|m)$/i.exec(value);
+  if (!simple) return null;
+  const amount = Number(simple[1]);
+  const unit = simple[2].toLowerCase();
+  const format = (number: number) => new Intl.NumberFormat("en", { maximumFractionDigits: 1 }).format(number);
+  if (/pressure/i.test(label) && (unit === "mpa" || unit === "bar")) return `Approx. ${format(amount * (unit === "mpa" ? 145.0377 : 14.50377))} psi`;
+  if (/air delivery|fad/i.test(label) && /\/min$/.test(unit)) return `Approx. ${format(amount * 35.3147)} cfm`;
+  if (/diameter|belt width/i.test(label) && unit === "mm") return `Approx. ${format(amount / 25.4)} in`;
+  if (/depth|mast height/i.test(label) && unit === "m") return `Approx. ${format(amount / 0.3048)} ft`;
+  return null;
+}
+
+export function trimRepeatedReviewNote(value: string) {
+  return value.replace(/\s+For the [^.]+ record, the review should document the actual application, site interfaces and operating sequence before any configuration is confirmed\.$/, "");
+}
+
 export function readCatalogSearch(value: string | string[] | undefined) {
   return (typeof value === "string" ? value : "").slice(0, 100).trim().replace(/\s+/g, " ");
 }

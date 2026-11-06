@@ -1,4 +1,4 @@
-export type AdminDatePreset = "today" | "this-week" | "this-month" | "custom";
+export type AdminDatePreset = "today" | "this-week" | "this-month" | "last-7" | "last-30" | "last-90" | "custom";
 
 export type AdminDateRange = {
   preset: AdminDatePreset;
@@ -40,15 +40,11 @@ export type AnalyticsEventPayload = {
 
 export type AdminMetric = { label: string; value: number; detail: string; };
 
-export type LeadStatus =
-  | "new"
-  | "qualified"
-  | "technical-review"
-  | "quotation-sent"
-  | "negotiation"
-  | "won"
-  | "lost"
-  | "nurture";
+export const leadStatusLabels = {
+  new: "新询盘", qualified: "已初筛", "technical-review": "技术评审", "quotation-sent": "已报价",
+  negotiation: "商务洽谈", won: "已成交", lost: "已流失", nurture: "持续跟进",
+} as const;
+export type LeadStatus = keyof typeof leadStatusLabels;
 
 export type AdminLead = {
   id: string;

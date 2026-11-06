@@ -1,4 +1,7 @@
 import { productPath } from "@/lib/product-sections";
+import { getProductCanonicalRedirect } from "@/lib/product-canonical";
+import { getProductDetailProfile } from "@/lib/product-detail-profiles";
+import { getCategory, getProduct } from "@/lib/products";
 import { siteConfig } from "@/lib/site";
 import type { Product } from "@/types/product";
 
@@ -25,4 +28,21 @@ export function normalizeInquiryProductUrl(value: string) {
   } catch {
     return "";
   }
+}
+
+export function resolveInquirySelection(value: string, categorySlug = "") {
+  const url = normalizeInquiryProductUrl(value);
+  const [, , requestedCategory = "", requestedSlug = ""] = url ? new URL(url).pathname.split("/") : [];
+  const alias = requestedSlug && getProductCanonicalRedirect(requestedCategory, requestedSlug);
+  const [, , category = requestedCategory, slug = requestedSlug] = alias ? alias.split("/") : [];
+  const product = slug ? getProduct(category, slug) : undefined;
+  if (product) {
+    return {
+      product,
+      category: getCategory(product.category),
+      model: getProductDetailProfile(product).model ?? "",
+      productUrl: new URL(productPath(product), siteConfig.siteUrl).href,
+    };
+  }
+  return { product: undefined, category: getCategory(categorySlug) ?? (!requestedSlug ? getCategory(requestedCategory) : undefined), model: "", productUrl: "" };
 }

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { recordAnalyticsEvent } from "@/lib/admin-operations/analytics";
 
@@ -22,7 +22,8 @@ const eventSchema = z.object({
   utm: z.record(z.string().regex(/^utm_[a-z_]{2,30}$/), z.string().max(180)).optional(),
 });
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (request.cookies.get("cw_analytics_consent")?.value !== "granted") return new NextResponse(null, { status: 204 });
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (contentLength > 16_384) return NextResponse.json({ ok: false, message: "Analytics payload is too large." }, { status: 413 });
   const raw = await request.text().catch(() => "");
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
   const payload = (() => { try { return JSON.parse(raw) as unknown; } catch { return null; } })();
   const parsed = eventSchema.safeParse(payload);
   if (!parsed.success) return NextResponse.json({ ok: false, message: "Invalid analytics payload." }, { status: 400 });
+  if (request.cookies.get("cw_visitor_id")?.value !== parsed.data.visitorId) return new NextResponse(null, { status: 204 });
 
   try {
     await recordAnalyticsEvent(parsed.data, request);

@@ -2,7 +2,7 @@
 
 import { PaperPlaneTilt } from "@phosphor-icons/react/ssr";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useId, useRef, useState } from "react";
+import { useId, useRef, useState, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { getAnalyticsRequestHeaders, trackAnalyticsEvent } from "@/components/analytics/AnalyticsTracker";
@@ -34,32 +34,49 @@ const categories = [
 
 type FormData = z.infer<typeof schema>;
 type VisibleInput = "name" | "company" | "country" | "email" | "application" | "material" | "quantity" | "whatsapp";
-type FormProps = { productModel?: string; productUrl?: string; compact?: boolean; defaults?: Partial<FormData> };
+type FormProps = { productModel?: string; productUrl?: string; fixedCategory?: { slug: string; name: string }; compact?: boolean; defaults?: Partial<FormData> };
+const subscribeToHydration = () => () => {};
+const clientReady = () => true;
+const serverNotReady = () => false;
 
-export function InquiryForm({ productModel, productUrl, compact = false, defaults = {} }: FormProps) {
+export function InquiryForm({ productModel, productUrl, fixedCategory, compact = false, defaults = {} }: FormProps) {
   const formId = useId();
+  const hydrated = useSyncExternalStore(subscribeToHydration, clientReady, serverNotReady);
   const [submission, setSubmission] = useState<{ ok: boolean; message: string }>();
   const hasTrackedStart = useRef(false);
+  const pending = useRef(false);
+  const retry = useRef<{ body: string; id: string } | null>(null);
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { category: "", productModel: productModel ?? "", productUrl: productUrl ?? "", website: "", ...defaults },
   });
 
   const onSubmit = async (data: FormData) => {
+    if (pending.current) return;
+    pending.current = true;
     setSubmission(undefined);
     try {
+      const body = JSON.stringify(data);
+      if (retry.current?.body !== body) retry.current = { body, id: crypto.randomUUID() };
       const response = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...getAnalyticsRequestHeaders() },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, submissionId: retry.current.id }),
+        signal: AbortSignal.timeout(15000),
       });
-      const result = await response.json() as { message?: string };
-      if (!response.ok) throw new Error(result.message ?? "We could not submit your request. Please try again.");
-      trackAnalyticsEvent("inquiry_submitted", { category: data.category });
+      const result = await response.json() as { ok?: boolean; message?: string; replayed?: boolean };
+      if (!response.ok || result.ok !== true) throw new Error(result.message ?? "We could not submit your request. Please try again.");
+      if (!result.replayed) trackAnalyticsEvent("inquiry_submitted", { category: data.category });
       setSubmission({ ok: true, message: result.message ?? "Your request has been received." });
+      retry.current = null;
+      hasTrackedStart.current = false;
       reset({ category: data.category, productModel: productModel ?? "", productUrl: productUrl ?? "", website: "" });
     } catch (error) {
-      setSubmission({ ok: false, message: error instanceof Error && !(error instanceof SyntaxError) ? error.message : "We could not submit your request. Please try again or contact us by email." });
+      const message = error instanceof Error && !["SyntaxError", "TypeError", "TimeoutError", "AbortError"].includes(error.name)
+        ? error.message : "We could not confirm receipt. Retry your inquiry or contact us by email.";
+      setSubmission({ ok: false, message });
+    } finally {
+      pending.current = false;
     }
   };
 
@@ -85,7 +102,7 @@ export function InquiryForm({ productModel, productUrl, compact = false, default
   }
 
   return (
-    <form className="cw-inquiry-form" noValidate aria-busy={isSubmitting}
+    <form className="cw-inquiry-form" method="post" action="/api/inquiry" noValidate aria-busy={isSubmitting}
       onFocus={() => {
         if (!hasTrackedStart.current) {
           hasTrackedStart.current = true;
@@ -94,7 +111,7 @@ export function InquiryForm({ productModel, productUrl, compact = false, default
       }}
       onSubmit={handleSubmit(onSubmit, () => setSubmission(undefined))}
     >
-      <input className="honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" {...register("website")} />
+      <input type="hidden" {...register("website")} />
       <input type="hidden" {...register("productModel")} />
       <input type="hidden" {...register("productUrl")} />
       <fieldset className="cw-form-group">
@@ -112,10 +129,13 @@ export function InquiryForm({ productModel, productUrl, compact = false, default
         <div className="cw-form-grid">
           <div className="cw-field">
             <label htmlFor={fieldId("category")}>Equipment family{requiredMark}</label>
-            <select id={fieldId("category")} required {...register("category")} {...errorProps("category")}>
+            {fixedCategory ? <>
+              <input id={fieldId("category")} value={fixedCategory.name} readOnly />
+              <input type="hidden" {...register("category")} />
+            </> : <select id={fieldId("category")} required {...register("category")} {...errorProps("category")}>
               <option value="">Select a category</option>
               {categories.map(([slug, label]) => <option value={slug} key={slug}>{label}</option>)}
-            </select>
+            </select>}
             {errorText("category")}
           </div>
           {!compact && <>
@@ -134,7 +154,8 @@ export function InquiryForm({ productModel, productUrl, compact = false, default
         </div>
       </fieldset>
       <div className="cw-form-submit">
-        <button type="submit" className="cw-btn cw-btn-primary" disabled={isSubmitting}><PaperPlaneTilt size={18} aria-hidden="true" />{isSubmitting ? "Sending request..." : "Send inquiry"}</button>
+        <button type="submit" className="cw-btn cw-btn-primary" disabled={!hydrated || isSubmitting}><PaperPlaneTilt size={18} aria-hidden="true" />{isSubmitting ? "Sending request..." : "Send inquiry"}</button>
+        <noscript><p>Send your project details using the email or WhatsApp links on this page.</p></noscript>
         {submission && <p className={`cw-form-result ${submission.ok ? "cw-form-result-ok" : "cw-form-result-error"}`} role={submission.ok ? "status" : "alert"}>{submission.message}</p>}
       </div>
     </form>

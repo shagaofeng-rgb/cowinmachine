@@ -29,6 +29,7 @@ export function ProductGallery({ photos, productName, family }: {
             alt={photo.alt}
             fill
             sizes="(max-width: 760px) 92vw, (max-width: 1240px) 49vw, 622px"
+            unoptimized={Boolean(photo.width && photo.height && Math.max(photo.width, photo.height) <= 640 && /\.(?:jpe?g|webp)$/i.test(photo.src))}
             loading={selected === 0 ? "eager" : undefined}
             fetchPriority={selected === 0 ? "high" : undefined}
             style={{ maxWidth: photo.width, maxHeight: photo.height }}

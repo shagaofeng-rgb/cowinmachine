@@ -2,7 +2,7 @@ import { createSign } from "node:crypto";
 import { isAdminRequest, isSchedulerRequest } from "@/lib/content-automation/auth";
 import { getGoogleSearchConsoleConfig, type GoogleServiceAccount } from "@/lib/content-automation/google-search-console-config";
 import { recordSearchDiscovery, type SearchDiscoveryRecord } from "@/lib/content-automation/search-discovery-log";
-import { getPublishedArticles } from "@/lib/content-automation/storage";
+import { getPublishedNewsArticles } from "@/lib/content-automation/storage";
 import { productCategories } from "@/lib/products";
 import { siteConfig } from "@/lib/site";
 
@@ -37,6 +37,7 @@ async function getGoogleAccessToken(serviceAccount: GoogleServiceAccount) {
       grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
       assertion,
     }),
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!response.ok) throw new Error(`Google OAuth returned ${response.status}`);
@@ -54,29 +55,26 @@ type GoogleSitemapStatus = {
   errors?: string;
 };
 
-async function submitAndReadSitemap(property: string, sitemapUrl: string, serviceAccount: GoogleServiceAccount) {
-  const accessToken = await getGoogleAccessToken(serviceAccount);
+async function submitAndReadSitemap(property: string, sitemapUrl: string, accessToken: string) {
   const endpoint = `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(property)}/sitemaps/${encodeURIComponent(sitemapUrl)}`;
   const headers = { Authorization: `Bearer ${accessToken}` };
 
-  const submitResponse = await fetch(endpoint, { method: "PUT", headers });
+  const submitResponse = await fetch(endpoint, { method: "PUT", headers, signal: AbortSignal.timeout(10_000) });
   if (!submitResponse.ok) {
     throw new Error(`Search Console sitemap submission returned ${submitResponse.status}`);
   }
 
-  const readbackResponse = await fetch(endpoint, { method: "GET", headers });
-  const readback = readbackResponse.ok
-    ? await readbackResponse.json() as GoogleSitemapStatus
-    : null;
+  const readbackResponse = await fetch(endpoint, { method: "GET", headers, signal: AbortSignal.timeout(6_000) }).catch(() => null);
+  const readback = readbackResponse?.ok ? await readbackResponse.json().catch(() => null) as GoogleSitemapStatus | null : null;
 
   return {
     submitHttpStatus: submitResponse.status,
-    readbackHttpStatus: readbackResponse.status,
+    readbackHttpStatus: readbackResponse?.status,
     lastSubmitted: readback?.lastSubmitted,
     lastDownloaded: readback?.lastDownloaded,
     pending: readback?.isPending,
-    warnings: Number(readback?.warnings ?? 0),
-    errors: Number(readback?.errors ?? 0),
+    warnings: readback ? Number(readback.warnings ?? 0) : undefined,
+    errors: readback ? Number(readback.errors ?? 0) : undefined,
   };
 }
 
@@ -136,13 +134,12 @@ async function inspectUrl(property: string, inspectionUrl: string, accessToken: 
   }
 }
 
-async function inspectPriorityUrls(property: string, serviceAccount: GoogleServiceAccount) {
+async function inspectPriorityUrls(property: string, accessToken: string) {
   const urls = priorityInspectionUrls();
   try {
-    const accessToken = await getGoogleAccessToken(serviceAccount);
     const results: UrlInspectionSummary[] = [];
-    for (let index = 0; index < urls.length; index += 3) {
-      results.push(...await Promise.all(urls.slice(index, index + 3).map((url) => inspectUrl(property, url, accessToken))));
+    for (let index = 0; index < urls.length; index += 5) {
+      results.push(...await Promise.all(urls.slice(index, index + 5).map((url) => inspectUrl(property, url, accessToken))));
     }
     return results;
   } catch (error) {
@@ -168,7 +165,7 @@ async function execute(request: Request) {
     return Response.json({ error: "Scheduler or administrator authorization is required." }, { status: 401 });
   }
 
-  const articles = await getPublishedArticles();
+  const publishedNewsCount = await getPublishedNewsArticles().then((articles) => articles.length).catch(() => null);
   const config = getGoogleSearchConsoleConfig();
   const sitemapUrl = config.sitemapUrl ?? `${siteConfig.siteUrl}/sitemap.xml`;
 
@@ -184,21 +181,22 @@ async function execute(request: Request) {
       status: result.status,
       sitemap: sitemapUrl,
       rss: `${siteConfig.siteUrl}/feed.xml`,
-      publishedNewsCount: articles.length,
+      publishedNewsCount,
       note: "Configure the exact Search Console property and service-account credentials before submission can run.",
     }, { status: 424 });
   }
 
   try {
-    const verification = await submitAndReadSitemap(config.property, sitemapUrl, config.serviceAccount);
-    const inspections = await inspectPriorityUrls(config.property, config.serviceAccount);
+    const accessToken = await getGoogleAccessToken(config.serviceAccount);
+    const verification = await submitAndReadSitemap(config.property, sitemapUrl, accessToken);
+    const inspections = await inspectPriorityUrls(config.property, accessToken);
     const result = {
       status: "sitemap-submitted" as const,
       property: config.property,
       sitemapUrl,
       ...verification,
       inspections,
-      detail: verification.readbackHttpStatus >= 200 && verification.readbackHttpStatus < 300
+      detail: verification.readbackHttpStatus === 200 && verification.lastSubmitted
         ? "Google accepted the sitemap submission and the sitemap resource was read back."
         : "Google accepted the submission, but the sitemap resource could not yet be read back.",
     };
@@ -210,7 +208,7 @@ async function execute(request: Request) {
       property: result.property,
       sitemap: result.sitemapUrl,
       rss: `${siteConfig.siteUrl}/feed.xml`,
-      publishedNewsCount: articles.length,
+      publishedNewsCount,
       verification: {
         submitHttpStatus: result.submitHttpStatus,
         readbackHttpStatus: result.readbackHttpStatus,
@@ -236,7 +234,7 @@ async function execute(request: Request) {
       status: result.status,
       sitemap: sitemapUrl,
       rss: `${siteConfig.siteUrl}/feed.xml`,
-      publishedNewsCount: articles.length,
+      publishedNewsCount,
       error: result.detail,
     }, { status: 502 });
   }

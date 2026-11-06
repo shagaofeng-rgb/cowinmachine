@@ -2,7 +2,8 @@ import "server-only";
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { getContentArticleChannel, isThirdPartyBlogFamily } from "@/lib/content-automation/channel";
+import { cache } from "react";
+import { getContentArticleChannel, isThirdPartyBlogFamily, legacyThirdPartyBlogFamilies } from "@/lib/content-automation/channel";
 import { newsSql } from "@/lib/content-automation/database";
 import type { ContentArticle, ContentAutomationState, ContentChannel, ContentImage, ContentQualityReport, ContentSource } from "@/types/content-automation";
 
@@ -13,6 +14,18 @@ export type ContentStore = { read(): Promise<ContentAutomationState>; write(stat
 
 const array = <T>(value: unknown): T[] => Array.isArray(value) ? value as T[] : [];
 const date = (value: unknown) => value ? new Date(String(value)).toISOString() : undefined;
+export type PublishedArticleCard = Pick<ContentArticle, "id" | "slug" | "title" | "summary" | "channel" | "productFamily" | "industry" | "image" | "publishedAt" | "updatedAt">;
+const cardColumns = "id, slug, title, summary, product_category, industry, images, published_at, updated_at";
+
+function toCard(row: Record<string, unknown>): PublishedArticleCard {
+  const productFamily = String(row.product_category);
+  return {
+    id: String(row.id), slug: String(row.slug), title: String(row.title), summary: String(row.summary),
+    channel: isThirdPartyBlogFamily(productFamily) ? "blog" : "news",
+    productFamily, industry: String(row.industry ?? ""), image: array<ContentImage>(row.images)[0],
+    publishedAt: date(row.published_at), updatedAt: date(row.updated_at) ?? new Date().toISOString(),
+  };
+}
 
 export function getArticleChannel(article: Pick<ContentArticle, "channel" | "productFamily">): ContentChannel {
   return getContentArticleChannel(article);
@@ -81,12 +94,33 @@ export function contentStore(): ContentStore {
   throw new Error("Unsupported CONTENT_STORAGE_ADAPTER. Use neon in production or file for local development.");
 }
 
-export async function getPublishedArticles(channel?: ContentChannel) {
-  const state = await contentStore().read();
+const readFilePublicArticles = cache(async () => {
+  const state = await new FileContentStore().read();
   return state.articles
-    .filter((article) => article.status === "published" && (!channel || getArticleChannel(article) === channel))
-    .sort((a,b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
-}
+    .filter((article) => article.status === "published")
+    .sort((a,b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? "") || a.slug.localeCompare(b.slug));
+});
+
+export const getPublishedArticle = cache(async (slug: string) => {
+  if (contentStore() instanceof FileContentStore) return (await readFilePublicArticles()).find((article) => article.slug === slug);
+  const rows = await newsSql().query(
+    `SELECT ${cardColumns}, content, status, product_id, application_scenario, topic_key, citations,
+      internal_links, quality_report, created_at FROM news_articles WHERE slug = $1 AND status = 'published' LIMIT 1`,
+    [slug],
+  );
+  return rows[0] ? toArticle(rows[0]) : undefined;
+});
+
+export const getPublishedArticles = cache(async (channel?: ContentChannel): Promise<PublishedArticleCard[]> => {
+  if (contentStore() instanceof FileContentStore) return (await readFilePublicArticles()).filter((article) => !channel || getArticleChannel(article) === channel);
+  const blogPredicate = "COALESCE(product_category, '') = ANY($1::text[])";
+  const scope = channel === "blog" ? `AND ${blogPredicate}` : channel === "news" ? `AND NOT (${blogPredicate})` : "";
+  const rows = await newsSql().query(
+    `SELECT ${cardColumns} FROM news_articles WHERE status = 'published' ${scope} ORDER BY published_at DESC NULLS LAST, slug ASC`,
+    channel ? [legacyThirdPartyBlogFamilies] : [],
+  );
+  return rows.map(toCard);
+});
 
 export const getPublishedNewsArticles = () => getPublishedArticles("news");
 export const getPublishedBlogArticles = () => getPublishedArticles("blog");

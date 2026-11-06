@@ -42,10 +42,14 @@ export async function getSearchConsoleStatus(): Promise<SearchConsoleStatus> {
       const inspections = latest.inspections?.length
         ? ` ${latest.inspections.length} priority URLs were inspected.`
         : "";
+      const downloaded = latest.lastDownloaded
+        ? ` Last download at read-back: ${new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Shanghai" }).format(new Date(latest.lastDownloaded))} (China time).`
+        : "";
+      const pending = latest.pending === undefined ? "" : latest.pending ? " Processing was pending at read-back." : " No processing was pending at read-back.";
       return {
         configured: true,
         state: "sitemap-submitted",
-        detail: `${timestamp}: submission HTTP ${latest.submitHttpStatus ?? "unknown"}; ${readback}.${inspections} This confirms discovery submission, not indexing.`,
+        detail: `${timestamp} (China time): submission HTTP ${latest.submitHttpStatus ?? "unknown"}; ${readback}.${downloaded}${pending}${inspections} This confirms discovery submission, not indexing.`,
       };
     }
 
@@ -54,11 +58,11 @@ export async function getSearchConsoleStatus(): Promise<SearchConsoleStatus> {
       state: "sitemap-submission-failed",
       detail: `${timestamp}: ${latest.detail ?? "The most recent sitemap submission failed."}`,
     };
-  } catch (error) {
+  } catch {
     return {
       configured: true,
       state: "configured",
-      detail: `Credentials are configured, but the persisted submission log could not be read: ${error instanceof Error ? error.message : "unknown error"}.`,
+      detail: "Credentials are configured, but the saved submission log could not be read.",
     };
   }
 }

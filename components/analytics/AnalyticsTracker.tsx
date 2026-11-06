@@ -7,6 +7,7 @@ import type { AnalyticsEventName, AnalyticsEventPayload } from "@/types/admin-op
 const consentKey = "cw_analytics_consent";
 const visitorKey = "cw_visitor_id";
 const sessionKey = "cw_session_id";
+const settingsEvent = "cowin:analytics-settings";
 
 function id() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}-cw`;
@@ -47,11 +48,12 @@ function cleanReferrer() {
 
 function send(eventName: AnalyticsEventName, pathname: string, metadata?: Record<string, string | number | boolean>) {
   if (readCookie(consentKey) !== "granted") return;
-  const { visitorId, sessionId } = analyticsIds();
+  let ids: ReturnType<typeof analyticsIds>;
+  try { ids = analyticsIds(); } catch { return; }
   const url = new URL(window.location.href);
   const utm = Object.fromEntries([...url.searchParams.entries()].filter(([key]) => key.startsWith("utm_")).slice(0, 6));
   const payload: AnalyticsEventPayload = {
-    eventId: id(), visitorId, sessionId, eventName, pagePath: pathname, pageTitle: document.title,
+    eventId: id(), ...ids, eventName, pagePath: pathname, pageTitle: document.title,
     referrer: cleanReferrer(), language: navigator.language, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     screen: `${window.screen.width}x${window.screen.height}`, ...productFromPath(pathname), metadata, utm,
   };
@@ -65,20 +67,32 @@ export function trackAnalyticsEvent(eventName: AnalyticsEventName, metadata?: Re
 
 export function getAnalyticsRequestHeaders(): Record<string, string> {
   if (typeof window === "undefined" || readCookie(consentKey) !== "granted") return {};
-  const { visitorId, sessionId } = analyticsIds();
-  return { "x-cowin-visitor-id": visitorId, "x-cowin-session-id": sessionId };
+  try {
+    const { visitorId, sessionId } = analyticsIds();
+    return { "x-cowin-visitor-id": visitorId, "x-cowin-session-id": sessionId };
+  } catch { return {}; }
+}
+
+export function AnalyticsSettingsButton() {
+  return <button type="button" className="footer-privacy-button" onClick={() => window.dispatchEvent(new Event(settingsEvent))}>Analytics settings</button>;
 }
 
 export function AnalyticsTracker() {
   const pathname = usePathname();
   const [consent, setConsent] = useState<"pending" | "granted" | "rejected">("pending");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     const value = readCookie(consentKey);
     const timer = window.setTimeout(() => {
       setConsent(value === "granted" || value === "rejected" ? value : "pending");
     }, 0);
-    return () => window.clearTimeout(timer);
+    const openSettings = () => setSettingsOpen(true);
+    window.addEventListener(settingsEvent, openSettings);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener(settingsEvent, openSettings);
+    };
   }, []);
 
   useEffect(() => {
@@ -105,12 +119,17 @@ export function AnalyticsTracker() {
 
   const choose = (value: "granted" | "rejected") => {
     writeCookie(consentKey, value, 60 * 60 * 24 * 180);
+    if (value === "rejected") {
+      writeCookie(visitorKey, "", 0);
+      try { sessionStorage.removeItem(sessionKey); } catch { /* Storage is optional. */ }
+    }
     setConsent(value);
+    setSettingsOpen(false);
   };
 
-  if (pathname.startsWith("/internal") || consent !== "pending") return null;
+  if (pathname.startsWith("/internal") || (consent !== "pending" && !settingsOpen)) return null;
   return <aside className="analytics-consent" aria-label="Analytics preference">
-    <p><strong>Analytics preference</strong><span>Allow anonymous, first-party visit analytics to help us improve product information and inquiry support. We do not use advertising pixels.</span></p>
+    <p><strong>Analytics preference</strong><span>Optional visit statistics help us improve product information. If you send an inquiry, your visit may be linked to it. You can send an inquiry either way.</span></p>
     <div><button className="button button-primary" onClick={() => choose("granted")}>Allow analytics</button><button className="button button-outline" onClick={() => choose("rejected")}>Essential only</button></div>
   </aside>;
 }

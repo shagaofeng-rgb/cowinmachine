@@ -1,7 +1,7 @@
 import type { AdminDatePreset, AdminDateRange } from "@/types/admin-operations";
 
 const timeZone = "Asia/Shanghai";
-const presetValues = new Set<AdminDatePreset>(["today", "this-week", "this-month", "custom"]);
+const presetValues = new Set<AdminDatePreset>(["today", "this-week", "this-month", "last-7", "last-30", "last-90", "custom"]);
 
 function dayParts(date: Date) {
   const values = new Intl.DateTimeFormat("en-CA", {
@@ -51,12 +51,15 @@ export function readAdminDateRange(values: { preset?: string; start?: string; en
   if (preset === "custom" && values.start && values.end && /^\d{4}-\d{2}-\d{2}$/.test(values.start) && /^\d{4}-\d{2}-\d{2}$/.test(values.end)) {
     const start = fromDayText(values.start);
     const end = fromDayText(values.end);
-    const maximumEnd = fromDayText(addDays(values.start, 366));
-    if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && dayText(start) === values.start && dayText(end) === values.end && start <= end && end <= maximumEnd) return rangeFor(values.start, values.end, "custom", `${values.start} 至 ${values.end}`);
+    if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && dayText(start) === values.start && dayText(end) === values.end && start <= end && end.getTime() - start.getTime() <= 366 * 86400000) return rangeFor(values.start, values.end, "custom", `${values.start} 至 ${values.end}`);
   }
 
   if (preset === "this-week") return rangeFor(startOfWeek(today), today, "this-week", "本周");
   if (preset === "this-month") return rangeFor(`${today.slice(0, 7)}-01`, today, "this-month", "本月");
+  if (preset === "last-7" || preset === "last-30" || preset === "last-90") {
+    const days = Number(preset.slice(5));
+    return rangeFor(addDays(today, 1 - days), today, preset, `近 ${days} 天`);
+  }
   return rangeFor(today, today, "today", "今日");
 }
 

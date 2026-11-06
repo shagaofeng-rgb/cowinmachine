@@ -7,7 +7,8 @@ import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-type NewsPageProps = { searchParams: Promise<{ page?: string; industry?: string }> };
+type NewsPageProps = { searchParams: Promise<{ page?: string | string[]; industry?: string | string[] }> };
+const readIndustry = (value: string | string[] | undefined) => typeof value === "string" ? value.trim().slice(0, 100) : "";
 
 function getIndustryFilters(articles: Awaited<ReturnType<typeof getPublishedNewsArticles>>) {
   const counts = new Map<string, number>();
@@ -23,7 +24,7 @@ function getIndustryFilters(articles: Awaited<ReturnType<typeof getPublishedNews
 export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
   const query = await searchParams;
   const articles = await getPublishedNewsArticles();
-  const activeIndustry = query.industry?.trim();
+  const activeIndustry = readIndustry(query.industry);
   const filteredArticles = activeIndustry ? articles.filter((article) => article.industry === activeIndustry) : articles;
   const resolution = resolvePage(query.page, getPageCount(filteredArticles.length, newsPerPage));
   const page = resolution.valid ? resolution.page : 1;
@@ -43,7 +44,7 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
 export default async function NewsPage({ searchParams }: NewsPageProps) {
   const query = await searchParams;
   const articles = await getPublishedNewsArticles();
-  const activeIndustry = query.industry?.trim();
+  const activeIndustry = readIndustry(query.industry);
   const filteredArticles = activeIndustry ? articles.filter((article) => article.industry === activeIndustry) : articles;
   const pageCount = getPageCount(filteredArticles.length, newsPerPage);
   const resolution = resolvePage(query.page, pageCount);
