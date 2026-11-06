@@ -1,32 +1,20 @@
 import Link from "next/link";
+import { ArrowRight, ClipboardText } from "@phosphor-icons/react/ssr";
 import { mailtoHref } from "@/lib/site";
 
-type Props = { productName: string; productModel?: string | null; productUrl: string };
-
-export function TechnicalReviewCard({ productName, productModel, productUrl }: Props) {
-  const quoteParams = new URLSearchParams({
-    product: productName,
-    productUrl,
-    ...(productModel ? { productModel } : {}),
-  });
-  const specificationsParams = new URLSearchParams(quoteParams);
-  specificationsParams.set("request", "verified-specifications");
-
-  return <aside className="quote-card technical-review-card" aria-labelledby="technical-review-heading">
-    <p className="eyebrow">Technical review</p>
-    <h2 id="technical-review-heading">Review This Configuration</h2>
-    <p className="technical-review-model"><span>Model reference</span><strong>{productModel ?? "Configuration review"}</strong></p>
-    <p>Prepare these project inputs before requesting a quotation:</p>
-    <ul className="technical-review-checklist">
-      <li>Application and operating conditions</li>
-      <li>Required capacity or output</li>
-      <li>Quantity and destination country</li>
-      <li>Available utilities and site constraints</li>
-    </ul>
-    <div className="technical-review-actions">
-      <Link className="button button-primary" href={`/request-a-quote?${quoteParams.toString()}`}>Open Quote Form</Link>
-      <a className="button button-outline" href={mailtoHref}>Talk to an Engineer</a>
-      <Link className="text-link" href={`/request-a-quote?${specificationsParams.toString()}`}>Request Verified Specifications</Link>
-    </div>
-  </aside>;
+export function TechnicalReviewCard({ quoteHref, model }: { quoteHref: string; model?: string | null }) {
+  return (
+    <aside className="cw-technical-aside" aria-labelledby="technical-review-heading">
+      <ClipboardText size={28} aria-hidden="true" />
+      <h2 id="technical-review-heading">Project review</h2>
+      {model && <p className="cw-aside-model">Model: <strong>{model}</strong></p>}
+      <ul>
+        <li>Application and operating conditions</li>
+        <li>Required output or capacity</li>
+        <li>Quantity and destination</li>
+      </ul>
+      <Link className="cw-btn cw-btn-primary" href={quoteHref}>Request a quote <ArrowRight size={17} aria-hidden="true" /></Link>
+      <a className="cw-link" href={mailtoHref}>Contact an engineer</a>
+    </aside>
+  );
 }

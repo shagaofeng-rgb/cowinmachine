@@ -1,5 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, BookOpenText, Newspaper } from "@phosphor-icons/react/ssr";
+import { EditorialDate, EditorialMedia } from "@/components/content-automation/EditorialMedia";
+import { InteriorIntro } from "@/components/interior/Interior";
 import { Pagination } from "@/components/Pagination";
 import type { ContentArticle } from "@/types/content-automation";
 
@@ -18,126 +20,87 @@ type ContentIndexProps = {
   emptyDescription: string;
 };
 
-function formatDate(value?: string) {
-  return value
-    ? new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value))
-    : "Editorial article";
+function ArticleMeta({ article }: { article: ContentArticle }) {
+  return (
+    <div className="cw-editorial-meta">
+      {article.industry && <span>{article.industry}</span>}
+      <EditorialDate value={article.publishedAt} />
+    </div>
+  );
 }
 
 export function ContentIndex({
-  articles,
-  totalItems,
-  currentPage,
-  totalPages,
-  sectionPath,
-  industryFilters,
-  activeIndustry,
-  kicker,
-  title,
-  description,
-  emptyTitle,
-  emptyDescription,
+  articles, totalItems, currentPage, totalPages, sectionPath, industryFilters, activeIndustry,
+  kicker, title, description, emptyTitle, emptyDescription,
 }: ContentIndexProps) {
-  const featured = currentPage === 1 ? articles[0] : undefined;
-  const remaining = currentPage === 1 ? articles.slice(1) : articles;
-  const itemType = sectionPath === "/blog" ? "Equipment guide" : "Industry update";
-  const articleHref = (slug: string) => sectionPath + "/" + slug;
+  const isBlog = sectionPath === "/blog";
+  const channel = isBlog ? "Blog" : "News";
+  const EmptyIcon = isBlog ? BookOpenText : Newspaper;
+  const featured = !isBlog && currentPage === 1 ? articles[0] : undefined;
+  const remaining = featured ? articles.slice(1) : articles;
+  const articleHref = (slug: string) => `${sectionPath}/${slug}`;
 
   return (
-    <main className="news-index">
-      <section className="news-index-intro">
-        <div className="content-wrap">
-          <p className="news-kicker">{kicker}</p>
-          <div className="news-index-title-row">
-            <div>
-              <h1>{title}</h1>
-              <p>{description}</p>
-            </div>
-            <p className="news-index-count">
-              {totalItems ? String(totalItems).padStart(2, "0") : "00"} <span>published items</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section news-index-content">
-        <div className="content-wrap">
-          {featured ? (
-            <article className="news-featured-card">
-              <div className="news-featured-copy">
-                <div className="news-card-meta">
-                  <span>{featured.industry}</span>
-                  <span>{formatDate(featured.publishedAt)}</span>
-                </div>
-                <p className="news-type-label">{itemType}</p>
-                <h2><Link href={articleHref(featured.slug)}>{featured.title}</Link></h2>
-                <p>{featured.summary}</p>
-                <Link className="news-read-link" href={articleHref(featured.slug)}>
-                  Read the article <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-              {featured.image ? (
-                <Link className="news-featured-media" href={articleHref(featured.slug)} aria-label={"Read " + featured.title}>
-                  <Image src={featured.image.src} alt={featured.image.alt} fill sizes="(max-width: 900px) 100vw, 42vw" priority />
-                </Link>
-              ) : (
-                <div className="news-featured-media news-featured-media-placeholder" aria-hidden="true" />
-              )}
-            </article>
-          ) : (
-            <div className="news-empty-state">
-              <p className="news-kicker">Publishing queue</p>
-              <h2>{emptyTitle}</h2>
-              <p>{emptyDescription}</p>
-            </div>
-          )}
-
+    <div className={`cw-interior ${isBlog ? "cw-blog-index" : "cw-news-index"}`}>
+      <InteriorIntro items={[{ label: channel }]} label={kicker} title={title} description={description} />
+      <section className="cw-section cw-editorial-index">
+        <div className="cw-wrap">
           {industryFilters?.length ? (
-            <nav className="news-topic-nav" aria-label="Filter news by industry">
-              <Link className={!activeIndustry ? "news-topic-active" : ""} href={sectionPath}>All updates <span>{industryFilters.reduce((total, filter) => total + filter.count, 0)}</span></Link>
+            <nav className="cw-news-filters" aria-label="Filter news by industry">
+              <Link aria-current={!activeIndustry ? "page" : undefined} href={sectionPath}>All updates <span>{industryFilters.reduce((total, filter) => total + filter.count, 0)}</span></Link>
               {industryFilters.map((filter) => (
-                <Link key={filter.label} className={filter.label === activeIndustry ? "news-topic-active" : ""} href={`${sectionPath}?industry=${encodeURIComponent(filter.label)}`}>
+                <Link key={filter.label} aria-current={filter.label === activeIndustry ? "page" : undefined} href={`${sectionPath}?industry=${encodeURIComponent(filter.label)}`}>
                   {filter.label} <span>{filter.count}</span>
                 </Link>
               ))}
             </nav>
           ) : null}
 
-          {remaining.length > 0 ? (
-            <div className="news-section-heading">
-              <div>
-                <p className="news-kicker">{currentPage === 1 ? "Latest archive" : "Archive"}</p>
-                <h2>{currentPage === 1 ? "More from COWIN MACHINE" : `Page ${currentPage} of ${totalPages}`}</h2>
+          {featured && (
+            <article className="cw-news-feature">
+              <EditorialMedia image={featured.image} channel={sectionPath} sizes="(max-width: 760px) 92vw, 580px" eager />
+              <div className="cw-news-feature-copy">
+                <p className="cw-kicker">{activeIndustry ? "Latest in this industry" : "Latest update"}</p>
+                <ArticleMeta article={featured} />
+                <h2><Link href={articleHref(featured.slug)}>{featured.title}</Link></h2>
+                <p>{featured.summary}</p>
+                <Link className="cw-link" href={articleHref(featured.slug)}>Read the update <ArrowRight size={17} aria-hidden="true" /></Link>
               </div>
-              <p>{totalItems} published items · Up to 9 per page</p>
-            </div>
-          ) : null}
+            </article>
+          )}
 
-          <div className="news-card-grid">
-            {remaining.map((article) => (
-              <article className="news-list-card" key={article.id}>
-                {article.image ? (
-                  <div className="news-list-card-media">
-                    <Image src={article.image.src} alt={article.image.alt} fill sizes="(max-width: 700px) 100vw, 33vw" />
+          {!articles.length && (
+            <div className="cw-empty">
+              <EmptyIcon size={33} aria-hidden="true" />
+              <h2>{emptyTitle}</h2><p>{emptyDescription}</p>
+              <Link className="cw-link" href={activeIndustry ? "/news" : isBlog ? "/products" : "/blog"}>
+                {activeIndustry ? "Show all updates" : isBlog ? "Browse equipment" : "Browse equipment guides"} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </div>
+          )}
+
+          {remaining.length > 0 && <>
+            <div className="cw-editorial-heading">
+              <h2>{isBlog ? "Equipment guides" : "News archive"}</h2>
+              <p>{totalItems} {isBlog ? "guides" : "updates"}{totalPages > 1 ? ` / Page ${currentPage} of ${totalPages}` : ""}</p>
+            </div>
+            <div className={isBlog ? "cw-guide-grid" : "cw-news-archive"}>
+              {remaining.map((article) => (
+                <article className={isBlog ? "cw-guide-card" : "cw-news-row"} key={article.id}>
+                  {isBlog || article.image ? <EditorialMedia image={article.image} channel={sectionPath} sizes={isBlog ? "(max-width: 540px) 92vw, (max-width: 860px) 45vw, 390px" : "150px"} /> : <div className="cw-news-row-icon" aria-hidden="true"><Newspaper size={29} /></div>}
+                  <div className="cw-editorial-card-copy">
+                    <ArticleMeta article={article} />
+                    <h3><Link href={articleHref(article.slug)}>{article.title}</Link></h3>
+                    <p>{article.summary}</p>
+                    <Link className="cw-link" href={articleHref(article.slug)} aria-label={`Read ${article.title}`}>{isBlog ? "Read guide" : "Read update"} <ArrowRight size={16} aria-hidden="true" /></Link>
                   </div>
-                ) : null}
-                <div className="news-list-card-content">
-                  <div className="news-card-meta">
-                    <span>{article.industry}</span>
-                    <span>{formatDate(article.publishedAt)}</span>
-                  </div>
-                  <h2><Link href={articleHref(article.slug)}>{article.title}</Link></h2>
-                  <p>{article.summary}</p>
-                  <Link className="news-read-link" href={articleHref(article.slug)}>
-                    Read article <span aria-hidden="true">→</span>
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-          <Pagination basePath={sectionPath} currentPage={currentPage} totalPages={totalPages} query={activeIndustry ? { industry: activeIndustry } : undefined} ariaLabel={`${title} pagination`} />
+                </article>
+              ))}
+            </div>
+          </>}
+          <Pagination basePath={sectionPath} currentPage={currentPage} totalPages={totalPages} query={activeIndustry ? { industry: activeIndustry } : undefined} ariaLabel={`${channel} pagination`} />
         </div>
       </section>
-    </main>
+    </div>
   );
 }

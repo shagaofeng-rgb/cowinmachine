@@ -1,3 +1,4 @@
+import { publishedSpecifications } from "@/lib/catalog-presentation";
 import { siteConfig } from "@/lib/site";
 import type { Product, ProductDetailProfile } from "@/types/product";
 
@@ -12,7 +13,7 @@ export function ProductJsonLd({ product, profile }: { product: Product; profile:
     description: product.shortDescription,
     image: product.heroImage ? [`${siteConfig.siteUrl}${product.heroImage}`] : undefined,
     url,
-    additionalProperty: profile.specifications.filter((item) => item.value !== "Configuration subject to application review.").map((item) => ({ "@type": "PropertyValue", name: item.label, value: item.value })),
+    additionalProperty: publishedSpecifications(profile).map((item) => ({ "@type": "PropertyValue", name: item.label, value: item.value })),
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
 }

@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ContentArticlePage } from "@/components/content-automation/ContentArticlePage";
-import {
-  getArticleChannel,
-  getPublishedArticles,
-} from "@/lib/content-automation/storage";
+import { getPublishedBlogArticles } from "@/lib/content-automation/storage";
 
 export const dynamic = "force-dynamic";
 
 async function getArticle(slug: string) {
-  return (await getPublishedArticles()).find(
-    (article) => article.slug === slug && getArticleChannel(article) === "blog",
-  );
+  return (await getPublishedBlogArticles()).find((article) => article.slug === slug);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -36,7 +31,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const article = await getArticle((await params).slug);
+  const { slug } = await params;
+  const articles = await getPublishedBlogArticles();
+  const currentIndex = articles.findIndex((item) => item.slug === slug);
+  const article = articles[currentIndex];
   if (!article) notFound();
-  return <ContentArticlePage article={article} sectionName="Blog" sectionPath="/blog" />;
+  const relatedArticles = [articles[currentIndex - 1], articles[currentIndex + 1]].filter((item) => item !== undefined);
+  return <ContentArticlePage article={article} relatedArticles={relatedArticles} sectionName="Blog" sectionPath="/blog" />;
 }

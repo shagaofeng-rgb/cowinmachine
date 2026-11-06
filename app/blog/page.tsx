@@ -37,11 +37,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       currentPage={resolution.page}
       totalPages={pageCount}
       sectionPath="/blog"
-      kicker="COWIN MACHINE / EQUIPMENT GUIDES"
-      title="Blog & Equipment Guidance"
+      kicker="COWIN MACHINE Blog"
+      title="Equipment Guides"
       description="Practical notes for preparing equipment requirements, comparing configurations and planning technical inquiries."
-      emptyTitle="The first equipment guide is being prepared."
-      emptyDescription="Third-party editorial submissions and practical equipment guidance will appear here after publication."
+      emptyTitle="No equipment guides published yet"
+      emptyDescription="Browse the equipment catalog or contact our team for selection guidance."
     />
   );
 }

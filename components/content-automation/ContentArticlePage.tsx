@@ -1,6 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "@phosphor-icons/react/ssr";
+import type { ReactNode } from "react";
 import { ArticleStructuredData } from "@/components/content-automation/ArticleStructuredData";
+import { EditorialDate, EditorialMedia } from "@/components/content-automation/EditorialMedia";
+import { InteriorBreadcrumbs } from "@/components/interior/Interior";
+import { normalizeInquiryProductUrl } from "@/lib/inquiry-context";
+import { whatsappHref } from "@/lib/site";
 import type { ContentArticle } from "@/types/content-automation";
 
 type ContentArticlePageProps = {
@@ -10,9 +15,21 @@ type ContentArticlePageProps = {
   sectionPath: "/news" | "/blog";
 };
 
+function safeArticleLink(value: string) {
+  if (/^\/(?![\/\\])/.test(value)) return value;
+  try {
+    const url = new URL(value);
+    return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function InlineMarkdown({ value }: { value: string }) {
   const match = value.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-  return match ? <Link href={match[2]}>{match[1]} <span aria-hidden="true">→</span></Link> : <>{value}</>;
+  if (!match) return <>{value}</>;
+  const href = safeArticleLink(match[2]);
+  return href ? <a href={href}>{match[1]}</a> : <>{match[1]}</>;
 }
 
 function sectionId(index: number) {
@@ -20,93 +37,94 @@ function sectionId(index: number) {
 }
 
 function articleLines(body: string) {
-  return body
-    .split("\n")
-    .filter((line) => line && !line.startsWith("# ") && !line.startsWith("> "));
+  return body.split("\n").filter((line) => line && !line.startsWith("# ") && !line.startsWith("> "));
 }
 
-function getArticleHeadings(body: string) {
-  return articleLines(body)
-    .map((line, index) => ({ line, index }))
-    .filter(({ line }) => line.startsWith("## "))
-    .map(({ line, index }) => ({ id: sectionId(index), label: line.slice(3) }));
-}
+function ArticleBody({ lines }: { lines: string[] }) {
+  const blocks: ReactNode[] = [];
+  for (let index = 0; index < lines.length; index++) {
+    const line = lines[index];
+    if (line.startsWith("## ")) blocks.push(<h2 id={sectionId(index)} key={index}>{line.slice(3)}</h2>);
+    else if (line.startsWith("### ")) blocks.push(<h3 key={index}>{line.slice(4)}</h3>);
+    else if (line.startsWith("- ")) {
+      const start = index;
+      const items = [line.slice(2)];
+      while (lines[index + 1]?.startsWith("- ")) items.push(lines[++index].slice(2));
+      blocks.push(<ul key={start}>{items.map((item, itemIndex) => <li key={itemIndex}><InlineMarkdown value={item} /></li>)}</ul>);
+    } else blocks.push(<p key={index}><InlineMarkdown value={line} /></p>);
+  }
 
-function ArticleBody({ body }: { body: string }) {
-  return (
-    <div className="news-prose">
-      {articleLines(body)
-        .map((line, index) => {
-          if (line.startsWith("## ")) return <h2 id={sectionId(index)} key={index}>{line.slice(3)}</h2>;
-          if (line.startsWith("### ")) return <h3 key={index}>{line.slice(4)}</h3>;
-          if (line.startsWith("- ")) return <p className="news-prose-link" key={index}><InlineMarkdown value={line.slice(2)} /></p>;
-          return <p key={index}>{line}</p>;
-        })}
-    </div>
-  );
+  return <div className="cw-prose">{blocks}</div>;
 }
 
 export function ContentArticlePage({ article, relatedArticles = [], sectionName, sectionPath }: ContentArticlePageProps) {
-  const published = article.publishedAt
-    ? new Intl.DateTimeFormat("en", { dateStyle: "long" }).format(new Date(article.publishedAt))
-    : "Pending";
-  const updated = new Intl.DateTimeFormat("en", { dateStyle: "long" }).format(new Date(article.updatedAt));
-  const type = sectionPath === "/blog" ? "Equipment guide" : "Industry update";
-  const headings = getArticleHeadings(article.body);
+  const isBlog = sectionPath === "/blog";
+  const type = isBlog ? "Equipment guide" : "Industry update";
+  const lines = articleLines(article.body);
+  const headings = lines.flatMap((line, index) => line.startsWith("## ") ? [{ id: sectionId(index), label: line.slice(3) }] : []);
   const readingMinutes = Math.max(1, Math.ceil(article.body.trim().split(/\s+/).filter(Boolean).length / 220));
+  const normalizedProductUrl = normalizeInquiryProductUrl(article.productUrl);
+  const productPath = normalizedProductUrl ? new URL(normalizedProductUrl).pathname : "/products";
+  const quoteHref = productPath !== "/products" ? `/request-a-quote?productUrl=${encodeURIComponent(productPath)}` : "/request-a-quote";
+  const sources = article.sources.flatMap((source) => {
+    const href = safeArticleLink(source.url);
+    return href ? [{ ...source, href }] : [];
+  });
 
   return (
-    <>
+    <div className="cw-interior">
       <ArticleStructuredData article={article} />
-      <main className="news-article">
-        <section className="news-article-hero">
-          <div className="content-wrap">
-            <nav className="news-breadcrumbs" aria-label="Breadcrumb">
-              <Link href="/">Home</Link><span>/</span><Link href={sectionPath}>{sectionName}</Link><span>/</span><span>{type}</span>
-            </nav>
-            <div className="news-article-hero-grid">
-              <div className="news-article-hero-copy">
-                <div className="news-card-meta news-card-meta-light"><span>{type}</span><span>{article.industry}</span></div>
-                <h1>{article.title}</h1>
-                <p>{article.summary}</p>
-                <p className="news-date-line">Published {published} <span aria-hidden="true">•</span> Updated {updated} <span aria-hidden="true">•</span> {readingMinutes} min read</p>
+      <article className={`cw-article ${isBlog ? "cw-article-blog" : "cw-article-news"}`}>
+        <header className="cw-article-header">
+          <div className="cw-wrap">
+            <InteriorBreadcrumbs items={[{ label: sectionName, href: sectionPath }, { label: type }]} />
+            <div className="cw-title cw-article-title">
+              <p className="cw-kicker">{type}{article.industry && article.industry !== type ? ` / ${article.industry}` : ""}</p>
+              <h1>{article.title}</h1>
+              {article.summary && <p>{article.summary}</p>}
+              <div className="cw-editorial-meta cw-article-dates">
+                {article.publishedAt && <span>Published <EditorialDate value={article.publishedAt} long /></span>}
+                {article.updatedAt && article.updatedAt.slice(0, 10) !== article.publishedAt?.slice(0, 10) && <span>Updated <EditorialDate value={article.updatedAt} long /></span>}
+                <span>{readingMinutes} min read</span>
               </div>
-              {article.image ? (
-                <div className="news-article-hero-media">
-                  <Image src={article.image.src} alt={article.image.alt} fill priority sizes="(max-width: 900px) 100vw, 40vw" />
-                </div>
-              ) : null}
             </div>
           </div>
-        </section>
-        <section className="section news-article-content">
-          <div className="content-wrap news-article-layout">
-            <div className="news-article-main"><ArticleBody body={article.body} /></div>
-            <aside className="news-article-aside" aria-label="Article actions">
-              {headings.length ? <nav className="news-article-outline" aria-label="Article outline"><p className="news-kicker">In this article</p>{headings.map((heading) => <a key={heading.id} href={`#${heading.id}`}>{heading.label}</a>)}</nav> : null}
-              <div className="news-aside-card">
-                <p className="news-kicker">Configuration review</p>
-                <h2>Discuss this application</h2>
-                <p>Share your project conditions and required quantity for a focused equipment review.</p>
-                <Link className="button button-primary" href={"/request-a-quote?productUrl=" + encodeURIComponent(article.productUrl)}>Request a Quote</Link>
-                <a className="news-aside-secondary" href="https://wa.me/8615665135205">WhatsApp Us <span aria-hidden="true">↗</span></a>
-              </div>
-              <div className="news-aside-product">
-                <p className="news-kicker">Related equipment</p>
-                <Link href={article.productUrl}>View product details <span aria-hidden="true">→</span></Link>
-              </div>
-              {article.sources.length ? (
-                <div className="news-aside-sources">
-                  <p className="news-kicker">Sources</p>
-                  <p>External reporting is cited for context and does not indicate a commercial relationship with COWIN MACHINE.</p>
-                  <ul>{article.sources.slice(0, 3).map((source) => <li key={source.id}><a href={source.url} rel="noreferrer">{source.name} <span aria-hidden="true">↗</span></a></li>)}</ul>
-                </div>
-              ) : null}
+        </header>
+        <div className={`cw-wrap cw-article-layout${headings.length >= 3 ? " cw-article-with-outline" : ""}`}>
+          {headings.length >= 3 && (
+            <aside className="cw-article-outline">
+              <details open>
+                <summary>In this article</summary>
+                <nav aria-label="Article outline"><ol>{headings.map(({ id, label }) => <li key={id}><a href={`#${id}`}>{label}</a></li>)}</ol></nav>
+              </details>
             </aside>
+          )}
+          <div className="cw-article-main">
+            {article.image && <EditorialMedia image={article.image} channel={sectionPath} sizes="(max-width: 760px) 92vw, 760px" eager />}
+            <ArticleBody lines={lines} />
+            {sources.length > 0 && <section className="cw-article-sources"><h2>Sources</h2><ul>{sources.map((source) => <li key={source.id}><a className="cw-link" href={source.href} rel="noreferrer">{source.name}<ArrowUpRight size={15} aria-hidden="true" /></a></li>)}</ul></section>}
+            <section className="cw-article-cta">
+              <h2>Discuss your equipment requirements</h2>
+              <div>
+                <Link className="cw-btn cw-btn-primary" href={quoteHref}>Request a quote <ArrowRight size={17} aria-hidden="true" /></Link>
+                <Link className="cw-btn cw-btn-outline" href={productPath}>{productPath === "/products" ? "Browse equipment" : "View related equipment"}</Link>
+                <a className="cw-link" href={whatsappHref}>WhatsApp</a>
+              </div>
+            </section>
+            <Link className="cw-link cw-article-back" href={sectionPath}><ArrowLeft size={16} aria-hidden="true" />Back to {sectionName}</Link>
           </div>
-        </section>
-        {relatedArticles.length ? <section className="news-article-next"><div className="content-wrap"><div className="news-article-next-heading"><p className="news-kicker">Continue reading</p><h2>More industry developments</h2></div><div className="news-article-next-grid">{relatedArticles.map((relatedArticle) => <article key={relatedArticle.id}><p>{relatedArticle.industry}</p><h3><Link href={`${sectionPath}/${relatedArticle.slug}`}>{relatedArticle.title}</Link></h3><Link href={`${sectionPath}/${relatedArticle.slug}`}>Read article <span aria-hidden="true">→</span></Link></article>)}</div></div></section> : null}
-      </main>
-    </>
+        </div>
+      </article>
+      {relatedArticles.length > 0 && <section className="cw-section cw-section-muted">
+        <div className="cw-wrap">
+          <div className="cw-section-title"><h2>{isBlog ? "More equipment guides" : "More industry updates"}</h2></div>
+          <ul className="cw-related-articles">
+            {relatedArticles.map((related) => <li key={related.id}>
+              <Link href={`${sectionPath}/${related.slug}`}><span><EditorialDate value={related.publishedAt} /><strong>{related.title}</strong></span><ArrowRight size={18} aria-hidden="true" /></Link>
+            </li>)}
+          </ul>
+        </div>
+      </section>}
+    </div>
   );
 }

@@ -64,11 +64,11 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       sectionPath="/news"
       industryFilters={getIndustryFilters(articles)}
       activeIndustry={activeIndustry}
-      kicker="COWIN MACHINE / INDUSTRY NEWS"
-      title="News & Industry Developments"
+      kicker="COWIN MACHINE News"
+      title="News & Industry Updates"
       description="Source-reviewed industry developments connected to equipment applications and buyer decisions."
-      emptyTitle="Today’s industry update is being prepared."
-      emptyDescription="Source-reviewed industry updates appear here after publication checks finish."
+      emptyTitle="No matching news updates"
+      emptyDescription="Browse equipment guides in the Blog."
     />
   );
 }

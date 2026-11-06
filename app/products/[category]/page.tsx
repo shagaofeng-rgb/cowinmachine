@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Pagination } from "@/components/Pagination";
-import { PageHero } from "@/components/PageHero";
-import { ProductCatalogCard } from "@/components/product/ProductCatalogCard";
-import { getPageCount, paginateItems, resolvePage } from "@/lib/pagination";
-import { isCanonicalProductRoute } from "@/lib/product-canonical";
-import { getCategory, productCategories, products } from "@/lib/products";
+import { EquipmentIcon } from "@/components/interior/EquipmentIcon";
+import { InteriorCallout, InteriorIntro } from "@/components/interior/Interior";
+import { CatalogCollection } from "@/components/product/CatalogCollection";
+import { CatalogDirectory } from "@/components/product/CatalogDirectory";
+import { catalogHref, catalogProducts, getFamilyPresentation, resolveCatalog, type CatalogParams } from "@/lib/catalog-presentation";
+import { getCategory, productCategories } from "@/lib/products";
 import { pageMetadata } from "@/lib/seo";
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<CatalogParams>;
 };
 
 export function generateStaticParams() {
@@ -20,45 +18,39 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
-  const { category: slug } = await params;
-  const category = getCategory(slug);
+  const category = getCategory((await params).category);
   if (!category) return {};
-  const itemCount = products.filter((product) => product.category === category.slug && isCanonicalProductRoute(product)).length;
-  const resolution = resolvePage((await searchParams).page, getPageCount(itemCount));
+  const entries = catalogProducts.filter((product) => product.category === category.slug);
+  const { resolution, search } = resolveCatalog(entries, await searchParams);
   const page = resolution.valid ? resolution.page : 1;
-  const path = page === 1 ? `/products/${category.slug}` : `/products/${category.slug}?page=${page}`;
   const suffix = page === 1 ? "" : ` - Page ${page}`;
-  const metadata = pageMetadata(`${category.name}${suffix}`, category.summary, path);
-  return resolution.valid ? metadata : { ...metadata, robots: { index: false, follow: false } };
+  const path = catalogHref(`/products/${category.slug}`, page, search);
+  const metadata = pageMetadata(`${category.name}${search ? " Search" : ""}${suffix}`, category.summary, path);
+  return resolution.valid && !search ? metadata : { ...metadata, robots: { index: false, follow: resolution.valid } };
 }
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
-  const { category: slug } = await params;
-  const category = getCategory(slug);
+  const category = getCategory((await params).category);
   if (!category) notFound();
-
-  const entries = products.filter((product) => product.category === category.slug && isCanonicalProductRoute(product));
-  const pageCount = getPageCount(entries.length);
-  const resolution = resolvePage((await searchParams).page, pageCount);
+  const entries = catalogProducts.filter((product) => product.category === category.slug);
+  const catalog = resolveCatalog(entries, await searchParams);
   const basePath = `/products/${category.slug}`;
-  if (!resolution.valid) notFound();
-  if (resolution.shouldRedirect) {
-    permanentRedirect(resolution.page === 1 ? basePath : `${basePath}?page=${resolution.page}`);
-  }
+  if (!catalog.resolution.valid) notFound();
+  if (catalog.resolution.shouldRedirect) permanentRedirect(catalogHref(basePath, catalog.resolution.page, catalog.search));
+  const family = getFamilyPresentation(category.slug);
 
-  const page = resolution.page;
-  const visibleProducts = paginateItems(entries, page);
-  const categoryImage = entries.find((product) => product.heroImage)?.heroImage;
-
-  return <>
-    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: category.name }]} />
-    <PageHero eyebrow="Product Category" title={category.name} description={category.summary} image={categoryImage ? { src: categoryImage, alt: `${category.name} equipment` } : undefined} />
-    <section className="product-category-context"><div className="content-wrap">
-      <div><p className="eyebrow">Category scope</p><p>Review {entries.length} published equipment records and use the model details to start a configuration conversation.</p></div>
-      <ul>{category.subcategories.map((subcategory) => <li key={subcategory}>{subcategory}</li>)}</ul>
-      <Link href="/products">All equipment <span aria-hidden="true">→</span></Link>
-    </div></section>
-    <section className="section product-catalog-section"><div className="content-wrap"><div className="product-catalog-heading"><div><p className="eyebrow">{category.name}</p><h2>Available equipment</h2><p>Published model references and technical content are shown here. Final selection remains subject to application review.</p></div><p className="product-catalog-page-status">Page {page} of {pageCount}</p></div><div className="product-catalog-grid">{visibleProducts.map((product) => <ProductCatalogCard key={product.id} product={product} />)}</div><Pagination basePath={basePath} currentPage={page} totalPages={pageCount} ariaLabel={`${category.name} catalog pagination`} /></div></section>
-    <section className="product-category-cta"><div className="content-wrap"><div><p className="eyebrow">Selection support</p><h2>Match the equipment to the job, not just the model.</h2></div><p>Share material, operating environment, power availability, output requirement and safety constraints with an engineer before selecting a final configuration.</p><Link className="button button-primary" href="/contact">Contact an Engineer</Link></div></section>
-  </>;
+  return (
+    <div className="cw-interior">
+      <InteriorIntro
+        items={[{ label: "Products", href: "/products" }, { label: category.name }]}
+        label="Equipment family"
+        title={category.name}
+        description={family.summary}
+        action={<span className="cw-family-mark"><EquipmentIcon family={category.slug} size={65} /></span>}
+      />
+      <CatalogDirectory active={category.slug} />
+      <CatalogCollection catalog={catalog} basePath={basePath} title={`Available ${category.name.toLowerCase()}`} />
+      <InteriorCallout title={`Selecting ${category.name.toLowerCase()}`} description={family.selection} href={`/request-a-quote?category=${category.slug}`} action="Request selection support" />
+    </div>
+  );
 }

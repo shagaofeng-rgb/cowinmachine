@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ProductDetailView } from "@/components/product/ProductDetailView";
+import { publishedSpecifications } from "@/lib/catalog-presentation";
 import { getProductCanonicalRedirect, isCanonicalProductRoute } from "@/lib/product-canonical";
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
 import { productPath } from "@/lib/product-sections";
@@ -18,10 +19,10 @@ function productDescription(product: Product, profile: ReturnType<typeof getProd
   }
 
   const applications = profile.content.applications.slice(0, 2).join(" and ");
-  const specifications = profile.specifications.slice(0, 2).map((item) => `${item.label}: ${item.value}`).join("; ");
+  const specifications = publishedSpecifications(profile).slice(0, 2).map((item) => `${item.label}: ${item.value}`).join("; ");
   return [
     `${product.name}${profile.model && !product.name.toLowerCase().includes(profile.model.toLowerCase()) ? ` (${profile.model})` : ""} for ${applications || "reviewed industrial applications"}.`,
-    specifications ? `Verified configuration fields include ${specifications}.` : "",
+    specifications ? `Catalog specifications include ${specifications}.` : "",
     "Final configuration remains subject to application review.",
   ].filter(Boolean).join(" ");
 }

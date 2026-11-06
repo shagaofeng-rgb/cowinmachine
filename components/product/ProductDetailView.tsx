@@ -1,97 +1,157 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ArrowRight, Check, Info, ShieldCheck } from "@phosphor-icons/react/ssr";
+import { InteriorBreadcrumbs } from "@/components/interior/Interior";
 import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/product/ProductJsonLd";
 import { ProductDetailTabs } from "@/components/product/ProductDetailTabs";
+import { ProductGallery } from "@/components/product/ProductGallery";
 import { TechnicalReviewCard } from "@/components/product/TechnicalReviewCard";
+import { publishedSpecifications, quickSpecifications } from "@/lib/catalog-presentation";
+import { productQuoteHref } from "@/lib/inquiry-context";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
+import { getGalleryPhotos, isZoomablePhoto } from "@/lib/product-gallery";
 import { productPath, productSections, type ProductSectionSlug } from "@/lib/product-sections";
 import { getCategory, getProduct, products } from "@/lib/products";
 import { siteConfig } from "@/lib/site";
-import type { Product } from "@/types/product";
+import type { Product, ProductDetailProfile } from "@/types/product";
 
 function ListBlock({ title, items }: { title: string; items: string[] }) {
-  return <section className="product-section-block"><h3>{title}</h3><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul></section>;
+  return (
+    <section className="cw-detail-block">
+      <h3>{title}</h3>
+      <ul className="cw-check-list">{items.map((item) => <li key={item}><Check size={16} aria-hidden="true" /><span>{item}</span></li>)}</ul>
+    </section>
+  );
 }
 
-function getRelatedProducts(product: Product) {
-  const profile = getProductDetailProfile(product);
+function getRelatedProducts(product: Product, profile: ProductDetailProfile) {
   const preferred = profile.relatedProductSlugs
     .map((route) => { const [category, slug] = route.split("/"); return getProduct(category, slug); })
     .filter((item): item is Product => item !== undefined && isCanonicalProductRoute(item));
   const fallbacks = products.filter((item) => item.category === product.category && item.slug !== product.slug && isCanonicalProductRoute(item));
   return [...preferred, ...fallbacks]
-    .filter((item, index, entries) => entries.findIndex((candidate) => candidate.id === item.id) === index)
+    .filter((item, index, entries) => item.id !== product.id && entries.findIndex((candidate) => candidate.id === item.id) === index)
     .slice(0, 4);
 }
 
-function SectionContent({ product, section }: { product: Product; section: ProductSectionSlug }) {
-  const profile = getProductDetailProfile(product);
-
+function SectionContent({ product, profile, section, quoteHref }: {
+  product: Product;
+  profile: ProductDetailProfile;
+  section: ProductSectionSlug;
+  quoteHref: string;
+}) {
   if (section === "overview") return <>
-    <p className="product-section-lede">{profile.content.overview}</p>
-    <div className="product-section-columns">
-      <ListBlock title="Key Benefits" items={profile.content.benefits} />
-      <section className="product-section-block"><h3>How It Works</h3><p>{profile.content.workingPrinciple}</p></section>
+    <p className="cw-detail-lead">{profile.content.overview}</p>
+    <div className="cw-panel-columns">
+      <ListBlock title="Key benefits" items={profile.content.benefits} />
+      <section className="cw-detail-block"><h3>How it works</h3><p>{profile.content.workingPrinciple}</p></section>
     </div>
   </>;
 
-  if (section === "applications") return <div className="product-section-columns">
-    <ListBlock title="Typical Applications" items={profile.content.applications} />
-    <ListBlock title="Selection Guide" items={profile.content.selectionGuide} />
+  if (section === "applications") return <div className="cw-panel-columns">
+    <ListBlock title="Typical applications" items={profile.content.applications} />
+    <ListBlock title="Selection guide" items={profile.content.selectionGuide} />
   </div>;
 
-  if (section === "specifications") return profile.specifications.length ? <div className="specification-table-wrap"><table><tbody>{profile.specifications.map((spec) => <tr key={spec.label}><th scope="row">{spec.label}</th><td>{spec.value}</td></tr>)}</tbody></table></div> : <p className="configuration-note">Configuration subject to application review. Request verified specifications for this record.</p>;
+  if (section === "specifications") {
+    const specifications = publishedSpecifications(profile);
+    return <>
+      {specifications.length ? (
+        <div className="cw-spec-table" role="region" aria-label="Catalog specifications" tabIndex={0}>
+          <table><thead><tr><th scope="col">Parameter</th><th scope="col">Catalog value</th></tr></thead>
+            <tbody>{specifications.map(({ label, value }) => <tr key={label}><th scope="row">{label}</th><td>{value}</td></tr>)}</tbody>
+          </table>
+        </div>
+      ) : <p className="cw-detail-lead">Verified model-specific values are not published for this record.</p>}
+      <p className="cw-spec-note">Final values depend on the reviewed model and project configuration.</p>
+      <Link className="cw-link" href={`${quoteHref}&request=verified-specifications`}>Request verified specifications <ArrowRight size={16} aria-hidden="true" /></Link>
+    </>;
+  }
 
-  if (section === "configuration") return <div className="product-section-columns">
-    <ListBlock title="Standard Configuration" items={profile.standardConfiguration} />
-    <ListBlock title="Optional Configuration" items={profile.optionalConfiguration} />
+  if (section === "configuration") return <div className="cw-panel-columns">
+    <ListBlock title="Standard configuration" items={profile.standardConfiguration} />
+    <ListBlock title="Optional configuration" items={profile.optionalConfiguration} />
   </div>;
 
-  if (section === "maintenance") return <ListBlock title="Operating Review" items={profile.content.maintenanceAndSafety} />;
+  if (section === "maintenance") return <ListBlock title="Operating review" items={profile.content.maintenanceAndSafety} />;
 
-  if (section === "faq") return <div className="faq-list">{profile.content.faqs.map((faq) => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</div>;
+  if (section === "faq") return (
+    <div className="cw-faq">
+      {profile.content.faqs.map((faq) => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}
+    </div>
+  );
 
-  const related = getRelatedProducts(product);
-  return related.length ? <div className="product-related-grid">{related.map((item) => <article className="card" key={item.id}>
-    {item.heroImage && <Image className="card-image" src={item.heroImage} alt={item.gallery[0]?.alt ?? `${item.name} product view`} width={720} height={540} sizes="(max-width: 560px) 92vw, (max-width: 900px) 45vw, 22vw" />}
-    <h3>{item.name}</h3><p>{item.shortDescription}</p><Link className="button button-outline" href={productPath(item)}>View Details</Link>
-  </article>)}</div> : <p className="configuration-note">Related equipment will be confirmed during the application review.</p>;
+  const related = getRelatedProducts(product, profile);
+  return related.length ? (
+    <ul className="cw-related-equipment">
+      {related.map((item) => (
+        <li key={item.id}><Link href={productPath(item)}>
+          {item.heroImage && <span className="cw-related-thumb"><Image src={item.heroImage} alt="" fill sizes="80px" /></span>}
+          <strong>{item.name}</strong><ArrowRight size={17} aria-hidden="true" />
+        </Link></li>
+      ))}
+    </ul>
+  ) : <p className="cw-detail-lead">Related equipment will be confirmed during the application review.</p>;
 }
 
 export function ProductDetailView({ product }: { product: Product }) {
   const category = getCategory(product.category);
   if (!category) return null;
   const profile = getProductDetailProfile(product);
-  const basePath = productPath(product);
+  const quoteHref = productQuoteHref(product, profile.model);
+  const quickSpecs = quickSpecifications(product.category, profile, 3);
+  const photos = getGalleryPhotos(product).map((photo) => ({ ...photo, zoomable: isZoomablePhoto(photo) }));
+  const needsReview = profile.publicationState === "configuration-review";
   const crumbs = [
-    { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
     { label: category.name, href: `/products/${category.slug}` },
-    { label: product.name },
   ];
 
-  return <>
-    <Breadcrumbs items={crumbs} />
-    <BreadcrumbJsonLd items={crumbs.map((item) => ({ name: item.label, url: item.href ? `${siteConfig.siteUrl}${item.href}` : undefined }))} />
-    <ProductJsonLd product={product} profile={profile} />
+  return (
+    <div className="cw-interior">
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: `${siteConfig.siteUrl}/` },
+        ...crumbs.map(({ label, href }) => ({ name: label, url: `${siteConfig.siteUrl}${href}` })),
+        { name: product.name },
+      ]} />
+      <ProductJsonLd product={product} profile={profile} />
 
-    <section className="section product-summary-section"><div className="content-wrap">
-      <div className="product-showcase">
-        <div className="product-gallery" aria-label={`${product.name} image gallery`}>
-          {product.heroImage ? <Image className="product-detail-image" src={product.heroImage} alt={product.gallery[0]?.alt ?? `${product.name} product view`} width={1200} height={900} priority sizes="(max-width: 1000px) 92vw, (max-width: 1180px) 58vw, 660px" /> : <div className="placeholder-image">Product image pending review.</div>}
-          <div className="product-thumbnail-row">{product.gallery.slice(0, 3).map((image) => <span className="product-thumbnail" key={image.src}><Image src={image.src} alt="" width={88} height={66} sizes="88px" /></span>)}</div>
+      <section className="cw-detail-summary">
+        <div className="cw-wrap">
+          <InteriorBreadcrumbs items={[...crumbs, { label: profile.model ?? "Equipment details" }]} />
+          <div className="cw-detail-grid">
+            <div className="cw-detail-identity cw-title">
+              <p className="cw-kicker">{category.name}</p>
+              <h1>{product.name}</h1>
+              {profile.model && <p className="cw-model-line">Model <strong>{profile.model}</strong></p>}
+              <p>{product.shortDescription}</p>
+            </div>
+            <ProductGallery key={product.id} photos={photos} productName={product.name} family={product.category} />
+            <div className="cw-detail-decision">
+              {quickSpecs.length > 0 && (
+                <dl className="cw-detail-facts">
+                  {quickSpecs.map(({ label, value }) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
+                </dl>
+              )}
+              {needsReview ? (
+                <div className="cw-review-note"><Info size={21} aria-hidden="true" /><div><strong>Configuration review required</strong><p>{profile.reviewReason ?? "Confirm the model and operating conditions with our team."}</p></div></div>
+              ) : (
+                <p className="cw-model-status"><ShieldCheck size={18} aria-hidden="true" />{quickSpecs.length ? "Catalog data. Final configuration subject to review." : "Model identified. Specifications available on request."}</p>
+              )}
+              <div className="cw-detail-actions">
+                <Link className="cw-btn cw-btn-primary" href={quoteHref}>{needsReview ? "Request configuration review" : "Request a quote"} <ArrowRight size={18} aria-hidden="true" /></Link>
+                <Link className="cw-btn cw-btn-outline" href="/contact">Contact an engineer</Link>
+              </div>
+            </div>
+          </div>
         </div>
-          <div className="product-identity"><p className="eyebrow">{profile.publicationState === "full-technical-content" ? "Identified model" : "Configuration review required"}</p><h1>{product.name}</h1><p className="catalog-reference">Model reference: {profile.model ?? "Awaiting confirmation"}</p><p>{product.shortDescription}</p><dl className="product-quick-facts"><div><dt>Equipment family</dt><dd>{category.name}</dd></div><div><dt>Content status</dt><dd>{profile.publicationState === "full-technical-content" ? "Published technical data" : "Configuration review"}</dd></div><div><dt>Selection process</dt><dd>Project condition review</dd></div></dl><div className="cta-row"><Link className="button button-primary" href={`/request-a-quote?product=${encodeURIComponent(product.name)}&productUrl=${encodeURIComponent(basePath)}`}>Request a Quote</Link><Link className="button button-outline" href="/contact">Contact an Engineer</Link></div></div>
-      </div>
-      {profile.publicationState === "configuration-review" && <div className="review-notice" role="status"><strong>Request Configuration Review.</strong> {profile.reviewReason} Configuration subject to application review.</div>}
-    </div></section>
+      </section>
 
-    <ProductDetailTabs
-      productName={product.name}
-      panels={productSections.map((item) => ({ slug: item.slug, content: <SectionContent product={product} section={item.slug} /> }))}
-      sidebar={<TechnicalReviewCard productName={product.name} productModel={profile.model} productUrl={basePath} />}
-    />
-  </>;
+      <ProductDetailTabs key={product.id} productName={product.name}
+        panels={productSections.map(({ slug }) => ({ slug, content: <SectionContent product={product} profile={profile} section={slug} quoteHref={quoteHref} /> }))}
+        sidebar={<TechnicalReviewCard quoteHref={quoteHref} model={profile.model} />}
+      />
+    </div>
+  );
 }

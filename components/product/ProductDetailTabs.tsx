@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { isProductSectionSlug, productSectionHash, productSections, type ProductSectionSlug } from "@/lib/product-sections";
 
 type Panel = { slug: ProductSectionSlug; content: ReactNode };
@@ -13,6 +12,7 @@ function sectionFromHash(): ProductSectionSlug {
 
 export function ProductDetailTabs({ panels, sidebar, productName }: { panels: Panel[]; sidebar: ReactNode; productName: string }) {
   const [active, setActive] = useState<ProductSectionSlug>("overview");
+  const rail = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const syncFromHash = () => setActive(sectionFromHash());
@@ -25,51 +25,69 @@ export function ProductDetailTabs({ panels, sidebar, productName }: { panels: Pa
     };
   }, []);
 
+  useEffect(() => {
+    const tabs = rail.current;
+    const tab = tabs?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!tabs || !tab) return;
+
+    const railBounds = tabs.getBoundingClientRect();
+    const tabBounds = tab.getBoundingClientRect();
+    if (tabBounds.left < railBounds.left) tabs.scrollLeft -= railBounds.left - tabBounds.left;
+    if (tabBounds.right > railBounds.right) tabs.scrollLeft += tabBounds.right - railBounds.right;
+  }, [active]);
+
   function selectSection(slug: ProductSectionSlug) {
     setActive(slug);
-    const hash = productSectionHash(slug);
-    window.history.pushState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
+    if (sectionFromHash() !== slug) {
+      const hash = productSectionHash(slug);
+      window.history.pushState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
+    }
   }
 
-  const activeIndex = productSections.findIndex((section) => section.slug === active);
-  const previous = productSections[activeIndex - 1];
-  const next = productSections[activeIndex + 1];
+  function moveFocus(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const count = productSections.length;
+    const destination = {
+      ArrowLeft: (index + count - 1) % count,
+      ArrowRight: (index + 1) % count,
+      Home: 0,
+      End: count - 1,
+    }[event.key];
+    if (destination === undefined) return;
+    event.preventDefault();
+    const next = productSections[destination].slug;
+    selectSection(next);
+    rail.current?.querySelector<HTMLButtonElement>(`#product-tab-${next}`)?.focus({ preventScroll: true });
+  }
 
-  return <>
-    <div className="product-section-nav-shell"><div className="content-wrap">
-      <nav className="product-section-nav" role="tablist" aria-label={`${productName} detail sections`}>
-        {productSections.map((section) => <button
-          key={section.slug}
-          id={`product-tab-${section.slug}`}
-          type="button"
-          role="tab"
-          aria-controls={`product-panel-${section.slug}`}
-          aria-selected={active === section.slug}
-          className={active === section.slug ? "product-section-link product-section-link-active" : "product-section-link"}
-          onClick={() => selectSection(section.slug)}
-        >{section.label}</button>)}
-      </nav>
-    </div></div>
-
-    <section className="section product-detail-section"><div className="content-wrap quote-layout product-section-layout">
-      <div className="product-section-panel">
-        {productSections.map((section, index) => <article
-          key={section.slug}
-          id={`product-panel-${section.slug}`}
-          role="tabpanel"
-          aria-labelledby={`product-tab-${section.slug}`}
-          hidden={active !== section.slug}
-        >
-          <p className="eyebrow">Section {index + 1} of {productSections.length}</p>
-          <h2>{section.heading}</h2>
-          {panels.find((panel) => panel.slug === section.slug)?.content}
-        </article>)}
-        <nav className="product-section-stepper" aria-label="Product detail section navigation">
-          {previous ? <button type="button" onClick={() => selectSection(previous.slug)}><span>Previous</span><strong>{previous.label}</strong></button> : <span />}
-          {next ? <button type="button" onClick={() => selectSection(next.slug)}><span>Next</span><strong>{next.label}</strong></button> : <Link href="/request-a-quote"><span>Next step</span><strong>Request a Quote</strong></Link>}
-        </nav>
+  return (
+    <section className="cw-product-details" aria-label="Product information">
+      <div className="cw-tabs-bar">
+        <div className="cw-wrap">
+          <nav ref={rail} className="cw-tabs" role="tablist" aria-label={`${productName} details`}>
+            {productSections.map((section, index) => (
+              <button key={section.slug} id={`product-tab-${section.slug}`} type="button" role="tab"
+                aria-controls={`product-panel-${section.slug}`} aria-selected={active === section.slug}
+                tabIndex={active === section.slug ? 0 : -1}
+                onClick={() => selectSection(section.slug)} onKeyDown={(event) => moveFocus(event, index)}
+              >{section.label}</button>
+            ))}
+          </nav>
+        </div>
       </div>
-      {sidebar}
-    </div></section>
-  </>;
+      <div className="cw-wrap cw-detail-content">
+        <div className="cw-detail-panels">
+          {productSections.map((section) => (
+            <div key={section.slug} id={`product-panel-${section.slug}`} className="cw-product-panel"
+              role="tabpanel" aria-labelledby={`product-tab-${section.slug}`} hidden={active !== section.slug} tabIndex={0}
+            >
+              <h2>{section.heading}</h2>
+              {panels.find((panel) => panel.slug === section.slug)?.content}
+            </div>
+          ))}
+        </div>
+        {sidebar}
+      </div>
+    </section>
+  );
 }
