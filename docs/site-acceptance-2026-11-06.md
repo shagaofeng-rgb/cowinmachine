@@ -29,3 +29,11 @@ Scope: `cowinmachine.com` only. Baseline: GitHub `53872b3`, Vercel `dpl_2z1iN2wP
 Run the production build (including lint, types and repository guards), all site/content tests, the local indexable-sitemap check, and the browser matrix before pushing. After deployment, recheck both domains and the live sitemap, verify the third-party article and image, and submit one uniquely marked test inquiry from a live product page. Confirm its exact model, category, product URL, customer and activity in the production database; remove only that marked inquiry and test customer and verify zero remaining records.
 
 If a production blocker is found, restore the previous Vercel production deployment, then reconcile Git with a reviewed revert; do not reset or delete production data. The new inquiry and admin flows use the existing schema.
+
+## Production verification and mobile follow-up
+
+- First deployment of this release: `eb7a71a`, Vercel `dpl_FWtnRzdc8Cz7BWmxZV5zaRKFfrwY`, bound to both domains. The apex returned 200; the `www` host returned 301 to the apex.
+- The production sweep checked 163 sitemap URLs with zero failures; 135 catalog routes plus redirects, crawl policy and feed checks also passed. The production browser pass exercised 30 templates and 257 internal links across Chromium, WebKit and Firefox.
+- One uniquely marked production inquiry was submitted from the `ZD10LG-8` detail page. The API returned 200, and the lead, linked customer, creation event, category and canonical product URL matched. The lead, customer and activity were removed and independently counted at zero. Analytics was declined for the synthetic inquiry, so its session and traffic channel were intentionally absent.
+- The subsequent mobile check identified that the form could be typed into before it was interactive. The follow-up disables fields until hydration and keeps unsolicited analytics choices inline on the inquiry pages. Mobile replay uses a mocked request and does not create a second production lead.
+- Weak-network lab after the first deployment: median LCP 3.67s home, 3.30s catalog, 4.06s sample detail, 4.66s Blog; observed CLS stayed zero. Detail and Blog improved in the sample; home/catalog did not reach the 2.5s field target. No regional real-user percentile or INP conclusion is drawn from these three-run samples.

@@ -114,7 +114,7 @@ export function InquiryForm({ productModel, productUrl, fixedCategory, compact =
       <input type="hidden" {...register("website")} />
       <input type="hidden" {...register("productModel")} />
       <input type="hidden" {...register("productUrl")} />
-      <fieldset className="cw-form-group">
+      <fieldset className="cw-form-group" disabled={!hydrated}>
         <legend>Contact details</legend>
         <div className="cw-form-grid">
           {input("name", "Full name", 120, { required: true, autoComplete: "name" })}
@@ -124,7 +124,7 @@ export function InquiryForm({ productModel, productUrl, fixedCategory, compact =
           {!compact && input("whatsapp", "WhatsApp / phone", 100, { type: "tel", autoComplete: "tel" })}
         </div>
       </fieldset>
-      <fieldset className="cw-form-group">
+      <fieldset className="cw-form-group" disabled={!hydrated}>
         <legend>Equipment requirements</legend>
         <div className="cw-form-grid">
           <div className="cw-field">
@@ -145,7 +145,7 @@ export function InquiryForm({ productModel, productUrl, fixedCategory, compact =
           </>}
         </div>
       </fieldset>
-      <fieldset className="cw-form-group">
+      <fieldset className="cw-form-group" disabled={!hydrated}>
         <legend>Project conditions</legend>
         <div className="cw-field">
           <label htmlFor={fieldId("message")}>Project details{requiredMark}</label>

@@ -77,9 +77,9 @@ export function AnalyticsSettingsButton() {
   return <button type="button" className="footer-privacy-button" onClick={() => window.dispatchEvent(new Event(settingsEvent))}>Analytics settings</button>;
 }
 
-export function AnalyticsTracker() {
+export function AnalyticsTracker({ inline = false }: { inline?: boolean }) {
   const pathname = usePathname();
-  const [consent, setConsent] = useState<"pending" | "granted" | "rejected">("pending");
+  const [consent, setConsent] = useState<"loading" | "pending" | "granted" | "rejected">("loading");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
@@ -127,8 +127,8 @@ export function AnalyticsTracker() {
     setSettingsOpen(false);
   };
 
-  if (pathname.startsWith("/internal") || (consent !== "pending" && !settingsOpen)) return null;
-  return <aside className="analytics-consent" aria-label="Analytics preference">
+  if (pathname.startsWith("/internal") || consent === "loading" || (consent !== "pending" && !settingsOpen)) return null;
+  return <aside className={inline && !settingsOpen ? "analytics-consent analytics-consent-inline" : "analytics-consent"} aria-label="Analytics preference">
     <p><strong>Analytics preference</strong><span>Optional visit statistics help us improve product information. If you send an inquiry, your visit may be linked to it. You can send an inquiry either way.</span></p>
     <div><button className="button button-primary" onClick={() => choose("granted")}>Allow analytics</button><button className="button button-outline" onClick={() => choose("rejected")}>Essential only</button></div>
   </aside>;

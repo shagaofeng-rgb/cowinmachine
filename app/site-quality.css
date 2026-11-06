@@ -12,6 +12,7 @@
 #main-content { scroll-margin-top: 80px; }
 #main-content:focus { outline: none; }
 .products-nav-group { display: flex; align-items: stretch; }
+.products-nav-button svg, .menu-button svg { fill: currentColor; stroke: none; }
 .products-mega-panel { max-height: calc(100dvh - 72px); overflow-y: auto; overscroll-behavior: contain; }
 .products-mega-intro h2 { font-size: 1.85rem; letter-spacing: 0; }
 .products-mega-number { color: var(--orange-text); }
@@ -26,6 +27,7 @@
 .footer-privacy { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem 1rem; }
 .footer-privacy a, .footer-privacy-button { color: #e1ebf5; text-decoration: underline; text-underline-offset: .15em; }
 .footer-privacy-button { border: 0; background: transparent; padding: .55rem 0; cursor: pointer; font: inherit; }
+.analytics-consent-inline { position: static; width: min(680px, calc(100% - 2rem)); margin: 1rem auto; box-shadow: none; }
 .cw-spec-equivalent { display: block; margin-top: .2rem; color: var(--muted); }
 .cw-policy-copy { max-width: 74ch; line-height: 1.7; overflow-wrap: anywhere; }
 .cw-policy-copy h2 { margin: 1.6rem 0 .45rem; font-size: 1.25rem; }

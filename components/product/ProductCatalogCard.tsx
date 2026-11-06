@@ -19,7 +19,7 @@ export function ProductCatalogCard({ product, showCategory = false, eager = fals
     <article className="cw-equipment-card">
       <Link className="cw-equipment-media" href={path} aria-label={`View ${product.name}`}>
         {product.heroImage
-          ? <Image src={product.heroImage} alt={alt} fill sizes="(max-width: 540px) 92vw, (max-width: 860px) 45vw, (max-width: 1100px) 30vw, 290px" loading={eager ? "eager" : undefined} />
+          ? <Image src={product.heroImage} alt={alt} fill sizes="(max-width: 540px) 92vw, (max-width: 860px) 45vw, (max-width: 1100px) 30vw, 290px" loading={eager ? "eager" : undefined} fetchPriority={eager ? "high" : undefined} />
           : <span className="cw-no-photo"><EquipmentIcon family={product.category} size={46} /><span>Product photo unavailable</span></span>}
       </Link>
       <div className="cw-equipment-body">
@@ -32,7 +32,7 @@ export function ProductCatalogCard({ product, showCategory = false, eager = fals
         ) : <p className="cw-card-review">{profile.publicationState === "configuration-review" ? "Configuration review required" : "Specifications on request"}</p>}
         <div className="cw-equipment-actions">
           <Link className="cw-link" href={path} aria-label={`View details for ${product.name}`}>Details <ArrowRight size={16} aria-hidden="true" /></Link>
-          <Link className="cw-btn cw-btn-outline cw-btn-small" href={productQuoteHref(product, profile.model)} aria-label={`Request a quote for ${product.name}`}>Get quote</Link>
+          <Link className="cw-btn cw-btn-outline cw-btn-small" href={productQuoteHref(product, profile.model)} aria-label={`Get quote for ${product.name}`}>Get quote</Link>
         </div>
       </div>
     </article>
