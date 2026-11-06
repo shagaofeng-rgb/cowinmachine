@@ -18,7 +18,7 @@ export function CatalogDirectory({ active }: { active?: ProductCategorySlug }) {
             const count = catalogProducts.filter((product) => product.category === category.slug).length;
             return (
               <li key={category.slug}>
-                <Link href={`/products/${category.slug}`} aria-current={active === category.slug ? "page" : undefined}>
+                <Link href={`/products/${category.slug}`} prefetch={false} aria-current={active === category.slug ? "page" : undefined}>
                   <EquipmentIcon family={category.slug} />
                   <span className="cw-directory-name">{category.name}</span>
                   <span className="cw-directory-count">{count} models</span>

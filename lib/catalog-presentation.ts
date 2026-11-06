@@ -1,7 +1,7 @@
 import { getProductDetailProfile } from "@/lib/product-detail-profiles";
 import { getPageCount, paginateItems, resolvePage } from "@/lib/pagination";
 import { isCanonicalProductRoute } from "@/lib/product-canonical";
-import { products } from "@/lib/products";
+import { type getCategory, products } from "@/lib/products";
 import type { Product, ProductCategorySlug, ProductDetailProfile } from "@/types/product";
 
 export const catalogProducts = products.filter(isCanonicalProductRoute);
@@ -129,4 +129,10 @@ export function resolveCatalog(entries: Product[], params: CatalogParams) {
     total: results.length,
     products: paginateItems(results, resolution.page),
   };
+}
+
+export function getCatalogListing(category?: ReturnType<typeof getCategory>, params: CatalogParams = {}) {
+  const basePath = category ? `/products/${category.slug}` : "/products";
+  const entries = category ? catalogProducts.filter((product) => product.category === category.slug) : catalogProducts;
+  return { category, basePath, catalog: resolveCatalog(entries, params) };
 }

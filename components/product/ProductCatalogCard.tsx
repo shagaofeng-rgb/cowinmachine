@@ -9,7 +9,7 @@ import { productPath } from "@/lib/product-sections";
 import { getCategory } from "@/lib/products";
 import type { Product } from "@/types/product";
 
-export function ProductCatalogCard({ product, showCategory = false, eager = false }: { product: Product; showCategory?: boolean; eager?: boolean }) {
+export function ProductCatalogCard({ product, showCategory = false }: { product: Product; showCategory?: boolean }) {
   const profile = getProductDetailProfile(product);
   const specifications = quickSpecifications(product.category, profile, 2);
   const path = productPath(product);
@@ -19,7 +19,7 @@ export function ProductCatalogCard({ product, showCategory = false, eager = fals
     <article className="cw-equipment-card">
       <Link className="cw-equipment-media" href={path} aria-label={`View ${product.name}`}>
         {product.heroImage
-          ? <Image src={product.heroImage} alt={alt} fill sizes="(max-width: 540px) 92vw, (max-width: 860px) 45vw, (max-width: 1100px) 30vw, 290px" loading={eager ? "eager" : undefined} fetchPriority={eager ? "high" : undefined} />
+          ? <Image src={product.heroImage} alt={alt} fill sizes="(max-width: 540px) 92vw, (max-width: 860px) 45vw, (max-width: 1100px) 30vw, 290px" />
           : <span className="cw-no-photo"><EquipmentIcon family={product.category} size={46} /><span>Product photo unavailable</span></span>}
       </Link>
       <div className="cw-equipment-body">

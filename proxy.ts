@@ -1,10 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { hasAdminAccess, isAdminEnabled } from "@/lib/admin-operations/auth";
+import { catalogResultsDestination, isCatalogResultsPath } from "@/lib/catalog-routing";
 
 const canonicalHost = "cowinmachine.com";
 
 export async function proxy(request: NextRequest) {
-  const isRootWebhookPost = request.method === "POST" && request.nextUrl.pathname === "/";
+  const { pathname } = request.nextUrl;
+  const isRootWebhookPost = request.method === "POST" && pathname === "/";
 
   if (isRootWebhookPost) {
     return NextResponse.rewrite(new URL("/api/integrations/blog-publish", request.url));
@@ -20,10 +22,18 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(canonicalUrl, 301);
   }
 
+  if (isCatalogResultsPath(pathname)) return new NextResponse(null, { status: 404 });
+  const destination = catalogResultsDestination(request.method, request.nextUrl);
+  if (destination) {
+    const resultsUrl = request.nextUrl.clone();
+    resultsUrl.pathname = destination;
+    return NextResponse.rewrite(resultsUrl);
+  }
+
   const isProtectedContentRoute =
-    request.nextUrl.pathname.startsWith("/internal/admin") ||
-    request.nextUrl.pathname.startsWith("/internal/content-operations") ||
-    request.nextUrl.pathname.startsWith("/api/content-automation/manual");
+    pathname.startsWith("/internal/admin") ||
+    pathname.startsWith("/internal/content-operations") ||
+    pathname.startsWith("/api/content-automation/manual");
 
   if (!isProtectedContentRoute) return NextResponse.next();
   if (!isAdminEnabled()) return new NextResponse(null, { status: 404 });

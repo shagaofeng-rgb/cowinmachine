@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { ClipboardText, Clock, Mountains, Paperclip, Plug, Ruler } from "@phosphor-icons/react/ssr";
 import { HomeTechnicalSelector } from "@/components/sections/HomeTechnicalSelector";
@@ -6,6 +6,9 @@ import { homeProductFamilies } from "@/lib/home-product-families";
 import { productCategories, products } from "@/lib/products";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig, whatsappHref } from "@/lib/site";
+import heroMobile from "@/public/images/generated/home-technical-selection-hero-mobile.avif";
+import heroMedium from "@/public/images/generated/home-technical-selection-hero-medium.avif";
+import heroWide from "@/public/images/generated/home-technical-selection-hero-wide.avif";
 
 const homeMetadata = pageMetadata(
   siteConfig.defaultTitle,
@@ -18,6 +21,15 @@ const representativeProducts = productCategories
   .filter((product): product is NonNullable<typeof product> => Boolean(product));
 
 const featuredProducts = representativeProducts.slice(0, 4);
+const { props: { alt: heroAlt, ...heroFallback } } = getImageProps({
+  className: "home-selection-hero-image",
+  src: "/images/generated/home-technical-selection-hero.png",
+  alt: "Unbranded drilling rig operating at a quarry worksite",
+  fill: true,
+  loading: "eager",
+  fetchPriority: "high",
+  sizes: "100vw",
+});
 
 const rfqChecklist = [
   { label: "Application details", icon: ClipboardText },
@@ -31,7 +43,11 @@ const rfqChecklist = [
 export default function HomePage() {
   return <>
     <section className="home-selection-hero">
-      <Image className="home-selection-hero-image" src="/images/generated/home-technical-selection-hero.png" alt="Unbranded drilling rig operating at a quarry worksite" fill priority sizes="100vw" />
+      <picture>
+        <source media="(max-width: 560px)" type="image/avif" srcSet={heroMobile.src} />
+        <source type="image/avif" srcSet={`${heroMedium.src} ${heroMedium.width}w, ${heroWide.src} ${heroWide.width}w`} sizes="100vw" />
+        <img {...heroFallback} alt={heroAlt} />
+      </picture>
       <div className="home-selection-hero-inner content-wrap">
         <div className="home-selection-hero-copy">
           <p className="eyebrow">COWIN MACHINE</p>
@@ -45,8 +61,8 @@ export default function HomePage() {
     <section className="home-family-index" aria-label="Product categories">
       <div className="content-wrap home-family-index-grid">
         {homeProductFamilies.map((family) => {
-          return <Link className="home-family-index-item" href={family.href} key={family.href}>
-            <Image src={family.image} alt={family.alt} width={160} height={120} sizes="(max-width: 560px) 42vw, (max-width: 1100px) 25vw, 160px" />
+          return <Link className="home-family-index-item" href={family.href} key={family.href} prefetch={false}>
+            <Image src={family.image} alt={family.alt} width={160} height={120} sizes="(max-width: 560px) 138px, 160px" fetchPriority="low" />
             <span className="home-family-index-name">{family.title}</span>
             <span className="home-family-index-arrow" aria-hidden="true">→</span>
           </Link>;
@@ -92,7 +108,7 @@ export default function HomePage() {
         <div className="home-section-heading"><div><p className="eyebrow">Featured equipment</p><h2>Explore equipment for demanding work environments.</h2></div><Link className="text-link" href="/products">View all equipment →</Link></div>
         <div className="home-featured-grid">
           {featuredProducts.map((product) => <article className="home-featured-card" key={product.id}>
-            {product.heroImage && <Image src={product.heroImage} alt={product.gallery[0]?.alt ?? `${product.name} product view`} width={720} height={540} sizes="(max-width: 700px) 92vw, (max-width: 1050px) 45vw, 24vw" />}
+            {product.heroImage && <Image src={product.heroImage} alt={product.gallery[0]?.alt ?? `${product.name} product view`} width={720} height={540} sizes="(max-width: 700px) 92vw, (max-width: 1050px) 45vw, 24vw" fetchPriority="low" />}
             <div><p className="eyebrow">{productCategories.find((category) => category.slug === product.category)?.name}</p><h3>{product.name}</h3><p>{product.shortDescription}</p><Link href={`/products/${product.category}/${product.slug}`}>View equipment <span aria-hidden="true">→</span></Link></div>
           </article>)}
         </div>

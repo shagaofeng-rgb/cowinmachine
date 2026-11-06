@@ -35,7 +35,7 @@ export function CatalogCollection({
         {search && <div className="cw-search-context"><span>Search: <strong>{search}</strong></span><Link className="cw-link" href={basePath}><X size={16} aria-hidden="true" />Clear search</Link></div>}
         {products.length ? (
           <div className="cw-catalog-grid">
-            {products.map((product, index) => <ProductCatalogCard key={product.id} product={product} showCategory={showCategory} eager={index === 0} />)}
+            {products.map((product) => <ProductCatalogCard key={product.id} product={product} showCategory={showCategory} />)}
           </div>
         ) : (
           <div className="cw-empty">
